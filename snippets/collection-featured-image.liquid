@@ -1,0 +1,35 @@
+{%- comment -%}
+  renders collection featured image
+  usage
+    {%- render 'collection-featured-image', collection: collection, loading: loading_attr -%}
+{%- endcomment -%}
+{%- liquid
+  capture image_alt
+    if collection.featured_image.alt != blank
+      echo collection.featured_image.alt
+      else
+        echo collection.title | escape
+    endif
+  endcapture
+-%}
+{%- capture featured_img_tag -%}
+  <img
+    srcset="{%- if collection.featured_image.width >= 550 -%}{{ collection.featured_image | image_url: width: 550 }} 550w,{%- endif -%}
+            {%- if collection.featured_image.width >= 1100 -%}{{ collection.featured_image | image_url: width: 1100 }} 1100w,{%- endif -%}
+            {%- if collection.featured_image.width >= 1445 -%}{{ collection.featured_image | image_url: width: 1445 }} 1445w,{%- endif -%}
+            {%- if collection.featured_image.width >= 1680 -%}{{ collection.featured_image | image_url: width: 1680 }} 1680w,{%- endif -%}
+            {%- if collection.featured_image.width >= 2048 -%}{{ collection.featured_image | image_url: width: 2048 }} 2048w,{%- endif -%}
+            {%- if collection.featured_image.width >= 2200 -%}{{ collection.featured_image | image_url: width: 2200 }} 2200w,{%- endif -%}
+            {%- if collection.featured_image.width >= 2890 -%}{{ collection.featured_image | image_url: width: 2890 }} 2890w,{%- endif -%}
+            {%- if collection.featured_image.width >= 4096 -%}{{ collection.featured_image | image_url: width: 4096 }} 4096w,{%- endif -%}
+            {{ collection.featured_image | image_url }} {{ collection.featured_image.width }}w"
+    sizes="(min-width: 750px) calc(100vw - 22rem), 1445px"
+    src="{{- collection.featured_image | image_url: width: 1445 -}}"
+    alt="{{- image_alt -}}"
+    loading="{{ loading }}"
+    width="1445"
+    height="{{- 1445 | divided_by: collection.featured_image.aspect_ratio | round -}}"
+    class="object-fit object-fit--absolute"
+  >
+{%- endcapture -%}
+{{- featured_img_tag -}}

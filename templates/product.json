@@ -1,0 +1,317 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "description_1": {
+          "type": "text",
+          "settings": {
+            "block_description": "<p>{{ product.vendor }}</p>",
+            "block_text_size": "text-size--small",
+            "block_text_weight": "--fw-normal",
+            "show_on_sidebar": true,
+            "block_spacing": 0
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "block_heading_size": "h4",
+            "block_heading_weight": "--fw-bold",
+            "block_spacing": 10
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "block_text_size": "text-size--large",
+            "block_text_weight": "--fw-bold",
+            "block_spacing": 8
+          }
+        },
+        "description": {
+          "type": "text",
+          "settings": {
+            "block_description": "<p>{{ product.metafields.custom.sub_text | metafield_tag }}</p>",
+            "block_text_size": "text-size--large",
+            "block_text_weight": "--fw-normal",
+            "show_on_sidebar": true,
+            "block_spacing": 0
+          }
+        },
+        "variants_chart": {
+          "type": "variants_chart",
+          "settings": {
+            "variant_style": "pills",
+            "force_standard_variant_picker": false,
+            "show_size_chart": true,
+            "block_spacing": 10
+          }
+        },
+        "statistics": {
+          "type": "statistics",
+          "settings": {
+            "show_sku": false,
+            "show_stock": false,
+            "show_unitprice": true,
+            "block_text_weight": "--fw-bold",
+            "block_spacing": 0
+          }
+        },
+        "additional_information_6wxrbP": {
+          "type": "additional_information",
+          "settings": {
+            "label": "Additional information",
+            "line_item_property_name": "Additional information",
+            "placeholder": "",
+            "rows": 4,
+            "maxlength": 0,
+            "required": false,
+            "show_on_sidebar": false,
+            "block_spacing": 16
+          }
+        },
+        "quantity_input": {
+          "type": "quantity_input",
+          "settings": {
+            "show_subtotal": true,
+            "block_spacing": 2
+          }
+        },
+        "buttons": {
+          "type": "buttons",
+          "settings": {
+            "show_dynamic_checkouts": true,
+            "show_gift_card_recipient": false,
+            "show_whatsapp": false,
+            "whatsapp_number": "",
+            "custom_message": "Hi! I'm interested in learning more about the ||product_url||. Could you please provide more details or assist me with the purchase? Looking forward to your response! Thank you!",
+            "block_spacing": 14
+          }
+        },
+        "payment_icons": {
+          "type": "payment_icons",
+          "settings": {
+            "heading": "Guaranteed safe checkout",
+            "block_spacing": 16
+          }
+        },
+        "pickup_availability": {
+          "type": "pickup_availability",
+          "settings": {
+            "block_text_size": "text-size--medium",
+            "block_text_weight": "--fw-bold",
+            "show_on_sidebar": false,
+            "block_spacing": 19
+          }
+        },
+        "pdp_downloads_hcmpeG": {
+          "type": "pdp_downloads",
+          "settings": {
+            "heading": "Downloads / Resources",
+            "heading_size": "text-size--large",
+            "heading_weight": "--fw-bold",
+            "download_label": "Download",
+            "show_on_sidebar": false,
+            "block_spacing": 24
+          }
+        },
+        "content": {
+          "type": "content",
+          "settings": {
+            "heading": "Description",
+            "heading_size": "text-size--xlarge",
+            "heading_weight": "--fw-semi-bold",
+            "block_text_size": "text-size--small",
+            "block_text_weight": "--fw-light",
+            "block_spacing": 0
+          }
+        },
+        "collapsible_row_2": {
+          "type": "collapsible_row",
+          "disabled": true,
+          "settings": {
+            "heading": "The Build",
+            "block_heading_size": "text-size--xlarge",
+            "block_heading_weight": "--fw-semi-bold",
+            "block_description": "<p>Designed for performance. Lightweight sole, cushioned insole, and breathable upper for all-day comfort and support.</p>",
+            "block_description_size": "text-size--large",
+            "block_description_weight": "--fw-normal",
+            "open_by_default": false,
+            "show_on_sidebar": false,
+            "block_spacing": 0
+          }
+        },
+        "collapsible_row_3": {
+          "type": "collapsible_row",
+          "disabled": true,
+          "settings": {
+            "heading": "Sustainability",
+            "block_heading_size": "text-size--xlarge",
+            "block_heading_weight": "--fw-semi-bold",
+            "block_description": "<p>Made with recycled materials and eco-conscious methods. Every pair leaves a lighter footprint.</p>",
+            "block_description_size": "text-size--large",
+            "block_description_weight": "--fw-normal",
+            "open_by_default": false,
+            "show_on_sidebar": false,
+            "block_spacing": 36
+          }
+        },
+        "icon_description_1": {
+          "type": "icon_description",
+          "settings": {
+            "icn_image": "shopify://shop_images/free-shipping_7245083.svg",
+            "heading": "Free Shipping & Returns:",
+            "block_heading_size": "text-size--xlarge",
+            "block_heading_weight": "--fw-semi-bold",
+            "description": "<p>Free shipping on $99+ orders. Easy 7-day returns.</p>",
+            "block_description_size": "text-size--medium",
+            "block_description_weight": "--fw-normal",
+            "show_on_sidebar": false,
+            "block_spacing": 25
+          }
+        },
+        "icon_description_2": {
+          "type": "icon_description",
+          "settings": {
+            "icn_image": "shopify://shop_images/clock_11883744.svg",
+            "heading": "Notice:",
+            "block_heading_size": "text-size--xlarge",
+            "block_heading_weight": "--fw-semi-bold",
+            "description": "<p>Minor delays may occur due to <br/>quality control<br/><br/></p><p></p>",
+            "block_description_size": "text-size--medium",
+            "block_description_weight": "--fw-normal",
+            "show_on_sidebar": false,
+            "block_spacing": 25
+          }
+        },
+        "complementary": {
+          "type": "complementary",
+          "settings": {
+            "heading": "Frequently bought together",
+            "block_heading_size": "text-size--medium",
+            "block_heading_weight": "--fw-medium",
+            "show_navigation": true,
+            "block_spacing": 19
+          }
+        }
+      },
+      "block_order": [
+        "description_1",
+        "title",
+        "price",
+        "description",
+        "variants_chart",
+        "statistics",
+        "additional_information_6wxrbP",
+        "quantity_input",
+        "buttons",
+        "payment_icons",
+        "pickup_availability",
+        "pdp_downloads_hcmpeG",
+        "content",
+        "collapsible_row_2",
+        "collapsible_row_3",
+        "icon_description_1",
+        "icon_description_2",
+        "complementary"
+      ],
+      "settings": {
+        "show_breadcrumb": false,
+        "breadcrumb_color_scheme": "",
+        "product_media_size": "square",
+        "section_color_scheme": "",
+        "product_gallery_view": false,
+        "section_auto_play": false,
+        "section_show_navigation": true,
+        "section_change_slides_every": 5,
+        "reviews_onside": false,
+        "reviews_auto_play": false,
+        "reviews_show_navigation": true,
+        "reviews_show_pagination": false,
+        "reviews_change_slides_every": 5,
+        "section_top_padding": 10,
+        "section_bottom_padding": 50
+      }
+    },
+    "1777618798733f58e1": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_jTCxtc": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "real_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_jTCxtc"
+      ],
+      "settings": {}
+    },
+    "recommendations": {
+      "type": "product-recommendation",
+      "settings": {
+        "section_caption": "Explore",
+        "section_caption_size": "text-size--medium",
+        "section_caption_weight": "--fw-bold",
+        "section_heading": "Our Recommendations",
+        "section_heading_size": "h3",
+        "section_heading_weight": "--fw-bold",
+        "section_description": "Experience the Elegance and Style",
+        "description_text_size": "text-size--small",
+        "section_description_weight": "--fw-normal",
+        "max_header_size": 100,
+        "auto_play": false,
+        "show_navigation": true,
+        "show_pagination": false,
+        "change_slides_every": 5,
+        "number_of_columns_on_desktop": 4,
+        "products_to_show": 12,
+        "number_of_columns_on_mobile": "2",
+        "card_view": "view_1",
+        "product_media_size": "adapt",
+        "product_heading_size": "text-size--small",
+        "product_heading_weight": "--fw-normal",
+        "card_text_alignment": "left",
+        "enable_atc": true,
+        "enable_quick_view": true,
+        "show_swatches": true,
+        "show_price": true,
+        "show_product_time": false,
+        "show_vendor": true,
+        "show_stock_tag": true,
+        "show_sale_tag": true,
+        "show_custom_tag": false,
+        "thumbnail_layout": "slider",
+        "section_text_alignment": "left",
+        "section_mobile_text_alignment": "left",
+        "section_color_scheme": "",
+        "section_top_padding": 50,
+        "section_bottom_padding": 50
+      }
+    },
+    "1777661453f7d182b0": {
+      "type": "apps",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "1777618798733f58e1",
+    "recommendations",
+    "1777661453f7d182b0"
+  ]
+}

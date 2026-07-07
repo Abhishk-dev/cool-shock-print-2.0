@@ -1,0 +1,55 @@
+{%- comment -%}
+  Renders the country picker for the localization form
+
+  Accepts:
+    - localPosition: pass in the position in which the form is coming up to create specific IDs
+{%- endcomment -%}
+<div class="dropdown-component dropdown-component--localization dropdown-component--country">
+  <strong id="{{ localPosition }}-country-heading{{ resp }}" class="visually-hidden" role="heading" aria-level="2">
+    {{- 'localization.country_label' | t -}}
+  </strong>
+  <localization-dropdown data-submission="true" data-form-id="{{- id -}}">
+    <button
+      type="button"
+      class="dropdown-component_opener dropdown-localization_opener --align-left"
+      aria-expanded="false"
+      aria-controls="{{- localPosition -}}-country-dropdown{{ resp }}"
+      aria-describedby="{{- localPosition -}}-country-heading{{ resp }}"
+    >
+      <span class="dropdown-component_icn dropdown-localization_icn">
+        <img src="{{- localization.country | image_url: width: 32 -}}" width="32" height="32" alt="{{- localization.country.name -}}" loading="lazy">
+      </span>
+      <span class="country-text">
+        {{- localization.country.name | append: ' ' }}
+        ({{ localization.country.currency.iso_code }} {{ localization.country.currency.symbol -}})
+      </span>
+      <i class="dropdown-componenet_icn-caret">
+        {%- render 'icons-data', width: 9, height: 5, use_icon: true, icon_reference: 'chevron-down', section_id: section_id -%}
+      </i>
+    </button>
+    <div class="dropdown-component_wrapper dropdown-localization_wrapper">
+      <ul id="{{ localPosition }}-country-dropdown{{ resp }}" class="list-unstyled dropdown-localization_items --align-left">
+        {%- for country in localization.available_countries -%}
+          <li>
+            <a
+              class="dropdown-component_btn-submit dropdown-localization_btn-submit{% if country.iso_code == localization.country.iso_code %} active{% endif %}"
+              href="#"
+              {% if country.iso_code == localization.country.iso_code %}
+                aria-current="true"
+              {% endif %}
+              data-value="{{- country.iso_code -}}"
+              data-submit-btn=""
+            >
+              <span class="dropdown-component_icn dropdown-localization_icn">
+                <img src="{{- country | image_url: width: 32 -}}" alt="{{- country.name -}}" loading="lazy" width="32" height="32">
+              </span>
+              {{- country.name | append: ' ' }}
+              ({{ country.currency.iso_code }} {{ country.currency.symbol -}})
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+    <input type="hidden" name="country_code" data-submit-input="" value="{{- localization.country.iso_code -}}">
+  </localization-dropdown>
+</div>

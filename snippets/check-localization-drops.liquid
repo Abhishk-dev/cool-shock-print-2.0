@@ -1,0 +1,22 @@
+{%- comment -%}
+  captures returns 'true' if any of localziation from dropdown is present to change
+  usage
+    {%- render 'check-localization-drops' -%}
+{%- endcomment -%}
+{%- liquid
+  capture country_exists
+    if localization.available_countries.size > 1
+      echo 'true'
+    endif
+  endcapture
+
+  capture language_exists
+    if localization.available_languages.size > 1 
+      echo 'true'
+    endif
+  endcapture
+
+  if country_exists == 'true' or language_exists == 'true'
+    echo 'true'
+  endif
+-%}

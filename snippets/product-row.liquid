@@ -1,0 +1,125 @@
+{%- comment -%}
+  renders product row as related product
+  usage
+    {%- render 'product-row', product: product -%}
+{%- endcomment -%}
+{%- liquid
+  capture product_clean_url
+    if product.url contains '?'
+      assign parts = product.url | split: '?'
+      echo parts[0]
+      else
+        echo product.url
+    endif
+  endcapture
+-%}
+<div class="product-row widget--styles" data-recommend-check="">
+  <div class="product-row_image">
+    {%- liquid
+      assign featured_image = product.selected_or_first_available_variant.featured_media
+      unless featured_image != blank
+        for media in product.media
+          assign featured_image = media
+          break
+        endfor
+      endunless
+    -%}
+    {%- unless featured_image == blank -%}
+      {%- capture image_sizes -%}
+        (max-width: 767px) 136px, 272px
+      {%- endcapture -%}
+      <img
+        srcset="{%- if featured_image.preview_image.width >= 136 -%}{{ featured_image.preview_image | image_url: width: 136 }} 136w,{%- endif -%}
+                {%- if featured_image.preview_image.width >= 272 -%}{{ featured_image.preview_image | image_url: width: 272 }} 272w{%- endif -%}"
+        sizes="{{- image_sizes -}}"
+        src="{{- featured_image.preview_image | image_url: width: 272 -}}"
+        alt="{{- product.title | escape -}}"
+        loading="lazy"
+        width="272"
+        height="{{- 272 | divided_by: featured_image.preview_image.aspect_ratio | round -}}"
+        class="object-fit object-fit--absolute"
+      >
+      {%- else -%}
+        {%- render 'placeholder-svgs', type: 'product', class: 'object-fit object-fit--absolute', index: 1  -%}
+    {%- endunless -%}
+  </div>
+  <div class="product-row_descr-wrap">
+    <strong class="product-row_heading text-size--{{ heading_size }} {{ heading_weight }} --word-break">
+      <a href="{{- product_clean_url -}}" class="">
+        {{- product.title -}}
+      </a>
+    </strong>
+    <strong class="product-row_price text-size--small">
+      {%- render 'product-price', product: product, use_variant: false, show_unit_price: true -%}
+    </strong>
+    {%- unless product.has_only_default_variant -%}
+      <modal-component-toggler>
+        <button
+          type="button"
+          data-expanded="false"
+          data-modal-ref="modal-quickview-complementary-{{ product.id }}"
+          aria-haspopup="dialog"
+          aria-controls="modal-quickview-complementary-{{ product.id }}"
+          class="button button--link product-row_btn"
+        >
+          {{- 'product.buy_label' | t -}}
+          <i class="button_icn">
+            {%- render 'icons-data', width: 16, height: 16, use_icon: true, icon_reference: 'long-arrow', section_id: section_id -%}
+          </i>
+        </button>
+      </modal-component-toggler>
+      <modal-render-component
+        data-modal="modal-quickview-complementary-{{ product.id }}"
+        data-container="body"
+        data-url="{{ request.origin }}{{ product.url }}?"
+        data-section="modal-quick-view"
+        data-render-selector="modal-quick-view"
+        data-selector="#modal-quickview-complementary-{{ product.id }}"
+        data-render-selector="modal-quick-view"
+      >
+        <div
+          class="modal modal-component modal-component--size-chart modal-component--quick-view modal-component--centered scheme--{{ section.settings.section_color_scheme }}"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-quickview-complementary-{{ product.id }}-heading"
+          aria-describedby="modal-quickview-complementary-{{ product.id }}"
+          tabindex="-1"
+        >
+          <div class="modal-component_spacer">
+            <div class="modal-component_wrapper">
+              <div class="modal-component_body">
+                <div class="modal-component_head --align-left product-common_size-heading">
+                  <modal-component-toggler>
+                    <button
+                      type="button"
+                      data-expanded="true"
+                      data-toggle-attribute="false"
+                      data-modal-ref="modal-quickview-complementary-{{ product.id }}"
+                      class="modal-component_btn-close button button--icn">
+                      <span class="button_icn-wrapper">
+                        {%- render 'icons-data', width: 14, height: 14, use_icon: true, icon_reference: 'cross' -%}
+                        <span class="visually-hidden">{{- 'accessibility.close' | t -}}</span>
+                      </span>
+                    </button>
+                  </modal-component-toggler>
+                  <strong id="modal-quickview-complementary-{{ product.id }}-heading" class="modal-component_heading h4 mty">
+                    {{- 'product.quick_view' | t -}}
+                  </strong>
+                </div>
+                <div class="modal-component_content" id="modal-quickview-complementary-{{ product.id }}">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </modal-render-component>
+      {%- else -%}
+        <a href="{{- product_clean_url -}}" class="button button--link product-row_btn">
+          {{- 'product.buy_label' | t -}}
+          <i class="button_icn">
+            {%- render 'icons-data', width: 16, height: 16, use_icon: true, icon_reference: 'long-arrow', section_id: section_id -%}
+          </i>
+        </a>
+    {%- endunless -%}
+  </div>
+</div>

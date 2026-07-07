@@ -1,0 +1,702 @@
+{%- comment -%}
+  renders line item of cart
+  usage
+    {% render 'line-item', item: item, loading_attr: 'lazy' %}
+{%- endcomment -%}
+{%- liquid
+  assign parent_attr = 'data-parent-line-item-' | append: item.id | append: '-' | append: index
+  assign line_id = 'main-line-id-' | append: item.id | append: '-' | append: index
+  assign error_render_attr = 'data-render-main-error' | append: item.id | append: '-' | append: index
+
+  assign dimension_calculated_price = blank
+  assign dimension_price_cents = 0
+  assign dimension_sqm = blank
+  for property in item.properties
+    if property.first == 'Calculated price'
+      assign dimension_calculated_price = property.last
+    elsif property.first == 'Square meters'
+      assign dimension_sqm = property.last
+    elsif property.first == '_price_cents'
+      assign dimension_price_cents = property.last | plus: 0
+    endif
+  endfor
+  assign has_dimension_pricing = false
+  if dimension_price_cents > 0
+    assign has_dimension_pricing = true
+    assign dimension_line_total = dimension_price_cents | times: item.quantity
+  endif
+-%}
+<div class="line-item {% if settings.cart_related_collection != null %}line-item_bdr-bottom{% endif %}" {{ parent_attr }} data-init-qty="{{- item.quantity -}}">
+  <div class="line-item_col" data-title="{{- 'customer.details.product_label' | t -}}">
+    <div class="line-item_infos-wrap">
+      {%- if item.variant.url != blank -%}
+        <a href="{{- item.variant.url -}}" class="line-item_image">
+          {%- else -%}
+            <a href="{{- item.product.title -}}" class="line-item_image">
+      {%- endif -%}
+        {%- if item.image != blank -%}
+          {%- liquid
+            capture image_alt
+              if item.image.alt != blank
+                echo item.image.alt | escape
+                else
+                  echo item.product.title
+              endif
+            endcapture
+          -%}
+          {%- capture image_sizes -%}
+            (max-width: 414px) 70px, 140px
+          {%- endcapture -%}
+          {{- item.image | image_url: width: 140 | image_tag: class: 'object-fit object-fit--absolute', loading: loading_attr, widths: '70, 140', sizes: image_sizes, alt: image_alt -}}
+          {%- else -%}
+            {%- render 'placeholder-svgs', type: 'product', class: 'object-fit object-fit--absolute', index: 1  -%}
+        {%- endif -%}
+        <span class="visually-hidden">{{ item.product.title }}</span>
+      {%- if item.variant.url != blank -%}
+        </a>
+          {%- else -%}
+            </a>
+      {%- endif -%}
+      <div class="line-item_infos-details">
+        {%- if settings.show_drawer_vendor -%}
+          <strong class="line-item-compact_text-heading --word-break">
+            {{- item.product.vendor -}}
+          </strong>
+        {%- endif -%}
+        <strong class="line-item_heading --word-break text-size--small --fw-bold h">
+          {%- if item.variant.url != blank -%}
+            <a href="{{- item.variant.url -}}" class="--hover-underline">
+              {{- item.product.title -}}
+            </a>
+            {%- else -%}
+              {{- item.product.title -}}
+          {%- endif -%}
+        </strong>
+        <ul class="list-unstyled --word-break">
+          <li class="line-item_variant-item">
+            <div class="line-item_variant-title">{{- 'cart.price' | t -}}:</div>
+            <div class="line-item_price-individual line-item_variant-value">
+              {%- if has_dimension_pricing -%}
+                <strong class="line-item_final-price --word-break">
+                  {{- dimension_calculated_price -}}
+                </strong>
+                {%- if dimension_sqm != blank -%}
+                  <span class="line-item_unit-price text-size--small">
+                    ({{ dimension_sqm }} m²)
+                  </span>
+                {%- endif -%}
+              {%- elsif item.original_price != item.final_price -%}
+                <span class="line-item_discounted-prices --word-break">
+                  <span class="visually-hidden">
+                    {{- 'product.regular_price' | t -}}
+                  </span>
+                  <s class="line-item_old-price">
+                    {{- item.original_price | money -}}
+                  </s>
+                  <span class="visually-hidden">
+                    {{- 'product.discount_price' | t -}}
+                  </span>
+                  <span class="line-item_final-price">
+                    {{- item.final_price | money -}}
+                  </span>
+                </span>
+                {%- else -%}
+                  <div class="line-item_col" data-title="{{- 'customer.main.total_label' | t -}}">
+                    <strong class="line-item_final-price --word-break" data-render-self-price="">
+                      {{- item.final_line_price | money -}}
+                    </strong>
+                    {%- if item.variant.available and item.unit_price_measurement -%}
+                      <span class="line-item_unit-price">
+                        <span class="visually-hidden">{{- 'product.unit_price' | t -}}</span>
+                        {{ item.variant.unit_price | money }}
+                        <span aria-hidden="true">/</span>
+                        <span class="visually-hidden">&nbsp;{{- 'product.unit_price_separator' | t -}}&nbsp;</span>
+                        {%- if item.variant.unit_price_measurement.reference_value != 1 -%}
+                          {{- item.variant.unit_price_measurement.reference_value -}}
+                        {%- endif -%}
+                        {{ item.variant.unit_price_measurement.reference_unit }}
+                      </span>
+                    {%- endif -%}
+                  </div>
+              {%- endif -%}
+              {%- unless template.name == 'cart' -%}
+                {%- if item.variant.available and item.unit_price_measurement -%}
+                  <span class="line-item_unit-price">
+                    <span class="visually-hidden">{{- 'product.unit_price' | t -}}</span>
+                    {{ item.variant.unit_price | money }}
+                    <span aria-hidden="true">/</span>
+                    <span class="visually-hidden">&nbsp;{{- 'product.unit_price_separator' | t -}}&nbsp;</span>
+                    {%- if item.variant.unit_price_measurement.reference_value != 1 -%}
+                      {{- item.variant.unit_price_measurement.reference_value -}}
+                    {%- endif -%}
+                    {{ item.variant.unit_price_measurement.reference_unit }}
+                  </span>
+                {%- endif -%}
+              {%- endunless -%}
+            </div>
+          </li>
+        </ul>
+        <div data-render-self-others="">
+          {%- if item.product.has_only_default_variant == false or item.properties.size != 0 -%}
+            {%- if item.product.has_only_default_variant == false -%}
+              <ul class="list-unstyled line-item_variant-list --word-break">
+                {%- for option in item.options_with_values -%}
+                  <li class="line-item_variant-item">
+                    <strong class="line-item_variant-title">
+                      {{- option.name -}}:
+                    </strong>
+                    <strong class="line-item_variant-value">
+                      {{- option.value -}}
+                    </strong>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+            {%- for property in item.properties -%}
+              {%- assign property_first_char = property.first | slice: 0 -%}
+              {%- if property.last != blank and property_first_char != '_' and property.first != 'Calculated price' -%}
+                <dl class="list-unstyled line-item_property-list line-item_variant-item --word-break">
+                  <dt class="line-item_property-title line-item_variant-title">
+                    {{- property.first -}}:
+                  </dt>
+                  <dd class="line-item_property-text line-item_variant-value">
+                    {%- if property.last contains '/uploads/' -%}
+                      <a href="{{- property.last -}}" class="line-item_property-text-link" target="_blank">
+                        {{- property.last | split: '/' | last -}}
+                      </a>
+                    {%- else -%}
+                      {{- property.last -}}
+                    {%- endif -%}
+                  </dd>
+                </dl>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          {%- if item.discounts.size > 0 -%}
+            <ul class="list-unstyled line-item_discounts-list">
+              {%- for discount in item.discounts -%}
+                <li class="line-item_discounts-item --word-break">
+                  {%- liquid
+                    render 'icons-data', width: 11, height: 11, use_icon: true, icon_reference: 'discount'
+                    echo discount.title
+                  -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+          {%- if item.selling_plan_allocation != null -%}
+            <div class="line-item_plan-wrap">
+              <strong class="line-item_plan-item">
+                {{- item.selling_plan_allocation.selling_plan.name -}}
+              </strong>
+            </div>
+          {%- endif -%}
+          <div class="line-item_error-wrap --word-break hidden" data-render-error="">
+            {% comment %} errors rendering here {% endcomment %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="line-item_col" data-title="{{- 'cart.main.thead.qty' | t -}}">
+    <div class="line-item_field-wrap">
+      <line-item-qty
+        class="quantity-input"
+        data-line-id="{{- item.index | plus: 1 -}}"
+        data-parent-selector="[{{ parent_attr }}]"
+        data-sections='[
+          {
+            "id": "cart-head",
+            "selectors": ["[data-render-cart-bubble]", "[data-render-cart-text]", "[data-render-cart-bubble-aside]", "[data-render-cart-text-aside]"]
+          },
+          {
+            "id": "cart-showcase",
+            "selectors": ["[data-line-items-drawer-container]"]
+          }
+          {% if template.name == 'cart' %}
+            ,
+            {
+              "id": "{{ section.id }}",
+              "selectors": ["[data-line-items-container]"]
+            }
+          {% endif %}
+        ]'
+      >
+        <label for="Quantity-{{ item.index | plus: 1 }}-{{ section.id }}-{{ item.product.id }}" class="visually-hidden">
+          {{- 'cart.main.thead.qty' | t -}}
+        </label>
+        <button class="quantity-input_button quantity-input_button-minus button button--icn {% if item.quantity < 2 %}disabled{% endif %}" name="minus" type="button" {% if item.quantity < 2 %}disabled="disabled"{% endif %}>
+          <span class="button_icn-wrapper">
+            {%- render 'icons-data', width: 8, height: 8, use_icon: true, icon_reference: 'minus', section_id: section_id -%}
+            <span class="visually-hidden" style="background-color: var(--section-background-color); color: var(--section-foreground-color);">
+              {{- 'quantity.decrease' | t: product: item.title | escape -}}
+            </span>
+          </span>
+        </button>
+        <input
+          type="number"
+          name="updates[]"
+          value="{{- item.quantity -}}"
+          {% # theme-check-disable %}
+          min="{{- item.variant.quantity_rule.min -}}"
+          {% if item.variant.quantity_rule.max != null %}
+            max="{{- item.variant.quantity_rule.max -}}"
+          {% endif %}
+          step="{{- item.variant.quantity_rule.increment -}}"
+          {% # theme-check-enable %}
+          aria-label="{{- 'quantity.input_label' | t: product: item.title | escape -}}"
+          id="Quantity-{{ item.index | plus: 1 }}-{{ section.id }}-{{ item.product.id }}"
+        >
+        <button class="quantity-input_button quantity-input_button-plus button button--icn" name="plus" type="button">
+          <span class="button_icn-wrapper">
+            {%- render 'icons-data', width: 8, height: 8, use_icon: true, icon_reference: 'plus', section_id: section_id -%}
+            <span class="visually-hidden" style="background-color: var(--section-background-color); color: var(--section-foreground-color);">
+              {{- 'quantity.increase' | t: product: item.title | escape -}}
+            </span>
+          </span>
+        </button>
+      </line-item-qty>
+      <div class="line-remove-icn-d">
+        {%- if settings.enable_drawer_edit_variation -%}
+          {%- unless item.product.has_only_default_variant -%}
+            <div class="cart-actions-list_item cart-btn-icn">
+              <strong id="{{ line_id }}-heading" class="visually-hidden">
+                {{- 'cart.edit' | t: product: item.product.title -}}
+              </strong>
+              <dropdown-component
+                data-close-button="true"
+                data-parent-focus=".modal-component--cart-drawer"
+              >
+                <button
+                  class="line-item-compact_remover dropdown-component_opener button button--icn"
+                  aria-expanded="false"
+                  aria-controls="{{- line_id -}}"
+                  aria-describedby="{{ line_id }}-heading"
+                >
+                  <span class="button_icn-wrapper">
+                    <span class="line-item-compact_remover--text">
+                      {{- 'cart.edit_label' | t -}}
+                    </span>
+                  </span>
+                </button>
+                <div class="dropdown-component_wrapper line-item-edit_dropdown-wrapper" id="{{- line_id -}}">
+                  <div class="line-item-edit_wrapper scheme scheme--{{ color_scheme }}">
+                    <div class="line-item-edit_head text-size--large h --v-align-middle">
+                      {{- 'cart.edit_label' | t -}}
+                      <button
+                        type="button"
+                        data-expanded="true"
+                        class="line-item-edit_close button button--icn"
+                        data-dropdown-close-btn=""
+                      >
+                        <span class="button_icn-wrapper">
+                          {%- render 'icons-data', width: 14, height: 14, use_icon: true, icon_reference: 'cross' -%}
+                          <span class="visually-hidden">{{- 'accessibility.close' | t -}}</span>
+                        </span>
+                      </button>
+                    </div>
+                    <div class="line-item-edit_body" data-edit-product-parent="edit-main-product-{{- line_id -}}">
+                      {%- liquid
+                        assign edit_product = item.product
+                        assign product_json_id = 'EditMainCartProductJson-' | append: line_id
+                        assign cart_product_form_id = 'EditMainCartProductAtcForm-' | append: line_id
+                        assign media_template_attr = 'data-media-template-edit-' | append: '-' | append: line_id
+                        assign media_static_attr = 'data-change-media-edit-' | append: '-' | append: line_id
+                        assign price_edit_render_attr = 'data-render-edit-price'
+
+                        assign current_option_values = ""
+                        for option_cart in item.options_with_values
+                          assign values = option_cart.value | split: ','
+                          for value in values
+                            if current_option_values != ""
+                              assign current_option_values = current_option_values | append: ","
+                            endif
+                            assign current_option_values = current_option_values | append: value
+                          endfor
+                        endfor
+                        assign current_option_values = current_option_values | split: ','
+
+                        if edit_product.selected_or_first_available_variant.featured_media != null
+                          assign first_image = edit_product.selected_or_first_available_variant.featured_media
+                          else
+                            for media in edit_product.media
+                              assign first_image = media
+                              break
+                            endfor
+                        endif
+
+                        capture edit_product_clean_url
+                          if edit_product.url contains '?'
+                            assign parts = edit_product.url | split: '?'
+                            echo parts[0]
+                            else
+                              echo edit_product.url
+                          endif
+                        endcapture
+
+                        assign check_against_inventory = true
+                        if edit_product.selected_or_first_available_variant.inventory_management != 'shopify' or edit_product.selected_or_first_available_variant.inventory_policy == 'continue'
+                          assign check_against_inventory = false
+                        endif
+                        if edit_product.selected_or_first_available_variant.quantity_rule.min > edit_product.selected_or_first_available_variant.inventory_quantity and check_against_inventory
+                          assign quantity_rule_soldout = true
+                        endif
+                      -%}
+                      {% for option in item.selected_options %}
+                        {% capture option_data %}{{ option.name }}: {{ option.value }}{% endcapture %}
+                        {% if selected_options_array != "" %}
+                          {% assign selected_options_array = selected_options_array | append: ", " %}
+                        {% endif %}
+                        {% assign selected_options_array = selected_options_array | append: option_data %}
+                      {% endfor %}
+                      <div class="edit-product">
+                        <div class="edit-product_wrapper">
+                          <div class="edit-product_media-wrapper">
+                            <div class="edit-product_media" {{ media_static_attr }}>
+                              {%- if first_image != blank -%}
+                                {%- liquid
+                                  capture image_alt
+                                    if first_image.preview_image.alt != blank
+                                      echo first_image.preview_image.alt | escape
+                                      else
+                                        echo edit_product.title | escape
+                                    endif
+                                  endcapture
+                                -%}
+                                <a href="{{- edit_product_clean_url -}}" class="--featured-image" data-media-id="{{- first_image.id -}}">
+                                  {{- item.image | image_url: width: 969 | image_tag: alt: image_alt, class: 'object-fit object-fit--absolute', loading: loading_attr, widths: '600, 800', sizes: '(max-width: 767px) 50vw, 100vw' -}}
+                                  <span class="visually-hidden">
+                                    {{- edit_product.title -}}
+                                  </span>
+                                </a>
+                                {%- else -%}
+                                  <a href="{{- edit_product_clean_url -}}" class="--media-size-square --featured-image --placeholder-image" style="--media-ratio: 1;" data-media-id="null">
+                                    {%- render 'placeholder-svgs', type: 'product', class: 'object-fit object-fit--absolute', index: 1  -%}
+                                    <span class="visually-hidden">
+                                      {{- edit_product.title -}}
+                                    </span>
+                                  </a>
+                              {%- endif -%}
+                            </div>
+                            <div class="edit-product_col edit-product_col--first">
+                              <strong class="h6 mty edit-product_heading text-size--small">
+                                <a href="{{ edit_product_clean_url }}">
+                                  {{- edit_product.title -}}
+                                </a>
+                              </strong>
+                              <div class="edit_product-product-price" {{ price_edit_render_attr }}>
+                                {%- if item.original_price != item.final_price -%}
+                                  <span class="line-item_discounted-prices --word-break">
+                                    <span class="visually-hidden">
+                                      {{- 'product.regular_price' | t -}}
+                                    </span>
+                                    <s class="line-item_old-price">
+                                      {{- item.original_price | money -}}
+                                    </s>
+                                    <span class="visually-hidden">
+                                      {{- 'product.discount_price' | t -}}
+                                    </span>
+                                    <span class="line-item_final-price">
+                                      {{- item.final_price | money -}}
+                                    </span>
+                                  </span>
+                                  {%- else -%}
+                                    <div class="line-item_col" data-title="{{- 'customer.main.total_label' | t -}}">
+                                      <strong class="line-item_final-price --word-break" data-render-self-price="">
+                                        {{- item.final_line_price | money -}}
+                                      </strong>
+                                    </div>
+                                {%- endif -%}
+                                {%- if item.variant.available and item.unit_price_measurement -%}
+                                  <span class="line-item_unit-price">
+                                    <span class="visually-hidden">{{- 'product.unit_price' | t -}}</span>
+                                    {{ item.variant.unit_price | money }}
+                                    <span aria-hidden="true">/</span>
+                                    <span class="visually-hidden">&nbsp;{{- 'product.unit_price_separator' | t -}}&nbsp;</span>
+                                    {%- if item.variant.unit_price_measurement.reference_value != 1 -%}
+                                      {{- item.variant.unit_price_measurement.reference_value -}}
+                                    {%- endif -%}
+                                    {{ item.variant.unit_price_measurement.reference_unit }}
+                                  </span>
+                                {%- endif -%}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="edit-product_text-wrap">
+                            <div class="edit-product_col edit-product_col--second">
+                              <div
+                                class="product-common_row product-common_row--variants_chart"
+                                style="--block-spacing: 0;"
+                              >
+                                <div data-edit-product-variant="edit-variants-container-{{- line_id -}}">
+                                  {%- for option in edit_product.options_with_values -%}
+                                    {%- liquid
+                                      unless settings.variant_swatches == 'none'
+                                        capture has_color_variant
+                                          for value in option.values
+                                            if settings.variant_swatches == 'swatches'
+                                              if value.swatch.image
+                                                echo 'true'
+                                                break
+                                                elsif value.swatch.color
+                                                  echo 'true'
+                                                  break
+                                              endif
+                                              else
+                                                if option.name == 'color' or option.name == 'Color' or option.name == 'colour' or option.name == 'Colour'
+                                                  echo 'true'
+                                                  break
+                                                endif
+                                            endif
+                                          endfor
+                                        endcapture
+                                      endunless
+
+                                      capture selected_option_variant
+                                        for option_cart in item.options_with_values
+                                          if option.name == option_cart.name
+                                            echo option_cart.value
+                                            break
+                                          endif
+                                        endfor
+                                      endcapture
+                                    -%}
+                                    <fieldset class="product-variant_row {% if has_color_variant == 'true' %}product-variant_fieldset{% endif %}">
+                                      <div class="product-variant_title-wrap --v-align-middle">
+                                        <strong class="product-common_variant-title text-size--medium --fw-bold h">
+                                          {{- option.name | append: ':' -}}
+                                        </strong>
+                                        <span class="product-common-selected-value text-size--medium --fw-normal" {{ 'data-selected-parent' | append: forloop.index | append: '-' | append: line_id }}>
+                                          {{- option.selected_value -}}
+                                        </span>
+                                      </div>
+                                      <variant-pill
+                                        class="product-variant_options-wrap product-common_product-variant_options-wrap --v-align-middle"
+                                        data-json-selector="#{{- product_json_id -}}"
+                                        data-forms='["#{{ cart_product_form_id }}"]'
+                                        data-error-selector="[{{ error_render_attr }}]"
+                                        data-renders='["[{{ price_edit_render_attr }}]"]'
+                                        data-section-id="product-organizer"
+                                        data-product-url="{{- edit_product_clean_url -}}"
+                                        data-update-url="false"
+                                        data-current-set='{{- current_option_values | json | escape -}}'
+                                        data-option-index="{{- forloop.index | minus: 1 -}}"
+                                        data-parent="[data-edit-product-variant='edit-variants-container-{{- line_id -}}']"
+                                        data-main-parent="[data-edit-product-parent='edit-main-product-{{- line_id -}}']"
+                                        data-galleries='["[{{ media_static_attr }}]"]'
+                                        data-media-template="true"
+                                        data-template="[{{ media_template_attr }}]"
+                                        data-selected-parent="[{{ 'data-selected-parent' | append: forloop.index | append: '-' | append: line_id }}]"
+                                      >
+                                        {%- render 'product-variant-options', product: edit_product, option: option, product_form_id: cart_product_form_id, swatches: settings.variant_swatches, is_color_option: has_color_variant, check_selected: true, selected_variant: selected_option_variant -%}
+                                      </variant-pill>
+                                    </fieldset>
+                                  {%- endfor -%}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="product-edit-btn">
+                          <div class="product-column_error-container line-item_error-wrap hidden" {{ error_render_attr }}>
+                            <span data-error=""></span>
+                          </div>
+                          {%- form 'product',
+                            edit_product,
+                            id: cart_product_form_id,
+                            class: form_class,
+                            novalidate: 'novalidate',
+                            data-type: 'add-to-cart-form'
+                          -%}
+                            {%- liquid
+                              assign check_against_inventory = true
+                              if edit_product.selected_or_first_available_variant.inventory_management != 'shopify' or edit_product.selected_or_first_available_variant.inventory_policy == 'continue'
+                                assign check_against_inventory = false
+                              endif
+                              if edit_product.selected_or_first_available_variant.quantity_rule.min > edit_product.selected_or_first_available_variant.inventory_quantity and check_against_inventory
+                                assign quantity_rule_soldout = true
+                              endif
+                            -%}
+                            <input
+                              type="hidden"
+                              name="id"
+                              value="{{- item.id -}}"
+                            >
+                            <input
+                              type="hidden"
+                              name="quantity"
+                              value="{{- item.quantity -}}"
+                            >
+                            <atc-line-update
+                              data-error-selector="[{{ error_render_attr }}]"
+                              data-form="#{{ cart_product_form_id }}"
+                              data-parent='true'
+                              data-parent-selector="[data-edit-product-parent='edit-product-{{- line_id -}}']"
+                              data-update-line-id="{{- index -}}"
+                              data-sections='[
+                                {
+                                  "id": "cart-head",
+                                  "selectors": ["[data-render-cart-bubble]", "[data-render-cart-text]", "[data-render-cart-bubble-aside]", "[data-render-cart-text-aside]"]
+                                },
+                                {
+                                  "id": "cart-showcase",
+                                  "selectors": ["[data-line-items-drawer-container]"]
+                                }
+                                {% if template == 'cart' %}
+                                  ,
+                                  {
+                                    "id": "main-cart",
+                                    "selectors": ["[data-line-items-container]"]
+                                  }
+                                {% endif %}
+                              ]'
+                            >
+                              <button
+                                type="submit"
+                                name="add"
+                                class="button button--primary cart-drawer_btn-submit edit-btn"
+                                {% if edit_product.selected_or_first_available_variant.available == false or quantity_rule_soldout %}
+                                  disabled
+                                {% endif %}
+                              >
+                                <span data-atc-text="" data-text-avail="{{- 'cart.update_cart' | t -}}" data-text-sold="{{- 'product.atc_buttons.unavailable' | t -}}" data-text-unavail="{{- 'product.atc_buttons.unavailable' | t -}}">
+                                  {{- 'cart.update_cart' | t -}}
+                                </span>
+                              </button>
+                            </atc-line-update>
+                          {%- endform -%}
+                        </div>
+                        <script id="{{- product_json_id -}}" type="application/json">
+                          {
+                            "handle": "{{ edit_product.handle | escape }}",
+                            "available": {{ edit_product.available | json }},
+                            "variants": [
+                              {%- for variant in edit_product.variants -%}
+                                {
+                                  "id": {{ variant.id | json }},
+                                  "featured_image": {% unless variant.featured_media.id == blank %}{{ variant.featured_media.id }}{% else %}null{% endunless %},
+                                  "available": {{ variant.available | json }},
+                                  "options": {{ variant.options | json }},
+                                  "option1": {{ variant.option1 | json }},
+                                  "option2": {{ variant.option2 | json }},
+                                  "option3": {{ variant.option3 | json }},
+                                  "quantity_rule": {{ variant.quantity_rule | json }}
+                                }
+                                {% if forloop.last == false %},{% endif -%}
+                              {%- endfor -%}
+                            ]
+                          }
+                        </script>
+                        <template {{ media_template_attr }}>
+                          <a href="{{- edit_product_clean_url -}}" class="--featured-image" data-media-id="{{- first_image.id -}}">
+                            {%- if first_image != blank -%}
+                              {%- liquid
+                                capture image_alt
+                                  if first_image.preview_image.alt != blank
+                                    echo first_image.preview_image.alt | escape
+                                    else
+                                      echo edit_product.title | escape
+                                  endif
+                                endcapture
+                              -%}
+                              {{- first_image.preview_image | image_url: width: 969 | image_tag: alt: image_alt, class: 'object-fit object-fit--absolute', loading: 'lazy', widths: '646, 969', sizes: '(max-width: 767px) 646vw, 969vw' -}}
+                              {%- else -%}
+                                {%- render 'placeholder-svgs', type: 'product', class: 'object-fit object-fit--absolute', index: 1  -%}
+                                <span class="visually-hidden">
+                                  {{- edit_product.title -}}
+                                </span>
+                            {%- endif -%}
+                          </a>
+                          {%- for variant in edit_product.variants -%}
+                            {%- liquid
+                              capture image_alt
+                                if variant.featured_image.alt != blank
+                                  echo variant.featured_image.alt | escape
+                                  else
+                                    echo variant.title | prepend: edit_product.title
+                                endif
+                              endcapture
+                            -%}
+                            <a href="{{- edit_product_clean_url -}}" class="--template-image" data-media-id="{{ variant.featured_media.id }}">
+                              {%- unless variant.featured_image == blank -%}
+                                {{- variant.featured_image.src | image_url: width: 969 | image_tag: alt: image_alt, class: 'object-fit object-fit--absolute', loading: loading, widths: '646, 969', sizes: '(max-width: 767px) 646vw, 969vw' -}}
+                                {%- else -%}
+                                  {%- render 'placeholder-svgs', type: 'product', class: 'object-fit object-fit--absolute', index: 1  -%}
+                                  <span class="visually-hidden">
+                                    {{- image_alt -}}
+                                  </span>
+                              {%- endunless -%}
+                            </a>
+                          {%- endfor -%}
+                        </template>
+                      </div>
+                    </div>
+                  </div>
+                  <a href="{{ routes.root_url }}" class="visually-hidden">{{ template.name }}</a>
+                </div>
+              </dropdown-component>
+            </div>
+          {%- endunless -%}
+        {%- endif -%}
+        <line-item-remove
+          class="remover-item-btn cart-btn-icn"
+          data-line-id="{{- item.index | plus: 1 -}}"
+          data-parent-selector="[{{ parent_attr }}]"
+          data-sections='[
+            {
+              "id": "cart-head",
+              "selectors": ["[data-render-cart-bubble]", "[data-render-cart-text]", "[data-render-cart-bubble-aside]", "[data-render-cart-text-aside]"]
+            },
+            {
+              "id": "cart-showcase",
+              "selectors": ["[data-line-items-drawer-container]"]
+            },
+            {
+              "id": "{{ section.id }}",
+              "selectors": ["[data-line-items-container]"]
+            }
+          ]'
+        >
+          <button class="line-item_remover button button--icn">
+            <span class="button_icn-wrapper">
+              <span class="line-item_remover--trash">
+                {{- 'cart.remove_text' | t -}}
+              </span>
+            </span>
+          </button>
+        </line-item-remove>
+      </div>
+    </div>
+  </div>
+  <div class="line-item_col" data-title="{{- 'customer.main.total_label' | t -}}">
+    <strong class="line-item_total-price --word-break" data-render-self-price="">
+      {%- if has_dimension_pricing -%}
+        {{- dimension_line_total | money -}}
+      {%- else -%}
+        {{- item.final_line_price | money -}}
+      {%- endif -%}
+      {%- if item.variant.available and item.unit_price_measurement -%}
+        <small class="line-item_unit-price">
+          <span class="visually-hidden">
+            {{- 'product.unit_price' | t -}}
+          </span>
+          {{- item.variant.unit_price | money -}}
+          <span aria-hidden="true">/</span>
+          <span class="visually-hidden"
+            >&nbsp;{{- 'product.unit_price_separator' | t -}}&nbsp;
+          </span>
+          {%- if item.variant.unit_price_measurement.reference_value != 1 -%}
+            {{- item.variant.unit_price_measurement.reference_value -}}
+          {%- endif -%}
+          {{- item.variant.unit_price_measurement.reference_unit -}}
+        </small>
+      {%- endif -%}
+    </strong>
+  </div>
+  <span class="loader line-item_loader hidden --v-align-middle --justify-center" data-loader="">
+    {%- render 'icons-data', width: 20, height: 20, use_icon: true, icon_reference: 'loader' -%}
+    <span class="visually-hidden">
+      {{- 'accessibility.loader' | t -}}
+    </span>
+  </span>
+</div>

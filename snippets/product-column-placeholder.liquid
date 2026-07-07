@@ -1,0 +1,149 @@
+{%- comment -%}
+  renders product list card on section templates
+  usage
+    {%- render 'product-list-card', figure: block, index: forloop.index -%}
+{%- endcomment -%}
+{% liquid
+  unless product.media.size == 0
+    assign featured_media = product.selected_or_first_available_variant.featured_media
+    unless featured_media != blank
+      for media in product.media
+        assign featured_media = media
+        break
+      endfor
+    endunless
+  endunless
+
+  capture featured_media_ratio
+    if media_size == 'adapt'
+      echo featured_media.preview_image.aspect_ratio | default: '1'
+    else 
+      echo '1'
+    endif
+  endcapture
+%}
+{%- capture column_button -%}
+  <div class="product-column_btn-wrap product-column_btn-wrap--pb --justify-center">
+    <div class="product-column_hover-title card-alignment --align-{{ section.settings.card_text_alignment }}">
+      {%- if show_vendor -%}
+        <strong class="h text-size--small --fw-semi-bold --word-break product-column_vendor">
+          {{ 'product.vendor' | t }}
+        </strong>
+      {%- endif -%}
+      {%- if section.settings.card_view == 'view_2' or section.settings.card_view == 'view_3' -%}
+        <{{- heading_tag }} class="mty {{ heading_size }} {{ heading_weight }} product-column_heading">
+          <a aria-disabled="true" class="">
+            {{- 'product.title' | t -}}
+          </a>
+        </{{- heading_tag -}}>
+      {%- endif -%}
+      {%- if show_price -%}
+        <strong class="--fw-semi-bold text-size--small product-column_price card-alignment">
+          {%- render 'product-price', product: product, use_variant: false, show_unit_price: true -%}
+        </strong>
+      {%- endif -%}
+      {%- if section.settings.card_view == 'view_1' -%}
+        <{{- heading_tag }} class="mty {{ heading_size }} {{ heading_weight }} product-column_heading">
+          <a aria-disabled="true" class="">
+            {{- 'product.title' | t -}}
+          </a>
+        </{{- heading_tag -}}>
+      {%- endif -%}
+    </div>
+    <div class="product-column_btn-icns {% if enable_atc %}border-bar{% endif %}">
+      {%- if show_quick_view -%}
+        <modal-component-toggler>
+          <button
+            type="button"
+            disabled
+            class="button button--icn product-column_btn-ixi product-column_qv-toggler --block">
+            <span class="--uppercase --desktop-column-btn">
+              {{- 'product.quick_view' | t -}}
+            </span>
+            <i class="button_icn-wrapper --mobile-column-btn">
+              {%- render 'icons-data', width: 20, height: 20, use_icon: true, icon_reference: 'eye', section_id: section_id -%}
+              <span class="visually-hidden --uppercase">
+                {{ 'product.quick_view' | t }}
+              </span>
+            </i>
+          </button>
+        </modal-component-toggler>
+      {%- endif -%}
+      {%- if enable_atc -%}
+        <modal-component-toggler>
+          <button
+            type="button"
+            disabled
+            class="button button--icn  product-column_btn-ixi product-column_qv-toggler --block">
+            <span class="product-column_enable-atc --uppercase --desktop-column-btn">
+              {{ 'product.atc_buttons.add_to_cart' | t }}
+            </span>
+            <i class="button_icn-wrapper --mobile-column-btn">
+              {%- render 'icons-data', width: 20, height: 20, use_icon: true, icon_reference: 'cart', section_id: section_id -%}
+            <span class="visually-hidden --uppercase">
+              {{ 'product.atc_buttons.add_to_cart' | t }}
+            </span>
+            </i>
+          </button>
+        </modal-component-toggler>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endcapture -%}
+<focused-element class="product-column {% unless media_size == 'adapt' %}--content-same{% endunless %}">
+    <div class="product-column_top-wrap">
+      <div class="product-column_media-wrap">
+        <a aria-disabled="true" class="product-column_image anim--shine --media-size-{{ media_size }}" style="--media-ratio: {{ featured_media_ratio }};">
+          {%- render 'placeholder-svgs', type: 'product', class: 'object-fit object-fit--absolute', index: 1  -%}
+          <span class="visually-hidden">
+            {{- 'product.title' | t -}}
+          </span>
+        </a>
+      </div>
+      {%- if show_stock_tag or show_sale_tag -%}
+        <ul class="list-unstyled tags-list product-column_tags-list --v-align-middle">
+          {%- if show_stock_tag -%}
+            <li class="tags-list_item parent-node">
+              <strong class="tags-list_tag --fw-medium">
+                {%- render 'product-stock-tag', product: product -%}
+              </strong>
+            </li>
+          {%- endif -%}
+          {%- if show_sale_tag -%}
+            <li class="tags-list_item parent-node">
+              <strong class="tags-list_tag --fw-medium">
+                {%- render 'product-discount-tag', product: product -%}
+              </strong>
+            </li>
+          {%- endif -%}
+        </ul>
+      {%- endif -%}
+    </div>
+    <div class="product-column_details-wrap --bdr-top --align-{{ section.settings.card_text_alignment }}">
+      {{- column_button -}}
+      {%- if section.settings.card_view == 'view_2' or section.settings.card_view == 'view_3' -%}
+        <{{- heading_tag }} class="mty {{ heading_size }} {{ heading_weight }} product-column_heading">
+          <a aria-disabled="true" class="">
+            {{- 'product.title' | t -}}
+          </a>
+        </{{- heading_tag -}}>
+      {%- endif -%}
+      {%- if section.settings.show_product_time -%}
+        <span class="product-column_time">
+          {{- 'product.labels.just_now' | t -}}
+        </span>
+      {%- endif -%}
+      {%- if show_price -%}
+        <strong class="--fw-semi-bold text-size--small product-column_price card-alignment">
+          {%- render 'product-price', product: product, use_variant: false, show_unit_price: true -%}
+        </strong>
+      {%- endif -%}
+      {%- if section.settings.card_view == 'view_1' -%}
+        <{{- heading_tag }} class="mty {{ heading_size }} {{ heading_weight }} product-column_heading">
+          <a aria-disabled="true" class="">
+            {{- 'product.title' | t -}}
+          </a>
+        </{{- heading_tag -}}>
+      {%- endif -%}
+    </div>
+</focused-element>

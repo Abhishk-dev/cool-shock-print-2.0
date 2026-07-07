@@ -1,0 +1,48 @@
+{%- comment -%}
+  renders icon image with description row on page templates
+  usage
+    {%- render 'image-icon', item: block, prefix_class: 'section_scheme_class' -%}
+{%- endcomment -%}
+
+{%- liquid
+  capture loading_attr
+    if section.index > 1
+      echo 'lazy'
+      else
+        echo 'eager'
+    endif
+  endcapture
+-%}
+<div class="image-icn">
+  <i class="image-icn_image">
+    {%- if item.settings.image != blank -%}
+      {%- liquid
+        capture image_alt
+          if item.settings.image.alt != blank
+            echo item.settings.image.alt
+            else
+              echo item.settings.heading | escape
+          endif
+        endcapture
+      -%}
+      {%- capture image_sizes -%}
+        (max-width: 414px) 50px, 100px
+      {%- endcapture -%}
+      {{- item.settings.image | image_url: width: 100 | image_tag: class: '', loading: loading_attr, widths: '50, 100', sizes: image_sizes, alt: image_alt -}}
+      {%- else -%}
+        {%- render 'placeholder-svgs', type: 'product', class: '', index: 1  -%}
+    {%- endif -%}
+  </i>
+  <div class="image-icn_descr-wrap">
+    {%- unless item.settings.heading == blank -%}
+      <strong class="image-icn_title {{ heading_size }} {{ heading_weight }} mty --word-break">
+        {{- item.settings.heading -}}
+      </strong>
+    {%- endunless -%}
+    {%- unless item.settings.description == blank -%}
+      <div class="mty {{ section.settings.icon_text_size }} {{ section.settings.icon_description_weight }} image-icn_description --word-break">
+        {{- item.settings.description -}}
+      </div>
+    {%- endunless -%}
+  </div>
+</div>

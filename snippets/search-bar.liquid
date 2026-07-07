@@ -1,0 +1,97 @@
+{%- comment -%}
+  renders search bar on page templates
+  usage
+    {%- render 'search-bar', predictive: true -%}
+{%- endcomment -%}
+<div class="search-bar {{ search_opened_logo_hide }} search-container-{{- section.id -}}">
+  <form action="{{- routes.search_url -}}" method="get" role="search">
+    <div class="seach-heading search-heading-block --fw-bold h --fw-normal --word-brek mty">
+      {{ 'search.title' | t }}
+    </div>
+    <div class="search-bar_form-group">
+      <div class="search-bar_search-box">
+        <label for="search-bar-input-{{ section.id }}-{{left_search }}" class="visually-hidden">
+          {{- 'search.label' | t -}}
+        </label>
+        <input
+          type="search"
+          name="q"
+          title="{{- 'search.label' | t -}}"
+          autocomplete="off"
+          id="search-bar-input-{{ section.id }}-{{ left_search }}"
+          value="{%- if search_value != blank -%}{{- search_value -}}{%- endif -%}"
+          placeholder="{{- 'search.placeholder' | t -}}"
+        >
+        <button type="submit" class="button button--icn search-bar_label">
+          <i class="button_icn-wrapper">
+            {%- render 'icons-data', width: 16, height: 16, use_icon: true, icon_reference: 'search', section_id: section_id -%}
+            <span class="visually-hidden">
+              {{- 'search.label' | t -}}
+            </span>
+          </i>
+        </button>
+        {%- if predictive -%}
+          <button type="button" class="button button--icn search-bar_reset-btn" data-dropdown-close-btn="">
+            <i class="button_icn-wrapper">
+              {%- render 'icons-data', width: 13, height: 13, use_icon: true, icon_reference: 'cross' -%}
+              <span class="visually-hidden">
+                {{- 'search.reset' | t -}}
+              </span>
+            </i>
+          </button>
+        {%- endif -%}
+    </div>
+    </div>
+    {%- if predictive -%}
+      <div class="predictive-container predictive-container--{{ section.id }}">
+        <div class="predictive-container_wrapper">
+          <div class="predictive-container_col predictive-container_col--results">
+            <div data-render-predict-results="" class="hidden"></div>
+            <div class="predictive-collection {% if section.settings.header_view == 'view_3' %}{% if section.settings.enable_opened_search %}predict_3-col-hide{%  endif %}{% endif %}">
+              <div class="predictive-collection_content">
+                {%- if section.settings.popular_menu.links != blanks -%}
+                  <div class="predictive-collection_popular-links predictive-collection--border">
+                    <div class="predictive-collection_popular-links--header h --fw-normal --word-brek mty predictive-collection-header-flex">
+                      <div class="circle"></div>
+                      {{ 'search.popular_search' | t }}
+                    </div>
+                    <ul class="list-unstyled predictive-collection_main-navigation h --fw-semi-bold --word-break ">
+                      {%- for link in section.settings.popular_menu.links -%}
+                        <li class="predictive-collection_main-navigation_item">
+                          <a href="{{- link.url -}}" class="predictive-collection_main-navigation_link {% if link.current %}predictive-collection_main-navigation_link--active{% endif %}" {% if link.current %}aria-current="{{- 'page.current_label' | t -}}"{% endif %}>
+                            {{- link.title -}}
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                {%- endif -%}
+                {%- if section.settings.quick_menu.links != blanks -%}
+                  <div class="predictive-collection_quick-links predictive-collection--border">
+                    <div class="predictive-collection_quick-links--header h --fw-normal --word-brek mty predictive-collection-header-flex">
+                      <div class="circle"></div>
+                      {{ 'search.quick_links' | t }}
+                    </div>
+                    <ul class="list-unstyled predictive-collection_main-navigation h --fw-semi-bold --word-break">
+                      {%- for link in section.settings.quick_menu.links -%}
+                        <li class="predictive-collection_main-navigation_item">
+                          <a href="{{- link.url -}}" class="predictive-collection_main-navigation_link {% if link.current %}predictive-collection_main-navigation_link--active{% endif %}" {% if link.current %}aria-current="{{- 'page.current_label' | t -}}"{% endif %}>
+                            {{- link.title -}}
+                          </a>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                {%- endif -%}
+                <div class="predictive-collection_image-banner predictive-collection--border">
+                  {%- render 'simple-product', product: product, prefix_class: 'predictive-collection', media_size: 'square'  -%}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+    <input type="hidden" name="options[prefix]" value="last">
+  </form>
+</div>

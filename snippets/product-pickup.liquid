@@ -1,0 +1,81 @@
+{%- comment -%}
+  renders product pickup drawer for product
+  usage
+    {%- render 'product-pickup', product: product, scheme: section.settings.section_color_scheme, text_weight: block_text_weight, text_size: block.settings.block_text_size -%}
+{%- endcomment -%}
+{%- liquid
+  assign pick_up_availabilities = product.selected_or_first_available_variant.store_availabilities | where: 'pick_up_enabled', true
+-%}
+<div class="modal-component_head">
+  <strong class="visually-hidden" id="modal-pickup-drawer-{{ section.id }}-heading">
+    {{- 'product.pickup.modal_heading' | t: product_title: product.title -}}
+  </strong>
+  <strong class="product-pickup_heading mty h4 --word-break">
+    {{- product.title -}}
+  </strong>
+  <strong class="product-pickup_subheading mty text-size--small --word-break">
+    {{- product.vendor -}}
+  </strong>
+  {%- unless product.has_only_default_variant -%}
+    <ul class="list-unstyled product-pickup_options-list --fw-light text-size--small mty">
+      {%- for option in product.options_with_values -%}
+        <li>
+          <strong class="product-pickup_options-title --fw-light text-size--small --word-break">
+            {{- option.name -}}:
+          </strong>
+          <strong class="product-pickup_options-value --fw-light text-size--small --word-break">
+            {{- option.selected_value -}}
+          </strong>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endunless -%}
+</div>
+<div class="modal-component_content">
+  <ul class="list-unstyled product-pickup_showcase-list">
+    {%- for availability in pick_up_availabilities -%}
+      <li class="product-pickup_showcase-item product-pickup_wrapper widget--styles">
+        <strong class="product-pickup_text-wrap --word-break --v-align-start --fw-light text-size--small">
+          <i class="product-pickup_icn {% unless availability.available %}product-pickup_cross-icn{% endunless %}">
+            {%- liquid
+              if availability.available
+                render 'icons-data', width: 28, height: 28, use_icon: true, icon_reference: 'check-o'
+                else
+                  render 'icons-data', width: 24, height: 24, use_icon: true, icon_reference: 'cross'
+              endif
+            -%}
+          </i>
+          <span>
+            {%- liquid
+              if availability.available
+                echo 'product.pickup.available_at' | t: location: availability.location.name
+                else
+                  echo 'product.pickup.unavailable_at' | t: location: availability.location.name
+              endif
+            -%}
+          </span>
+        </strong>
+        <em class="product-pickup_text-wrap --v-align-start --word-break --fw-light text-size--small">
+          <i class="product-pickup_icn">
+            {%- render 'icons-data', width: 28, height: 28, use_icon: true, icon_reference: 'clock' -%}
+          </i>
+          <span>
+            {{- availability.pick_up_time -}}
+          </span>
+        </em>
+        {%- assign address = availability.location.address -%}
+        <address class="product-pickup_text-wrap mty --v-align-start --word-break --fw-light text-size--small">
+          <i class="product-pickup_icn">
+            {%- render 'icons-data', width: 28, height: 28, use_icon: true, icon_reference: 'address-pin' -%}
+          </i>
+          <div class="mty">
+            {{- address | format_address -}}
+            {%- if address.phone.size > 0 -%}
+              <em class="product-pickup_text-wrap">{{- address.phone -}}</em>
+            {%- endif -%}
+          </div>
+        </address>
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>

@@ -1,0 +1,49 @@
+{%- comment -%}
+  renders products media image
+  usage
+    {%- render 'product-media-image', product: product, media: media, size: 'full', loading: loading_attr -%}
+{%- endcomment -%}
+{%- liquid
+  capture image_alt
+    if media.preview_image.alt != blank
+      echo media.preview_image.alt | escape
+      else
+        echo product.title | escape
+    endif
+  endcapture
+-%}
+{%- case size -%}
+  {%- when 'full' -%}
+    {%- capture media_img_tag -%}
+      <img
+        srcset="{%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
+                {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
+                {%- if media.preview_image.width >= 1445 -%}{{ media.preview_image | image_url: width: 1445 }} 1445w,{%- endif -%}
+                {%- if media.preview_image.width >= 1680 -%}{{ media.preview_image | image_url: width: 1680 }} 1680w,{%- endif -%}
+                {%- if media.preview_image.width >= 2048 -%}{{ media.preview_image | image_url: width: 2048 }} 2048w,{%- endif -%}
+                {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
+        sizes="(min-width: 768px) 100vw, 50vw"
+        src="{{- media.preview_image | image_url: width: 1445 -}}"
+        alt="{{- image_alt -}}"
+        loading="{{ loading }}"
+        width="1445"
+        height="{{- 1445 | divided_by: media.preview_image.aspect_ratio | round -}}"
+        class="object-fit object-fit--absolute"
+      >
+    {%- endcapture -%}
+  {%- when 'thumbnail' -%}
+    {%- capture media_img_tag -%}
+      <img
+        srcset="{%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 50w,{%- endif -%}
+                {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
+        sizes="(min-width: 768px) 50vw, 550px"
+        src="{{- media.preview_image | image_url: width: 550 -}}"
+        alt="{{- image_alt -}}"
+        loading="{{ loading }}"
+        width="550"
+        height="{{- 550 | divided_by: media.preview_image.aspect_ratio | round -}}"
+        class="object-fit object-fit--absolute"
+      >
+    {%- endcapture -%}
+{%- endcase -%}
+{{- media_img_tag -}}

@@ -1,0 +1,127 @@
+{%- comment -%}
+  renders social icons list
+  usage
+    {%- render 'social-icons' | prefix_class: 'section_prefix_class' | social_icons_enable: true | social_extra_class: '--q-align-justify' -%}
+{%- endcomment -%}
+<ul class="{{ prefix_class }}_socials-list {{ social_extra_class }} socials-list list-unstyled {% unless social_icons_enable == false %}socials-list--icns{% endunless %}">
+  {%- if settings.social_instagram_link != blank -%}
+    <li>
+      <a href="{{- settings.social_instagram_link -}}" class="{% unless social_icons_enable == false %}list-social_link{% else %}list-social_text-link{% endunless %}">
+        {%- liquid
+          unless social_icons_enable == false
+            render 'icons-data', width: 17, height: 17, use_icon: true, icon_reference: 'instagram'
+          endunless
+        -%}
+        <span class="{% unless social_icons_enable == false %}visually-hidden{% endunless %}">{{- 'socials.instagram' | t -}}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_linkedin_link != blank -%}
+    <li>
+      <a href="{{- settings.social_linkedin_link -}}" class="{% unless social_icons_enable == false %}list-social_link{% else %}list-social_text-link{% endunless %}">
+        {%- liquid
+          unless social_icons_enable == false
+            render 'icons-data', width: 17, height: 17, use_icon: true, icon_reference: 'linkedin'
+          endunless
+        -%}
+        <span class="{% unless social_icons_enable == false %}visually-hidden{% endunless %}">{{- 'socials.linkedin' | t -}}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_facebook_link != blank -%}
+    <li>
+      <a href="{{- settings.social_facebook_link -}}" class="{% unless social_icons_enable == false %}list-social_link{% else %}list-social_text-link{% endunless %}">
+        {%- liquid
+          unless social_icons_enable == false
+            render 'icons-data', width: 17, height: 17, use_icon: true, icon_reference: 'facebook'
+          endunless
+        -%}
+        <span class="{% unless social_icons_enable == false %}visually-hidden{% endunless %}">{{- 'socials.facebook' | t -}}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_youtube_link != blank -%}
+    <li>
+      <a href="{{- settings.social_youtube_link -}}" class="{% unless social_icons_enable == false %}list-social_link{% else %}list-social_text-link{% endunless %}">
+        {%- liquid
+          unless social_icons_enable == false
+            render 'icons-data', width: 17, height: 17, use_icon: true, icon_reference: 'youtube'
+          endunless
+        -%}
+        <span class="{% unless social_icons_enable == false %}visually-hidden{% endunless %}">{{- 'socials.youtube' | t -}}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_twitter_link != blank -%}
+    <li>
+      <a href="{{- settings.social_twitter_link -}}" class="{% unless social_icons_enable == false %}list-social_link{% else %}list-social_text-link{% endunless %}">
+        {%- liquid
+          unless social_icons_enable == false
+            render 'icons-data', width: 17, height: 17, use_icon: true, icon_reference: 'twitter'
+          endunless
+        -%}
+        <span class="{% unless social_icons_enable == false %}visually-hidden{% endunless %}">{{- 'socials.twitter' | t -}}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_snapchat_link != blank -%}
+    <li>
+      <a href="{{- settings.social_snapchat_link -}}" class="{% unless social_icons_enable == false %}list-social_link{% else %}list-social_text-link{% endunless %}">
+        {%- liquid
+          unless social_icons_enable == false
+            render 'icons-data', width: 17, height: 17, use_icon: true, icon_reference: 'snapchat'
+          endunless
+        -%}
+        <span class="{% unless social_icons_enable == false %}visually-hidden{% endunless %}">{{- 'socials.snapchat' | t -}}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_pinterest_link != blank -%}
+    <li>
+      <a href="{{- settings.social_pinterest_link -}}" class="{% unless social_icons_enable == false %}list-social_link{% else %}list-social_text-link{% endunless %}">
+        {%- liquid
+          unless social_icons_enable == false
+            render 'icons-data', width: 17, height: 17, use_icon: true, icon_reference: 'pinterest'
+          endunless
+        -%}
+        <span class="{% unless social_icons_enable == false %}visually-hidden{% endunless %}">{{- 'socials.pinterest' | t -}}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_tiktok_link != blank -%}
+    <li>
+      <a href="{{- settings.social_tiktok_link -}}" class="{% unless social_icons_enable == false %}list-social_link{% else %}list-social_text-link{% endunless %}">
+        {%- liquid
+          unless social_icons_enable == false
+            render 'icons-data', width: 17, height: 17, use_icon: true, icon_reference: 'tiktok'
+          endunless
+        -%}
+        <span class="{% unless social_icons_enable == false %}visually-hidden{% endunless %}">{{- 'socials.tiktok' | t -}}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_tumblr_link != blank -%}
+    <li>
+      <a href="{{- settings.social_tumblr_link -}}" class="{% unless social_icons_enable == false %}list-social_link{% else %}list-social_text-link{% endunless %}">
+        {%- liquid
+          unless social_icons_enable == false
+            render 'icons-data', width: 17, height: 17, use_icon: true, icon_reference: 'tumblr'
+          endunless
+        -%}
+        <span class="{% unless social_icons_enable == false %}visually-hidden{% endunless %}">{{- 'socials.tumblr' | t -}}</span>
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_vimeo_link != blank -%}
+    <li>
+      <a href="{{- settings.social_vimeo_link -}}" class="{% unless social_icons_enable == false %}list-social_link{% else %}list-social_text-link{% endunless %}">
+        {%- liquid
+          unless social_icons_enable == false
+            render 'icons-data', width: 17, height: 17, use_icon: true, icon_reference: 'vimeo'
+          endunless
+        -%}
+        <span class="{% unless social_icons_enable == false %}visually-hidden{% endunless %}">{{- 'socials.vimeo' | t -}}</span>
+      </a>
+    </li>
+  {%- endif -%}
+</ul>

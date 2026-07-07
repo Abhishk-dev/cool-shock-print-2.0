@@ -1,0 +1,61 @@
+{%- comment -%}
+  renders line item of cart
+  usage
+    {% render 'locator-row', row: block, index: forloop.index %}
+{%- endcomment -%}
+
+<article class="locator-row_row locator-row-{{ section.id }}-{{ row.id }}" {{ row.shopify_attributes }}>
+  <div class="locator-row_col locator-row_col-description">
+    <div class="locator-row_content-block">
+      {%- if row.settings.heading != blank -%}
+        <header class="heading-head locator-row_heading-head">
+          <h2 class="locator-row_heading {{ row.settings.heading_size }} {{ row.settings.heading_weight }} --h-anchor-none mty --word-break">
+            {{- row.settings.heading -}}
+          </h2>
+        </header>
+      {%- endif -%}
+      <div class="locator-row_store-content widget--styles">
+        {%- if row.settings.address_description != blank -%}
+          <div class="locator-row_store-address-section">
+            <div class="locator-row_store-address --word-break mty text-size--small --fw-normal">
+              {{- 'store_locator.address.title' | t  -}}
+            </div>
+            <div class="locator-row_store-address-description --word-break">
+              {{- row.settings.address_description -}}
+            </div>
+          </div>
+        {%- endif -%}
+        {%- if row.settings.phone_hour_description != blank -%}
+          <div class="locator-row_store-hours-section">
+            <div class="locator-row_store-hours --word-break mty text-size--small --fw-normal">
+              {{- 'store_locator.hours.title' | t -}}
+            </div>
+            <div class="locator-row_store-time --word-break">
+              {{- row.settings.phone_hour_description -}}
+            </div>
+          </div>
+        {%- endif -%}
+        {%- if row.settings.email_description != blank -%}
+          <div class="locator-row_store-email-section">
+            <div class="locator-row_store-email --word-break mty text-size--small --fw-normal">
+              {{- 'store_locator.email_address.title' | t -}}
+            </div>
+            <div class="locator-row_store-email-address --word-break">
+              {{- row.settings.email_description -}}
+            </div>
+          </div>
+        {%- endif -%}
+        {%- if row.settings.opening_time != blank -%}
+          <div class="locator-row_store-opening-section">
+            <div class="locator-row_store-opening --word-break mty text-size--small --fw-normal">
+              {{- 'store_locator.opening_time.title' | t -}}
+            </div>
+            <div class="locator-row_store-opening-time --word-break">
+              {{- row.settings.opening_time -}}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</article>

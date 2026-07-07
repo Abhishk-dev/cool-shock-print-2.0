@@ -1,0 +1,31 @@
+{%- comment -%}
+  renders collapsible row on page templates
+  usage
+     {%- render 'collapsible-row', block: block, prefix_class: section_prefix_class, heading_size: block.settings.block_heading_size, heading_weight: block.settings.block_heading_weight, description_size: block.settings.block_description_size, description_weight: block.settings.block_description_weight -%}
+{%- endcomment -%}
+
+<details class="collapsible-row --collapse-row --align-left" {% if block.settings.open_by_default %}open{% endif %}>
+  <summary
+    class="collapsible-row_opener --v-align-middle {{ heading_weight }} h {{ heading_size }}"
+    aria-controls="sect-{{ section.id }}-{{ block.id }}"
+    id="{{ section.id }}-{{ block.id }}-accordion"
+  >
+    {{- block.settings.heading -}}
+    <i class="collapsible-row_opener-icn collapsible-row_opener--icn-open">
+      {%- render 'icons-data', width: 10, height: 10, use_icon: true, icon_reference: 'plus', section_id: section_id -%}
+    </i>
+    <i class="collapsible-row_opener-icn collapsible-row_opener--icn-close">
+      {%- render 'icons-data', width: 10, height: 10, use_icon: true, icon_reference: 'minus', section_id: section_id -%}
+    </i>
+  </summary>
+  <div
+    role="region"
+    id="sect-{{ section.id }}-{{ block.id }}"
+    class="collapsible-row_slide"
+    aria-labelledby="{{ section.id }}-{{ block.id }}-accordion"
+  >
+    <div class="collapsible-row_slide-wrapper {{ description_weight }} {{ description_size }} mty">
+      {{- block.settings.block_description -}}
+    </div>
+  </div>
+</details>

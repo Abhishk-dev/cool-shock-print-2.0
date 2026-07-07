@@ -1,0 +1,181 @@
+<modal-component
+  data-modal="modal-service-form-{{ card.id }}"
+  data-container="body"
+  >
+    <div
+      class="modal modal-component modal-component--centered modal-component--service-form scheme scheme--{{ card.settings.form_color_scheme }}"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-service-form-heading-{{ card.id }}"
+      aria-describedby="modal-service-form-{{ card.id }}"
+      tabindex="-1"
+    >
+      <div class="modal-component_spacer">
+        <div class="modal-component_wrapper" id="modal-service-form-{{ card.id }}">
+          <div class="modal-component_body">
+            <div class="modal-component_head">
+              <modal-component-toggler>
+                <button
+                  type="button"
+                  data-expanded="true"
+                  data-toggle-attribute="false"
+                  data-modal-ref="modal-service-form-{{ card.id }}"
+                  class="modal-component_btn-close button button--icn"
+                >
+                  <span class="btn-icn-ixi_wrapper">
+                    {%- render 'icons-data', width: 14, height: 14, use_icon: true, icon_reference: 'cross' -%}
+                    <span class="visually-hidden">{{- 'accessibility.close' | t -}}</span>
+                  </span>
+                </button>
+              </modal-component-toggler>
+              <strong id="modal-service-form-heading-{{ card.id }}" class="modal-component_heading visually-hidden h4 --fw-extra-bold mty --align-left">
+                {{ 'sections.service_form.popup_heading' | t: index: index }}
+              </strong>
+            </div>
+            <div class="modal-component_content">
+              <div class="{{ prefix_class }}_booking-form">
+                {%- if card.settings.form_heading != blank -%}
+                  <h3 class="{{ prefix_class }}_booking-form-heading {{ card.settings.form_heading_size }} {{ card.settings.form_heading_weight }}">{{ card.settings.form_heading }}</h3>
+                {%- endif -%}
+                {%- if card.settings.form_description != blank -%}
+                  <div class="{{ prefix_class }}_booking-form-description {{ card.settings.form_description_size }} {{ card.settings.form_description_weight }}">{{ card.settings.form_description }}</div>
+                {%- endif -%}
+                {%- assign form_id = 'ContactForm' | append: card.id -%}
+                {%- form 'contact', id: form_id, class: 'isolate' -%}
+                  {%- if form.errors != blank -%}
+                    <strong class="form__message --fw-normal mty" role="alert" tabindex="-1" autofocus>
+                      {%- render 'icons-data', width: 22, height: 22, use_icon: true, icon_reference: 'error' -%}
+                      {{- 'erorr.common_heading' | t -}}
+                    </strong>
+                    <ul class="errors-list list-unstyled">
+                      <li class="errors-list_item">
+                        <smooth-anchor data-offset=".sticky-header-wrapper">
+                          <a class="errors-list_link text-size--small" href="#ContactForm-email-{{ form_id }}">
+                            *{{- form.errors.translated_fields.email | capitalize }}
+                            {{ form.errors.messages.email -}}
+                          </a>
+                        </smooth-anchor>
+                      </li>
+                    </ul>
+                  {%- endif -%}
+                  <div class="form-group form-group--name">
+                    <label class="text-size--small --fw-medium visually-hidden" for="contact-name-{{ form_id }}">{{- 'contact_form.form_label.name.label' | t -}}</label>
+                    <input type="text" id="contact-name-{{ form_id }}" name="contact[Name]" placeholder="{{- 'contact_form.form_placeholder.name.label' | t -}}">
+                  </div>
+                  {%- if card.settings.form_request_type_label != blank -%}
+                    {%- if card.settings.option_1 != blank or card.settings.option_2 != blank or card.settings.option_3 != blank or card.settings.option_4 != blank -%}
+                      <div class="form-group form-group--request-type">
+                        <label class="text-size--small --fw-medium visually-hidden" for="contact-request-type-{{ form_id }}">
+                          {{- card.settings.form_request_type_label -}}
+                        </label>
+                        <div class="form-group_select-wrap">
+                          <select id="contact-request-type-{{ form_id }}" name="contact[request_type]">
+                            <option value="" disabled selected hidden>{{- card.settings.form_request_type_label -}}</option>
+                            {%- if card.settings.option_1 != blank -%}
+                              <option value="{{ card.settings.option_1 }}">{{- card.settings.option_1 -}}</option>
+                            {%- endif -%}
+                            {%- if card.settings.option_2 != blank -%}
+                              <option value="{{ card.settings.option_2 }}">{{- card.settings.option_2 -}}</option>
+                            {%- endif -%}
+                            {%- if card.settings.option_3 != blank -%}
+                              <option value="{{ card.settings.option_3 }}">{{- card.settings.option_3 -}}</option>
+                            {%- endif -%}
+                            {%- if card.settings.option_4 != blank -%}
+                              <option value="{{ card.settings.option_4 }}">{{- card.settings.option_4 -}}</option>
+                            {%- endif -%}
+                          </select>
+                          <div class="{{ prefix_class }}_select-icon">
+                            {%- render 'icons-data', width: 10, height: 10, use_icon: true, icon_reference: 'chevron-down' -%}
+                          </div>
+                        </div>
+                      </div>
+                    {%- endif -%}
+                  {%- endif -%}
+                  <div class="two-form-group">
+                    <div class="form-group form-group--phone">
+                      <label class="text-size--small --fw-medium visually-hidden" for="contact-phone-{{ form_id }}">{{- 'contact_form.form_label.phone.label' | t -}}</label>
+                      <input type="tel" id="contact-phone-{{ form_id }}" name="contact[phone]" placeholder="{{- 'contact_form.form_placeholder.phone.label' | t -}}"
+                      onkeydown="validation()">
+                    </div>
+                    <div class="form-group form-group--email">
+                      <label class="text-size--small --fw-medium visually-hidden" for="ContactForm-email-{{ form_id }}">{{- 'contact_form.form_label.email.label' | t -}}</label>
+                      <input type="email" id="ContactForm-email-{{ form_id }}" name="contact[email]" placeholder="{{ 'contact_form.form_placeholder.email.label' | t }}"
+                      onkeydown="validation()">
+                      <div class="newsletter-form_results-wrap results-wrap_message text-size--small">
+                        {%- if form.errors contains 'email' -%}
+                          <div class="error-email">
+                            {%- render 'icons-data', width: 22, height: 22, use_icon: true, icon_reference: 'error' -%}
+                            <small class="contact__field-error" id="ContactForm-email-{{ form_id }}-error">
+                              {{- form.errors.translated_fields.email | capitalize }}
+                              {{ form.errors.messages.email -}}
+                            </small>
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group form-group--message">
+                    {%- liquid
+                      assign max_chars_message = 200
+                      assign max_chars_message_rendered = 'recipient.form.max_characters' | t: max_chars: max_chars_message
+                      assign message_label_rendered = 'recipient.form.message_label' | t
+                    -%}
+                    <label 
+                      for="ContactForm-message-{{ form_id }}" 
+                      class="form-label visually-hidden">
+                      {{ 'recipient.form.message' | t }}
+                    </label>
+                    <textarea
+                      rows="10"
+                      id="ContactForm-message-{{ form_id }}"
+                      class="form-control form-control--textarea"
+                      name="properties[Message]"
+                      maxlength="{{ max_chars_message }}"
+                      placeholder="{{ 'recipient.form.message' | t }}"
+                      aria-label="{{ message_label_rendered }} {{ max_chars_message_rendered }}"
+                      title="{{ message_label_rendered }}"
+                      {% if form.errors contains 'message' %}
+                        aria-invalid="true"
+                        aria-describedby="ContactForm-message-error-{{ form_id }}"
+                      {% endif %}
+                    >{{ form.message }}</textarea>
+                  </div>
+                  <span class="service-form-field-label text-size--small">
+                    <span>{{ max_chars_message_rendered }}</span>
+                  </span>
+                  <div
+                    id="ContactForm-message-error-{{ form_id }}"
+                    class="form__message text-size--small {% unless form.errors contains 'message' %}hidden{% endunless %}"
+                  >
+                    {%- render 'icons-data', width: 20, height: 20, use_icon: true, icon_reference: 'error' -%}
+                    <span class="error-message">
+                      {%- if form.errors contains 'message' -%}
+                        {{ form.errors.messages.message }}.
+                      {%- endif -%}
+                    </span>
+                  </div>
+                  <div class="form-wrapper_btn-wrap">
+                    <div class="form-wrapper_btn-wrap-btn {% unless section.settings.form_label != blank %}btn--no-label{% endunless %}">
+                      <button class="button button--secondary form-wrapper_button" type="submit">
+                        {{- 'contact_form.submit_label' | t -}}
+                      </button>
+                    </div>
+                  </div>
+                  {%- if form.posted_successfully? -%}
+                    <div class="success-message" role="alert" tabindex="-1" autofocus>
+                      <i class="success-message_icn">
+                        {%- render 'icons-data', width: 54, height: 54, use_icon: true, icon_reference: 'smile' -%}
+                      </i>
+                      <p>{{- 'contact_form.success.heading1' | t -}}</p>
+                      <p>{{- 'contact_form.success.heading2' | t -}}</p>
+                    </div>
+                  {%- endif -%}
+                {%- endform -%}
+              </div>
+              <a href="{{- routes.root_url -}}" class="visually-hidden">home</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</modal-component>

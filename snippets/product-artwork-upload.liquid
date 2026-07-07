@@ -1,0 +1,203 @@
+{%- assign artwork_upload_dom_id = form_id | append: '-artwork-upload' -%}
+{%- assign artwork_upload_input_id = form_id | append: '-artwork-file' -%}
+{%- assign artwork_upload_help_id = form_id | append: '-artwork-help' -%}
+{%- assign artwork_upload_error_id = form_id | append: '-artwork-error' -%}
+
+<div class="product-artwork-upload" id="{{ artwork_upload_dom_id }}">
+  <div class="product-artwork-upload__title-row">
+    <label class="product-artwork-upload__label" for="{{ artwork_upload_input_id }}">
+      Upload your artwork file
+    </label>
+    <button
+      type="button"
+      class="product-artwork-upload__info-btn"
+      aria-describedby="{{ artwork_upload_help_id }}"
+      aria-label="Artwork upload guidelines"
+    >
+      i
+    </button>
+    <div class="product-artwork-upload__help" id="{{ artwork_upload_help_id }}" role="tooltip">
+      Upload one file up to 10MB. Allowed formats: AI, PSD, EPS/ESP, PDP, and PDF.
+    </div>
+  </div>
+  <input
+    id="{{ artwork_upload_input_id }}"
+    class="product-artwork-upload__input"
+    type="file"
+    name="properties[Artwork file]"
+    accept=".ai,.psd,.eps,.esp,.pdp,.pdf,application/pdf,application/postscript"
+  >
+  <p class="product-artwork-upload__hint">
+    Max size: 10MB. Allowed file types: AI, PSD, EPS/ESP, PDP, PDF.
+  </p>
+  <p class="product-artwork-upload__error" id="{{ artwork_upload_error_id }}" role="alert" aria-live="polite"></p>
+</div>
+
+<style>
+  .product-artwork-upload {
+    margin-bottom: 14px;
+    padding: 14px;
+    border: 2px solid rgba(var(--color-foreground), 0.22);
+    border-radius: 8px;
+    background: rgba(var(--color-background), 0.95);
+  }
+
+  .product-artwork-upload__title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    position: relative;
+  }
+
+  .product-artwork-upload__label {
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .product-artwork-upload__info-btn {
+    margin-left: auto;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid rgba(var(--color-foreground), 0.8);
+    background: #1990c6;
+    color: rgb(var(--color-background));
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .product-artwork-upload__help {
+    position: absolute;
+    right: 0;
+    left: auto;
+    top: calc(100% + 8px);
+    min-width: 220px;
+    max-width: 310px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(var(--color-foreground), 0.2);
+    background: #e0dfdfff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: justify;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(4px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    z-index: 4;
+  }
+
+  .product-artwork-upload__info-btn:hover + .product-artwork-upload__help,
+  .product-artwork-upload__info-btn:focus + .product-artwork-upload__help,
+  .product-artwork-upload__title-row:focus-within .product-artwork-upload__help {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .product-artwork-upload__input {
+    width: 100%;
+  }
+
+  .product-artwork-upload__hint {
+    margin: 8px 0 0;
+    font-size: 12px;
+    line-height: 1.3;
+    opacity: 0.8;
+  }
+
+  .product-artwork-upload__error {
+    margin: 8px 0 0;
+    color: rgb(var(--color-error));
+    font-size: 12px;
+    line-height: 1.3;
+    display: none;
+  }
+
+  .product-artwork-upload__error.is-visible {
+    display: block;
+  }
+
+  .product-artwork-upload.is-error {
+    border-color: rgb(var(--color-error));
+  }
+</style>
+
+<script>
+  (function () {
+    var wrapper = document.getElementById({{ artwork_upload_dom_id | json }});
+
+    if (!wrapper || wrapper.dataset.artworkUploadReady === 'true') {
+      return;
+    }
+
+    wrapper.dataset.artworkUploadReady = 'true';
+
+    var input = document.getElementById({{ artwork_upload_input_id | json }});
+    var error = document.getElementById({{ artwork_upload_error_id | json }});
+    var form = wrapper.closest('form');
+    var maxSizeBytes = 10 * 1024 * 1024;
+    var allowedExtensions = ['ai', 'psd', 'eps', 'esp', 'pdf', 'pdp'];
+
+    var setError = function (message) {
+      if (!error) return;
+      error.textContent = message;
+      error.classList.add('is-visible');
+      wrapper.classList.add('is-error');
+    };
+
+    var clearError = function () {
+      if (!error) return;
+      error.textContent = '';
+      error.classList.remove('is-visible');
+      wrapper.classList.remove('is-error');
+    };
+
+    var validateSelectedFile = function () {
+      if (!input || !input.files || !input.files.length) {
+        clearError();
+        return true;
+      }
+
+      var file = input.files[0];
+      var fileNameParts = file.name.split('.');
+      var extension = fileNameParts.length > 1 ? fileNameParts[fileNameParts.length - 1].toLowerCase() : '';
+
+      if (allowedExtensions.indexOf(extension) === -1) {
+        setError('Allowed file types: AI, PSD, EPS/ESP, PDP, PDF.');
+        input.value = '';
+        return false;
+      }
+
+      if (file.size > maxSizeBytes) {
+        setError('File size must be 10MB or smaller.');
+        input.value = '';
+        return false;
+      }
+
+      clearError();
+      return true;
+    };
+
+    if (input) {
+      input.addEventListener('change', validateSelectedFile);
+    }
+
+    if (form) {
+      form.addEventListener('submit', function (event) {
+        if (!validateSelectedFile()) {
+          event.preventDefault();
+          if (input) input.focus();
+        }
+      });
+    }
+  })();
+</script>

@@ -1,0 +1,136 @@
+{%- comment -%}
+  renders article/blog card on page templates
+  usage
+    {%- render 'blog-card', article: article, show_image: section.settings.show_featured_image, show_date: section.settings.show_date, show_author: section.settings.show_author, show_excerpt: true, prefix_class: 'section_scheme_class' -%}
+{%- endcomment -%}
+{%- liquid
+  assign media_size = section.settings.product_media_size | default: section.settings.card_media_size
+  assign heading_size = blog_heading_size | default: 'text-size--medium'
+
+  capture card_media_size
+    if media_size == 'adapt'
+      echo article.image.aspect_ratio | default: '1'
+      else 
+        echo '1'
+    endif
+ endcapture
+-%}
+<article class="blog-card {{ prefix_class }}_blog-card --align-left">
+  <div class="blog-card_top-wrap">
+    <div class="blog-card_image-date">
+      {%- if show_image -%}
+        <a href="{{- article.url -}}" class="blog-card_image anim--shine --media-size-{{ media_size }}" style="--media-ratio: {{ card_media_size }};">
+          {%- if article.image != blank -%}
+            {%- liquid
+              capture image_alt
+                unless article.image.alt == blank
+                  echo article.image.alt
+                  else
+                    echo article.title | escape
+                endunless
+              endcapture
+
+              assign image_height = 177 | divided_by: article.image.aspect_ratio | round
+            -%}
+            {{- article.image | image_url: width: 866 | image_tag:
+              alt: image_alt,
+              width: 177,
+              height: image_height,
+              class: 'object-fit object-fit--absolute',
+              loading: loading_attr,
+              widths: '177, 226, 266, 290, 301, 354, 577, 866',
+              sizes: '(max-width: 411px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), (max-width: 1259px) calc((100vw / 4) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+            -}}
+            {% else %}
+              {%- render 'placeholder-svgs', type: 'blog', index: 1, class: 'object-fit object-fit--absolute' -%}
+              <span class="visually-hidden">{{- article.title -}}</span>
+          {%- endif -%}
+        </a>
+      {%- endif -%}
+      {%- if show_image -%}
+        {%- if show_date or show_author -%}
+          <div class="blog-card_stats-wrap blog-card_date --margin-date mty">
+            {%- if show_date -%}
+              <strong class="blog-card_subtitle blog-card_subtitle--date --word-break">
+                {{- article.published_at | time_tag: format: 'date' -}}
+              </strong>
+            {%- endif -%}
+            {%- if show_author -%}
+              <strong class="blog-card_subtitle blog-card_subtitle--date --word-break">
+                {{- article.author -}}
+              </strong>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+    <div class="blog-card_content-head">
+      {%- unless show_image -%}
+        {%- if show_date or show_author -%}
+          <div class="blog-card_stats-wrap blog-card_date-static --margin-date mty">
+            {%- if show_date -%}
+              <strong class="blog-card_subtitle blog-card_subtitle--date --word-break">
+                {{- article.published_at | time_tag: format: 'date' -}}
+              </strong>
+            {%- endif -%}
+            {%- if show_author -%}
+              <strong class="blog-card_subtitle blog-card_subtitle--date --word-break">
+                {{- article.author -}}
+              </strong>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endunless -%}
+      {% if article.tags.size > 0 and show_tags %}
+        <ul class="list-unstyled blog-card_tags-list blog-card_tags-list--scroll --normal-tag">
+          {%- for tag in article.tags -%}
+            <li class="blog-card_tag-item">
+              <strong class="blog-card_tag-link --word-break">
+                {{- tag -}}
+              </strong>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {% endif %}
+      <h2 class="blog-card_heading {{ heading_size }} mty --h-anchor-none --fw-semi-bold">
+        <a href="{{- article.url -}}" class="">
+          {{- article.title -}}
+        </a>
+      </h2>
+      {%- if article.excerpt_or_content.size > 0 and show_excerpt -%}
+        <div class="text-size--small mty blog-card_excerpt --normal-gap --word-break --fw-light">
+          <p>
+            {{- article.excerpt_or_content | strip_html | truncatewords: 20 -}}
+            <a href="{{- article.url -}}" class="blog-card_read-more h --fw-medium">
+              {{- 'blogs.link_label' | t -}}
+            </a>
+          </p>
+        </div>
+      {%- endif -%}
+      {%- if show_comments_count -%}
+        <div class="blog-card_stats-wrap --comments mty">
+          {%- if show_comments_count -%}
+            {%- if article.comments_count > 0 -%}
+              <strong class="blog-card_subtitle blog-card_subtitle--comments-count --word-break">
+                <i class="blog-card_icn">
+                  {%- render 'icons-data', width: 17, height: 17, use_icon: true, icon_reference: 'comment', section_id: section_id -%}
+                </i>
+                {%- liquid
+                  capture count
+                    if article.comments_count > 1
+                      echo 'blogs.comments.count.other' | t: count: article.comments_count
+                      else
+                        echo 'blogs.comments.count.one' | t: count: article.comments_count
+                    endif
+                  endcapture
+
+                  echo count
+                -%}
+              </strong>
+            {%- endif -%}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</article>

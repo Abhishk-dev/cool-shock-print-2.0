@@ -1,0 +1,29 @@
+{%- comment -%}
+  renders product card
+  usage
+    {%- render 'product-card', product: product, prefix_class: section_prefix_class -%}
+{%- endcomment -%}
+<div class="mega-mpc mega-mpc-placeholder --align-center">
+  <div class="mega-mpc__inner">
+    <div class="mega-mpc_image {{ menu_media_height }}">
+      {%- render 'placeholder-svgs', type: 'product', index: index, class: 'object-fit object-fit--absolute' -%}
+    </div>
+    <div class="{{ section_prefix_class }}_countdown-timer">
+      {%- if block.settings.end_date != blank -%}
+        <div class="countdown-timer-wrap">
+          {%- render 'countdown-timer', end_date: block.settings.end_date, end_type: block.settings.end_type, end_message: block.settings.end_message -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="mega-mpc_description">
+    <div class="mega-mpc_align">
+      <strong class="mty mega-mpc_text mega-mpc_heading text-size--small --fw-normal">
+        {{ 'product.title' | t }}
+      </strong>
+      <div class="mega-mpc_price text-size--large">
+        {%- render 'product-price', product: product, use_variant: false -%}
+      </div>
+    </div>
+  </div>
+</div>

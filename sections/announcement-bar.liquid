@@ -1,0 +1,301 @@
+{%- if section.settings.show_only_on_homepage == false or template.name == 'index' -%}
+  {%- liquid
+    assign section_prefix_class = 'announcement-bar'
+    assign section_scheme_class = section.settings.section_color_scheme | prepend: 'scheme scheme--'
+
+    assign marquee_direction = 'backward'
+    if section.settings.marquee_direction == 'marquee_forward'
+      assign marquee_direction = 'forward'
+    endif
+
+    capture container_class
+      if section.settings.section_full_width
+        echo 'container-fluid'
+        else
+          echo 'container'
+      endif
+    endcapture
+  -%}
+  {%- style -%}
+    .announcement-bar{
+      --section-padding-top: 0;
+      --section-padding-bottom: 0;
+    }
+
+    .announcement-bar .marquee-component_col{
+      padding: 0 25px;
+    }
+
+    .announcement-bar .marquee-component_col,
+    .announcement-bar_column{
+      display: flex;
+    }
+
+    .announcement-bar .marquee-component{
+      align-items: center;
+    }
+
+    .announcement-bar_column{
+      width: 100%;
+      margin-top: auto;
+      margin-bottom: auto;
+      align-items: center;
+      gap: 50px;
+      padding: 7px 0px;
+    }
+
+    .announcement-bar .container-fluid{
+      --cp-spacer-left: 0;
+      --cp-spacer-right: 0;
+    }
+
+    .announcement-bar_image-wrap{
+      width: 24px;
+      height: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .announcement-bar_image-wrap img{
+      border-radius: inherit;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .announcement-bar_text-wrap{
+      flex-grow: 1;
+    }
+
+    .announcement-bar_heading,
+    .announcement-bar_space:after{
+      display: block;
+    }
+
+    .announcement-bar_heading{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--section-heading-color);
+    }
+
+    .announcement-bar_space:after{
+      content: "";
+      border-bottom: 1px solid var(--section-border-color);
+      width: 9px;
+    }
+
+    .announcement-bar_dot{
+      flex-shrink: 0;
+      display: block;
+      width: 3px;
+      height: 3px;
+      border-radius: 100%;
+      background-color: var(--section-alternative-color);
+    }
+
+    @media(min-width: 768px){
+      .announcement-bar_column{
+        gap: 104px;
+      }
+
+      .announcement-bar .marquee-component_col{
+        padding: 0 52px;
+      }
+    }
+  {%- endstyle -%}
+  <div class="global-block {{ section_prefix_class }} {{ section_prefix_class }}-{{ section.id }} {{ section_scheme_class }} {% if section.settings.show_bottom_bdr %}--bdr-bottom{% endif %} {% if section.settings.show_top_bdr %}--bdr-top{% endif %}">
+    <div class="{{ container_class }}">
+      <div class="{{ section_prefix_class }}_wrapper">
+        <marquee-component data-direction="{{ marquee_direction }}" data-pause-on-hover="{{ section.settings.marquee_on_hover }}" data-speed="{{ section.settings.marquee_speed | plus: 15 }}">
+          <div class="marquee-component marquee-component--h-scroll">
+            {%- for block in section.blocks -%}
+              <div class="marquee-component_col">
+                <div class="{{ section_prefix_class }}_column">
+                  <div class="{{ section_prefix_class }}_text-wrap">
+                    {%- if block.settings.heading != blank -%}
+                      <strong class="{{ section_prefix_class }}_heading {{ section.settings.block_heading_size }} {{ section.settings.block_heading_weight }}">{{- block.settings.heading -}}</strong>
+                    {%- endif -%}
+                  </div>
+                  <div class="{{ section_prefix_class }}_space"></div>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        </marquee-component>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+{% schema %}
+
+{
+  "name": "t:sections.announcement_bar.name",
+  "tag": "header",
+  "class": "announcement-header",
+  "limit": 1,
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_only_on_homepage",
+      "label": "t:sections.announcement_bar.settings.show_home_only.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:layout.content"
+    },
+    {
+      "type": "select",
+      "id": "block_heading_size",
+      "label": "t:sizes.text.label",
+      "options": [
+        {
+          "value": "text-size--small",
+          "label": "t:sizes.text.options.opt_1.label"
+        },
+        {
+          "value": "text-size--medium",
+          "label": "t:sizes.text.options.opt_2.label"
+        },
+        {
+          "value": "text-size--large",
+          "label": "t:sizes.text.options.opt_3.label"
+        },
+        {
+          "value": "text-size--xlarge",
+          "label": "t:sizes.text.options.opt_4.label"
+        }
+      ],
+      "default": "text-size--small"
+    },
+    {
+      "type": "select",
+      "id": "block_heading_weight",
+      "label": "t:weight.text.label",
+      "options": [
+        {
+          "value": "--fw-bold",
+          "label": "t:weight.heading.options.opt_1.label"
+        },
+        {
+          "value": "--fw-semi-bold",
+          "label": "t:weight.heading.options.opt_5.label"
+        },
+        {
+          "value": "--fw-medium",
+          "label": "t:weight.heading.options.opt_2.label"
+        },
+        {
+          "value": "--fw-normal",
+          "label": "t:weight.heading.options.opt_3.label"
+        },
+        {
+          "value": "--fw-light",
+          "label": "t:weight.heading.options.opt_4.label"
+        }
+      ],
+      "default": "--fw-normal"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_bdr",
+      "label": "t:top_bdr.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_bdr",
+      "label": "t:bottom_bdr.label",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "section_full_width",
+      "label": "t:sections.full_width.label",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "default": "scheme2",
+      "label": "t:color_scheme.label"
+    },
+    {
+      "type": "header",
+      "content": "t:scroll.content"
+    },
+    {
+      "type": "range",
+      "id": "marquee_speed",
+      "label": "t:scroll.settings.speed.label",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "default": 15,
+      "unit": "sec"
+    },
+    {
+      "type": "select",
+      "id": "marquee_direction",
+      "label": "t:scroll.settings.direction.label",
+      "options": [
+        {
+          "value": "marquee_backward",
+          "label": "t:scroll.settings.direction.options.opt_1.label"
+        },
+        {
+          "value": "marquee_forward",
+          "label": "t:scroll.settings.direction.options.opt_2.label"
+        }
+      ],
+      "default": "marquee_backward"
+    },
+    {
+      "type": "checkbox",
+      "label": "t:scroll.settings.on_hover.label",
+      "id": "marquee_on_hover",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "name": "t:sections.announcement_bar.blocks.text.name",
+      "type": "announcement_text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:text.label",
+          "default": "Welcome to our store"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.announcement_bar.name",
+      "blocks": [
+        {
+          "type": "announcement_text",
+          "settings": {
+          }
+        },
+        {
+          "type": "announcement_text",
+          "settings": {
+          }
+        },
+        {
+          "type": "announcement_text",
+          "settings": {
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

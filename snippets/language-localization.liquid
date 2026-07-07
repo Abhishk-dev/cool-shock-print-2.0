@@ -1,0 +1,47 @@
+{%- comment -%}
+  Renders the language picker for the localization form
+
+  Accepts:
+    - localPosition: pass in the position in which the form is coming up to create specific IDs
+{%- endcomment -%}
+<div class="dropdown-component dropdown-component--localization dropdown-component--lang">
+  <strong id="{{ localPosition }}-lang-heading-{{ resp }}" class="visually-hidden" role="heading" aria-level="2">
+    {{- 'localization.language_label' | t -}}
+  </strong>
+  <localization-dropdown data-submission="true" data-form-id="{{- id -}}">
+    <button
+      type="button"
+      class="dropdown-component_opener dropdown-localization_opener --align-left"
+      aria-expanded="false"
+      aria-controls="{{- localPosition -}}-lang-dropdown-{{ resp }}"
+      aria-describedby="{{- localPosition -}}-lang-heading-{{ resp }}"
+    >
+      {{- localization.language.name -}}
+      <i class="dropdown-componenet_icn-caret">
+        {%- render 'icons-data', width: 9, height: 5, use_icon: true, icon_reference: 'chevron-down', section_id: section_id -%}
+      </i>
+    </button>
+    <div class="dropdown-component_wrapper dropdown-localization_wrapper">
+      <ul id="{{ localPosition }}-lang-dropdown-{{ resp }}" class="list-unstyled dropdown-localization_items --align-left">
+        {%- for language in localization.available_languages -%}
+          <li>
+            <a
+              class="dropdown-component_btn-submit dropdown-localization_btn-submit {% if language.iso_code == localization.language.iso_code %}active{% endif %}"
+              href="#"
+              hreflang="{{- language.iso_code -}}"
+              lang="{{- language.iso_code -}}"
+              {% if language.iso_code == localization.language.iso_code %}
+                aria-current="true"
+              {% endif %}
+              data-value="{{- language.iso_code -}}"
+              data-submit-btn=""
+            >
+              {{- language.endonym_name -}}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+    <input type="hidden" name="locale_code" data-submit-input="" value="{{- localization.language.iso_code -}}">
+  </localization-dropdown>
+</div>

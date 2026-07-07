@@ -1,0 +1,93 @@
+{%- comment -%}
+  renders article/blog card placeholder on section templates
+  usage
+    {%- render 'blog-card-placeholder', index: forloop.index, show_image: section.settings.show_featured_image, show_date: section.settings.show_date, show_author: section.settings.show_author, show_excerpt: true, prefix_class: 'section_scheme_class' -%}
+{%- endcomment -%}
+
+{%- liquid
+  assign media_size = section.settings.section_media_size | default: section.settings.card_media_size
+  assign heading_size = blog_heading_size | default: 'text-size--medium'
+-%}
+<article class="blog-card {{ prefix_class }}_blog-card --align-left">
+  <div class="blog-card_top-wrap">
+    <div class="blog-card_image-date">
+      {%- if show_image -%}
+        <a aria-disabled="true" class="blog-card_image anim--shine --media-size-{{ media_size }}" style="--media-ratio: 1;">
+          {%- render 'placeholder-svgs', type: 'blog', index: index, class: 'object-fit object-fit--absolute' -%}
+        </a>
+      {%- endif -%}
+      {%- if show_image -%}
+        {%- if show_date or show_author -%}
+          <div class="blog-card_stats-wrap blog-card_date --margin-date mty">
+            {%- if show_date -%}
+              <strong class="blog-card_subtitle blog-card_subtitle--date --word-break">
+                December 12, 2024
+              </strong>
+            {%- endif -%}
+            {%- if show_author -%}
+              <strong class="blog-card_subtitle blog-card_subtitle--date --word-break">
+                {{- 'blogs.placeholder.author' | t -}}
+              </strong>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+    <div class="blog-card_content-head">
+      {%- unless show_image -%}
+        {%- if show_date or show_author -%}
+          <div class="blog-card_stats-wrap blog-card_date-static --margin-date mty">
+            {%- if show_date -%}
+              <strong class="blog-card_subtitle blog-card_subtitle--date --word-break">
+                December 12, 2024
+              </strong>
+            {%- endif -%}
+            {%- if show_author -%}
+              <strong class="blog-card_subtitle blog-card_subtitle--date --word-break">
+                {{- 'blogs.placeholder.author' | t -}}
+              </strong>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endunless -%}
+      {% if show_tags %}
+        <ul class="list-unstyled blog-card_tags-list blog-card_tags-list--scroll --normal-tag">
+          {%- for tag in (1..3) -%}
+            <li class="blog-card_tag-item">
+              <strong class="blog-card_tag-link --word-break">
+                {{- 'blogs.placeholder.tags' | t: index: forloop.index -}}
+              </strong>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {% endif %}
+      <h2 class="{{ heading_size }} blog-card_heading --fw-semi-bold mty --h-anchor-none">
+        <a aria-disabled="true">
+          {{- 'blogs.placeholder.title' | t -}}
+        </a>
+      </h2>
+      {%- if show_excerpt -%}
+        <div class="text-size--small mty blog-card_excerpt  --word-break --fw-light --normal-gap">
+          <p>
+            {{- 'blogs.placeholder.excerpt' | t -}}
+            <a aria-disabled="true" class="blog-card_read-more h --fw-medium">
+              {{- 'blogs.link_label' | t -}}
+            </a>
+          </p>
+        </div>
+      {%- endif -%}
+      {%- if show_comments_count -%}
+        <div class="blog-card_stats-wrap --comments mty">
+          {%- if show_comments_count -%}
+            <strong class="blog-card_subtitle blog-card_subtitle--comments-count --word-break">
+              <i class="blog-card_icn">
+                {%- render 'icons-data', width: 17, height: 17, use_icon: true, icon_reference: 'comment', section_id: section_id -%}
+              </i>
+              {{- 'blogs.comments.count.one' | t: count: 1 -}}
+            </strong>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</article>

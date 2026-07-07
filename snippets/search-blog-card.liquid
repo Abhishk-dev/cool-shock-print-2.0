@@ -1,0 +1,110 @@
+{%- comment -%}
+  renders search blog card on section templates
+  usage
+    {%- render 'search-blog-card', product: product -%}
+{%- endcomment -%}
+{%- liquid
+  capture loading_attr
+    if section.index > 1
+      echo 'lazy'
+      else
+        echo 'eager'
+    endif
+  endcapture
+
+  assign media_size = section.settings.product_media_size | default: section.settings.card_media_size
+
+  capture card_media_size
+    if media_size == 'adapt'
+      echo article.image.aspect_ratio | default: '1'
+    else 
+      echo '1'
+    endif
+ endcapture
+
+-%}
+<focused-element class="product-column product-column--blog-card">
+  <div class="product-column_top-wrap">
+    <div class="product-column_media-wrap">
+      <a href="{{- article.url -}}" class="product-column_image --media-size-{{ media_size }}" style="--media-ratio: {{ card_media_size }};">
+        {%- if article.image != blank -%}
+          {%- liquid
+            capture image_alt
+              unless article.image.alt == blank
+                echo article.image.alt
+                else
+                  echo article.title | escape
+              endunless
+            endcapture
+
+            assign image_height = 177 | divided_by: article.image.aspect_ratio | round
+          -%}
+          {{- article.image | image_url: width: 866 | image_tag:
+            alt: image_alt,
+            width: 177,
+            height: image_height,
+            class: 'object-fit object-fit--absolute',
+            loading: loading_attr,
+            widths: '177, 226, 266, 290, 301, 354, 577, 866',
+            sizes: '(max-width: 411px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), (max-width: 1259px) calc((100vw / 4) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+          -}}
+          {% else %}
+            {%- render 'placeholder-svgs', type: 'blog', index: 1, class: 'object-fit object-fit--absolute' -%}
+            <span class="visually-hidden">{{- article.title -}}</span>
+        {%- endif -%}
+      </a>
+    </div>
+  </div>
+  <div class="product-column_details-wrap widget--styles --bdr-top">
+    {%- if show_author or show_date -%}
+      <div class="blog-card_stats-wrap --margin-date mty">
+        {%- if show_author -%}
+          <strong class="blog-card_subtitle blog-card_subtitle--author --word-break">
+            {{- article.author -}}
+          </strong>
+        {%- endif -%}
+        {%- if show_date -%}
+          <strong class="blog-card_subtitle blog-card_subtitle--date --word-break">
+            {{- article.published_at | time_tag: format: 'date' -}}
+          </strong>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    <{{- heading_tag }} class="mty {{ heading_weight }} {{ heading_size }} product-column_heading">
+      <a href="{{- article.url -}}" class="">
+        {{- article.title -}}
+      </a>
+    </{{- heading_tag -}}>
+    {%- if show_comments_count -%}
+      <div class="blog-card_stats-wrap --comments mty">
+        {%- if show_comments_count -%}
+          {%- if article.comments_count > 0 -%}
+            <strong class="blog-card_subtitle blog-card_subtitle--comments-count --word-break">
+              {%- liquid
+                capture count
+                  if article.comments_count > 1
+                    echo 'blogs.comments.count.other' | t: count: article.comments_count
+                    else
+                      echo 'blogs.comments.count.one' | t: count: article.comments_count
+                  endif
+                endcapture
+
+                echo count
+              -%}
+            </strong>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    {%- if article.excerpt_or_content.size > 0 and show_excerpt -%}
+      <div class="text-size--small mty blog-card_excerpt {% if index == 1 %}--excerpt{% else %}--normal-gap{% endif %} --word-break --fw-light">
+        <p>
+          {{- article.excerpt_or_content | strip_html | truncatewords: 60 -}}
+          <a href="{{- article.url -}}" class="blog-card_read-more --fw-semi-bold">
+            {{- 'blogs.link_label' | t -}}
+          </a>
+        </p>
+      </div>
+    {%- endif -%}
+  </div>
+</focused-element>

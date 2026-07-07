@@ -1,0 +1,1178 @@
+{%- liquid
+  assign section_prefix_class = 'carousel'
+  assign section_scheme_class = section.settings.section_color_scheme | prepend: 'scheme scheme--'
+  
+  capture section_height_class
+    case section.settings.section_carousel_height
+      when 'small'
+        echo '--small-image-carousel'
+      when 'medium'
+        echo '--medium-image-carousel'
+      when 'window_height'
+        echo '--vh-image-carousel'
+    endcase
+  endcapture
+
+  capture section_mobile_height_class
+    case section.settings.section_mobile_carousel_height
+      when 'small'
+        echo '--small-mob-image-carousel'
+      when 'medium'
+        echo '--medium-mob-image-carousel'
+      when 'window_height'
+        echo '--vh-mob-image-carousel'
+    endcase
+  endcapture
+-%}
+{%- style -%}
+  .carousel-card{
+    --q-align-value: var(--mobile-q-align);
+    --q-justify-value: var(--mobile-justify-align);
+    position: relative;
+    z-index: 1;
+  }
+
+  .carousel-card,
+  .carousel-card .container,
+  .carousel-height,
+  .carousel-card .align-holder,
+  .carousel-card_bg-wrapper,
+  .carousel-card_bg-wrapper::before{
+    height: 100%;
+  }
+
+  .carousel-card_wrapper{
+    position: relative;
+  }
+
+  .carousel-card_wrapper{
+    margin-top: var(--make-transparent-offset, 0);
+    padding: 18px;
+  }
+
+  .carousel-card--no-box{
+    background-color: transparent;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .carousel-card_description{
+    --mt-top: 8px;
+    color: var(--section-heading-color);
+  }
+
+  .carousel-card_caption{
+    --mt-bottom: 4px;
+  }
+
+  .carousel-card_btn,
+  .carousel-card .align-holder_wrapper,
+  .carousel-card_slide-controls{
+    display: flex;
+  }
+
+  .carousel-card_btn{
+    flex-wrap: wrap;
+    gap: 12px;
+    --mt-top: 28px;
+  }
+
+  .carousel-card_btn .button{
+    --button-font-weight: 400;
+  }
+
+  .carousel-card_bg-wrapper,
+  .carousel-card_bg-wrapper::before{
+    position: absolute;
+  }
+
+  .carousel-card_bg-wrapper,
+  .carousel-card_bg-wrapper::before,
+  .carousel-card_wrapper,
+  .carousel-card .align-holder_wrapper{
+    width: 100%;
+  }
+
+  .carousel-card_bg-wrapper{
+    top: 0;
+    left: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .carousel-card .align-holder_wrapper,
+  .carousel-card_slide-controls{
+    align-items: center;
+  }
+
+  .carousel-card .align-holder_wrapper{
+    max-width: var(--max-content, 100%);
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .carousel-card_logo{
+    margin: 0 auto 22px;
+    max-width: 180px;
+  }
+
+  .--small-mob-image-carousel{
+    min-height: 350px;
+  }
+
+  .--medium-mob-image-carousel{
+    min-height: 600px;
+  }
+
+  .--vh-mob-image-carousel{
+    min-height: calc(100vh - 44px);
+  }
+
+  .carousel-card_bg-wrapper::before{
+    content: "";
+    background: var(--overlay-bg);
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+
+  .carousel_wrapper{
+    position: relative;
+  }
+
+  .carousel_wrapper .product-common_price-col{
+    flex-grow: 1;
+    flex-basis: 0;
+  }
+
+  .carousel .splide__pagination{
+    counter-reset: pagination-num;
+    position: relative;
+    display: block;
+  }
+
+  .carousel .splide__pagination__page:before {
+    counter-increment: pagination-num;
+    content: counter(pagination-num);
+    width: 24px;
+    height: 19px;
+    font-size: 1.2rem;
+    border: none;
+    padding-right: 25px;
+  }
+
+  .carousel .splide__pagination__page{
+    opacity: 0;
+    position: absolute;
+    padding: 0;
+    bottom: 2px;
+    left: 1px;
+  }
+
+  .carousel .splide__pagination__page.is-active{
+    position: absolute;
+    opacity: 100;
+    z-index: 0;
+    color: var(--section-secondary-text-color);
+  }
+
+  .carousel_total-pages{
+    margin-left: 9px;
+    font-size: 1.2rem;
+  }
+
+  .carousel .splide__pagination__page.is-active:before,
+  .carousel .splide__pagination__page:hover:before{
+    background-color: unset;
+  }
+
+  .carousel .splide-controls{
+    position: absolute;
+    bottom: 8px;
+    right: 25px;
+    background: var(--section-secondary-bg);
+    padding: 5px;
+    border-radius: 6px;
+    color: var(--section-secondary-text-color);
+  }
+
+  .carousel .splide__arrow--next.button,
+  .carousel .splide__arrow--prev.button{
+    --button-padding-y: 0.2rem;
+    --button-padding-x: 0.6rem;
+  }
+
+  .carousel-card_image {
+    width: 100%;
+    height: 100%;
+  }
+
+  .is-initialized .carousel-card_image {
+    transform: scale(1.5);
+    transition: transform 1.5s ease-in-out;
+  }
+
+  .is-initialized .splide__slide.is-active .carousel-card_image {
+    transform: scale(1);
+  }
+
+  .is-initialized .carousel-card_wrapper {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+
+  .is-initialized .splide__slide.is-active .carousel-card_wrapper {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .is-initialized .carousel-card_wrapper .heading-head,
+  .is-initialized .carousel-card_wrapper .carousel-card_description {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+
+  .is-initialized .splide__slide.is-active .carousel-card_wrapper .heading-head,
+  .is-initialized .splide__slide.is-active .carousel-card_wrapper .carousel-card_description {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .is-initialized .carousel-card_button {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: 
+      opacity 0.8s ease-in 0.6s,
+      transform 0.8s ease-in-out 0.6s;
+  }
+
+  .is-initialized .splide__slide.is-active .carousel-card_button {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .is-initialized .carousel-card_bg-wrapper {
+    opacity: 0;
+    transition: opacity 1s ease-out, transform 1s ease-out;
+  }
+
+  .is-initialized .splide__slide.is-active .carousel-card_bg-wrapper {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .carousel_booking-form {
+    padding: 4px;
+  }
+
+  .carousel_booking-form .two-form-group {
+    display: flex;
+  }
+
+  .carousel_booking-form,
+  .carousel_booking-form .form-group,
+  .carousel_booking-form .form-wrapper_button,
+  .carousel_booking-form .form-group_select-wrap,
+  .carousel_booking-form .form-group select {
+    width: 100%;
+  }
+
+  .carousel_booking-form .success-message_icn,
+  .carousel_booking-form .carousel_select-icon {
+    line-height: 0;
+  }
+
+  .carousel_booking-form .two-form-group {
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-direction: column;
+  }
+
+  .carousel_booking-form .form-control--textarea{
+    height: 110px;
+  }
+
+  .carousel_booking-form .form-group input,
+  .carousel_booking-form .form-group select {
+    padding-left: 24px;
+    border-width: 1px;
+  }
+
+  .carousel_booking-form .form-group select {
+    padding-right: 40px;
+    appearance: none;
+  }
+
+  .carousel_booking-form .form-group--name,
+  .carousel_booking-form .form-group--request-type {
+    margin-bottom: 16px;
+  }
+
+  .carousel_booking-form .form-wrapper_button {
+    --button-padding-y: 1.6rem;
+  }
+
+  .carousel_booking-form .form-group_select-wrap {
+    position: relative;
+    display: inline-block;
+  }
+
+  .carousel_booking-form .carousel_select-icon {
+    pointer-events: none;
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1rem;
+    height: 1rem;
+    color: var(--section-background-color);
+  }
+
+  .carousel_booking-form .success-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 16px;
+    color: var(--success-color);
+    gap: 4px;
+  }
+
+  .carousel_booking-form .success-message p {
+    margin: 0;
+  }
+
+  .carousel-card_wrapper.--card-padding{
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .carousel-card_image.--mobile{
+    display: block;
+  }
+
+  .carousel-card_image.--desktop{
+    display: none;
+  }
+
+  @media (min-width: 576px){
+    .--small-mob-image-carousel{
+      min-height: 400px;
+    }
+    
+    .carousel-card_wrapper{
+      padding: 32px 0;
+    }
+
+    .--medium-mob-image-carousel{
+      min-height: 500px;
+    }
+
+    .--vh-mob-image-carousel{
+      min-height: calc(100vh - 44px);
+    }
+  }
+
+  @media (min-width: 768px){
+    
+    .carousel-card_slide-controls{
+      right: 30px;
+    }
+
+    .carousel-card{
+      --q-align-value: var(--desktop-q-align);
+      --q-justify-value: var(--desktop-justify-align);
+    }
+
+    .--small-image-carousel{
+      min-height: 420px;
+    }
+
+    .--medium-image-carousel{
+      min-height: 500px;
+    }
+
+    .--vh-image-carousel {
+      min-height: calc(100vh - 66px);
+    }
+
+    .carousel-card_logo{
+      max-width: 300px;
+    }
+
+    .carousel-card_wrapper.--width{
+      width: calc(100% - 280px);
+    }
+
+    .carousel_booking-form .two-form-group {
+      gap: 8px;
+      flex-direction: row;
+    }
+
+    .carousel-card_wrapper.--card-padding{
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+
+    .carousel-card_image.--mobile{
+      display: none;
+    }
+
+    .carousel-card_image.--desktop{
+      display: block;
+    }
+  }
+
+  @media (min-width: 992px){
+
+    .--small-image-carousel{
+      min-height: 470px;
+    }
+
+    .--medium-image-carousel{
+      min-height: 550px;
+    }
+
+    .--vh-image-carousel {
+      min-height: calc(100vh - 66px);
+    }
+
+    .carousel .splide-controls{
+      bottom: 19px;
+    }
+
+    .carousel_booking-form {
+      padding: 42px 36px;
+    }
+  }
+
+  @media (min-width:1200px){
+    .--small-image-carousel{
+      min-height: 540px;
+    }
+
+    .--medium-image-carousel{
+      min-height: 600px;
+    }
+
+    .--vh-image-carousel {
+      min-height: calc(100vh - 66px);
+    }
+
+    .carousel-card_wrapper.--width{
+      width: calc(100% - 372px);
+    }
+    
+    .carousel-card_left.button.button--icn,
+    .carousel-card_right.button.button--icn{
+      --button-padding-y: 1.5rem;
+      --button-padding-x: 1.5rem;
+    }
+
+    .carousel-card_slide-controls{
+      bottom: -58px;
+    }
+  }
+{%- endstyle -%}
+<div class="global-block {{ section_prefix_class }} {{ section_prefix_class }}-{{ section.id }} {{ section_scheme_class }}" style="--section-padding-top: {{ section.settings.section_top_padding }}px; --section-padding-bottom: {{ section.settings.section_bottom_padding }}px;">
+  <div class="{{ section_prefix_class }}_wrapper">
+    <splide-slider
+      data-slider-type="default"
+      {% if request.design_mode %}
+        data-go-to="true"
+      {% endif %}
+    >
+      <div 
+        class="splide {{ section_prefix_class }}_slider"
+        data-splide='{
+          "drag": true,
+          "autoplay": {{- section.settings.auto_play -}},
+          "interval": {{- section.settings.change_slides_every | times: 1000 -}},
+          "rewind": true,
+          "gap": "30px",
+          "perMove": 1,
+          "perPage": 1,
+          {% if section.blocks.size > 1 %}
+            "arrows": {{ section.settings.show_navigation }},
+            "pagination": {{ section.settings.show_pagination }},
+          {% else %}
+            "arrows": false,
+            "pagination": false,
+          {% endif %}
+          {% if section.settings.type == 'fade' %}
+            "type": "fade"
+          {% else %}
+            "type": "slide"
+          {% endif %}
+        }'>
+        <div class="splide__track">
+          <div class="splide__list splide-slider--h-scroll" style="--init-divider: 1; --init-mob-divider: 1;">
+            {%- for block in section.blocks -%}
+              <div class="splide__slide {% unless block.settings.enable_container %}scheme scheme--{% endunless %} {{ block.settings.block_color_scheme }} {{ section_height_class }} {{ section_mobile_height_class }}" {{ block.shopify_attributes }}>
+                {%- render 'carousel-card', card: block, index: forloop.index, height: section_height_class, prefix_class: section_prefix_class, section_mobile_height_class: section_mobile_height_class -%}
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+        {%- if section.blocks.size > 1 -%}
+          {%- if section.settings.show_navigation or section.settings.show_pagination -%}
+            <div class="splide-controls splide__arrows --justify-center">
+              {%- if section.settings.show_navigation -%}
+                <button class="splide__arrow splide__arrow--prev button button--primary button--animate">
+                  <span class="visually-hidden">{{- 'accessibility.slider.previous' | t -}}</span>
+                  {%- render 'icons-data', width: 10, height: 10, use_icon: true, icon_reference: 'left-arrow' -%}
+                </button>
+              {%- endif -%}
+              <ul class="splide__pagination" role="tablist" aria-label="{{- 'accessibility.slider.pagination_label' | t -}}">
+                <li role="presentation" class="{{ section_prefix_class }}_total-pages">
+                  / {{ section.blocks.size }}
+                </li>
+              </ul>
+              {%- if section.settings.show_navigation -%}
+                <button class="splide__arrow splide__arrow--next button button--primary button--animate">
+                  <span class="visually-hidden">{{- 'accessibility.slider.next' | t -}}</span>
+                  {%- render 'icons-data', width: 10, height: 10, use_icon: true, icon_reference: 'right-arrow' -%}
+                </button>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    </splide-slider>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.carousel_section.name",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:layout.content"
+    },
+    {
+      "type": "select",
+      "id": "section_carousel_height",
+      "label": "t:sections.carousel_section.settings.height.desktop_height.label",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:height.options.opt_1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:height.options.opt_2.label"
+        },
+        {
+          "value": "window_height",
+          "label": "t:height.options.opt_4.label"
+        }
+      ],
+      "default": "small"
+    },
+    {
+      "type": "select",
+      "id": "section_mobile_carousel_height",
+      "label": "t:sections.carousel_section.settings.height.mobile_height.label",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:height.options.opt_1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:height.options.opt_2.label"
+        },
+        {
+          "value": "window_height",
+          "label": "t:height.options.opt_4.label"
+        }
+      ],
+      "default": "small"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "default": "scheme4",
+      "label": "t:color_scheme.label"
+    },
+    {
+      "type": "header",
+      "content": "t:slideshow.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_play",
+      "label": "t:slideshow.auto_play.label",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "type",
+      "label": "t:sections.carousel_section.settings.slide_type.name",
+      "options": [
+        {
+          "value": "fade",
+          "label": "t:sections.carousel_section.settings.slide_type.opt_1.label"
+        },
+        {
+          "value": "slide",
+          "label": "t:sections.carousel_section.settings.slide_type.opt_2.label"
+        }
+      ],
+      "default": "fade"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "t:slideshow.show_arrows.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "t:slideshow.show_nav.label",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "change_slides_every",
+      "label": "t:slideshow.interval.label",
+      "min": 2,
+      "max": 9,
+      "step": 1,
+      "default": 5,
+      "unit": "s",
+      "info": "t:slideshow.interval.info"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "t:sections.carousel_section.blocks.slide.name",
+      "type": "slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.carousel_section.blocks.slide.settings.image.label",
+          "info": "t:sections.carousel_section.blocks.slide.settings.image.info"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+        "label": "t:sections.carousel_section.blocks.slide.settings.image.mobile.label"
+        },
+        {
+          "type": "color_background",
+          "id": "background",
+          "label": "t:sections.carousel_section.blocks.slide.settings.image.bg_overlay.label",
+          "default": "linear-gradient(to bottom, rgba(121,121,121,0.1) 0%,rgba(19,19,19,0.5) 100%)"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "t:caption.label"
+        },
+        {
+          "type": "select",
+          "id": "caption_size",
+          "label": "t:sizes.caption.label",
+          "options": [
+            {
+              "value": "text-size--small",
+              "label": "t:sizes.text.options.opt_1.label"
+            },
+            {
+              "value": "text-size--medium",
+              "label": "t:sizes.text.options.opt_2.label"
+            },
+            {
+              "value": "text-size--large",
+              "label": "t:sizes.text.options.opt_3.label"
+            }
+          ],
+          "default": "text-size--medium"
+        },
+        {
+          "type": "select",
+          "id": "caption_weight",
+          "label": "t:weight.caption.label",
+          "options": [
+            {
+              "value": "--fw-bold",
+              "label": "t:weight.heading.options.opt_1.label"
+            },
+            {
+              "value": "--fw-semi-bold",
+              "label": "t:weight.heading.options.opt_5.label"
+            },
+            {
+              "value": "--fw-medium",
+              "label": "t:weight.heading.options.opt_2.label"
+            },
+            {
+              "value": "--fw-normal",
+              "label": "t:weight.heading.options.opt_3.label"
+            }
+          ],
+          "default": "--fw-bold"
+        },     
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "t:heading.label",
+          "default": "Talk about your brand"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "t:sizes.heading.label",
+          "options": [
+            {
+              "value": "h1",
+              "label": "t:sizes.heading.options.opt_1.label"
+            },
+            {
+              "value": "h2",
+              "label": "t:sizes.heading.options.opt_2.label"
+            },
+            {
+              "value": "h3",
+              "label": "t:sizes.heading.options.opt_3.label"
+            },
+            {
+              "value": "h4",
+              "label": "t:sizes.heading.options.opt_4.label"
+            }
+          ],
+          "default": "h2"
+        },
+        {
+          "type": "select",
+          "id": "heading_weight",
+          "label": "t:weight.heading.label",
+          "options": [
+            {
+              "value": "--fw-bold",
+              "label": "t:weight.heading.options.opt_1.label"
+            },
+            {
+              "value": "--fw-semi-bold",
+              "label": "t:weight.heading.options.opt_5.label"
+            },
+            {
+              "value": "--fw-medium",
+              "label": "t:weight.heading.options.opt_2.label"
+            },
+            {
+              "value": "--fw-normal",
+              "label": "t:weight.heading.options.opt_3.label"
+            }
+          ],
+          "default": "--fw-bold"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "description",
+          "label": "t:description_text.label",
+          "default": "Share information about your brand with your customers."
+        },
+        {
+          "type": "select",
+          "id": "text_size",
+          "label": "t:sizes.description_text.label",
+          "options": [
+            {
+              "value": "text-size--small",
+              "label": "t:sizes.text.options.opt_1.label"
+            },
+            {
+              "value": "text-size--medium",
+              "label": "t:sizes.text.options.opt_2.label"
+            },
+            {
+              "value": "text-size--large",
+              "label": "t:sizes.text.options.opt_3.label"
+            },
+            {
+              "value": "text-size--xlarge",
+              "label": "t:sizes.text.options.opt_4.label"
+            }
+          ],
+          "default": "text-size--medium"
+        },
+        {
+          "type": "select",
+          "id": "description_weight",
+          "label": "t:weight.description_text.label",
+          "options": [
+            {
+              "value": "--fw-bold",
+              "label": "t:weight.heading.options.opt_1.label"
+            },
+            {
+              "value": "--fw-semi-bold",
+              "label": "t:weight.heading.options.opt_5.label"
+            },
+            {
+              "value": "--fw-medium",
+              "label": "t:weight.heading.options.opt_2.label"
+            },
+            {
+              "value": "--fw-normal",
+              "label": "t:weight.heading.options.opt_3.label"
+            },
+            {
+              "value": "--fw-light",
+              "label": "t:weight.heading.options.opt_4.label"
+            }
+          ],
+          "default": "--fw-normal"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.carousel_section.blocks.slide.settings.container.content",
+          "info": "t:sections.carousel_section.blocks.slide.settings.container.info"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_container",
+          "label": "t:sections.carousel_section.blocks.slide.settings.enable_container.label",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "max_content_size",
+          "label": "t:sections.head.size.label",
+          "min": 30,
+          "max": 100,
+          "step": 1,
+          "default": 50,
+          "unit": "%"
+        },
+        {
+          "type": "select",
+          "id": "block_content_position",
+          "label": "t:positions.label",
+          "options": [
+            {
+              "value": "top_left",
+              "label": "t:positions.options.top_left"
+            },
+            {
+              "value": "top_right",
+              "label": "t:positions.options.top_right"
+            },
+            {
+              "value": "centered",
+              "label": "t:positions.options.center"
+            },
+            {
+              "value": "middle_left",
+              "label": "t:positions.options.left"
+            },
+            {
+              "value": "middle_right",
+              "label": "t:positions.options.right"
+            },
+            {
+              "value": "bottom_left",
+              "label": "t:positions.options.bottom_left"
+            },
+            {
+              "value": "bottom_right",
+              "label": "t:positions.options.bottom_right"
+            }
+          ],
+          "default": "bottom_left"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.carousel_section.blocks.slide.settings.first_button.content"
+        },
+        {
+          "type": "select",
+          "id": "first_button_action_type",
+          "label": "t:sections.carousel_section.blocks.slide.settings.button_action_type.label",
+          "options": [
+            {
+              "value": "link",
+              "label": "t:sections.carousel_section.blocks.slide.settings.button_action_type.opt_1.label"
+            },
+            {
+              "value": "form",
+              "label": "t:sections.carousel_section.blocks.slide.settings.button_action_type.opt_2.label"
+            }
+          ],
+          "default": "link"
+        },
+        {
+          "type": "text",
+          "id": "first_button_heading",
+          "label": "t:settings_schema.buttons.settings.button.label",
+          "default": "BUTTON LABEL"
+        },
+        {
+          "type": "url",
+          "id": "first_url",
+          "label": "t:settings_schema.buttons.settings.button.link.label",
+          "visible_if": "{{ block.settings.first_button_action_type == 'link' }}"
+        },
+        {
+          "type": "checkbox",
+          "id": "first_open_new_window",
+          "label": "t:target_blank.label",
+          "default": false,
+          "visible_if": "{{ block.settings.first_button_action_type == 'link' }}"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.carousel_section.blocks.slide.settings.service_form.content",
+          "visible_if": "{{ block.settings.first_button_action_type == 'form' }}"
+        },
+        {
+          "type": "text",
+          "id": "form_heading",
+          "label": "t:sections.carousel_section.blocks.slide.settings.form_heading.label",
+          "default": "Get in touch",
+          "visible_if": "{{ block.settings.first_button_action_type == 'form' }}"
+        },
+        {
+          "type": "select",
+          "id": "form_heading_size",
+          "label": "t:sizes.heading.label",
+          "options": [
+            {
+              "value": "h1",
+              "label": "t:sizes.heading.options.opt_1.label"
+            },
+            {
+              "value": "h2",
+              "label": "t:sizes.heading.options.opt_2.label"
+            },
+            {
+              "value": "h3",
+              "label": "t:sizes.heading.options.opt_3.label"
+            },
+            {
+              "value": "h4",
+              "label": "t:sizes.heading.options.opt_4.label"
+            }
+          ],
+          "default": "h2",
+          "visible_if": "{{ block.settings.first_button_action_type == 'form' }}"
+        },
+        {
+          "type": "select",
+          "id": "form_heading_weight",
+          "label": "t:weight.heading.label",
+          "options": [
+            {
+              "value": "--fw-bold",
+              "label": "t:weight.heading.options.opt_1.label"
+            },
+            {
+              "value": "--fw-semi-bold",
+              "label": "t:weight.heading.options.opt_5.label"
+            },
+            {
+              "value": "--fw-medium",
+              "label": "t:weight.heading.options.opt_2.label"
+            },
+            {
+              "value": "--fw-normal",
+              "label": "t:weight.heading.options.opt_3.label"
+            },
+            {
+              "value": "--fw-light",
+              "label": "t:weight.heading.options.opt_4.label"
+            }
+          ],
+          "default": "--fw-bold",
+          "visible_if": "{{ block.settings.first_button_action_type == 'form' }}"
+        },
+        {
+          "type": "richtext",
+          "id": "form_description",
+          "label": "t:sections.carousel_section.blocks.slide.settings.form_description.label",
+          "default": "<p>Share information about your brand with your customers.</p>",
+          "visible_if": "{{ block.settings.first_button_action_type == 'form' }}"
+        },
+        {
+          "type": "select",
+          "id": "form_description_size",
+          "label": "t:sizes.description_text.label",
+          "options": [
+            {
+              "value": "text-size--small",
+              "label": "t:sizes.text.options.opt_1.label"
+            },
+            {
+              "value": "text-size--medium",
+              "label": "t:sizes.text.options.opt_2.label"
+            },
+            {
+              "value": "text-size--large",
+              "label": "t:sizes.text.options.opt_3.label"
+            },
+            {
+              "value": "text-size--xlarge",
+              "label": "t:sizes.text.options.opt_4.label"
+            }
+          ],
+          "default": "text-size--large",
+          "visible_if": "{{ block.settings.first_button_action_type == 'form' }}"
+        },
+        {
+          "type": "select",
+          "id": "form_description_weight",
+          "label": "t:weight.description_text.label",
+          "options": [
+            {
+              "value": "--fw-bold",
+              "label": "t:weight.heading.options.opt_1.label"
+            },
+            {
+              "value": "--fw-semi-bold",
+              "label": "t:weight.heading.options.opt_5.label"
+            },
+            {
+              "value": "--fw-medium",
+              "label": "t:weight.heading.options.opt_2.label"
+            },
+            {
+              "value": "--fw-normal",
+              "label": "t:weight.heading.options.opt_3.label"
+            },
+            {
+              "value": "--fw-light",
+              "label": "t:weight.heading.options.opt_4.label"
+            }
+          ],
+          "default": "--fw-normal",
+          "visible_if": "{{ block.settings.first_button_action_type == 'form' }}"
+        },
+        {
+          "type": "text",
+          "id": "form_request_type_label",
+          "label": "t:sections.carousel_section.blocks.slide.settings.form_request_type_label.label",
+          "default": "Choose a service",
+          "visible_if": "{{ block.settings.first_button_action_type == 'form' }}"
+        },
+        {
+          "type": "text",
+          "id": "option_1",
+          "label": "t:sections.carousel_section.blocks.slide.settings.option_1.label",
+          "default": "Example 1",
+          "visible_if": "{{ block.settings.first_button_action_type == 'form' }}"
+        },
+        {
+          "type": "text",
+          "id": "option_2",
+          "label": "t:sections.carousel_section.blocks.slide.settings.option_2.label",
+          "default": "Example 2",
+          "visible_if": "{{ block.settings.first_button_action_type == 'form' }}"
+        },
+        {
+          "type": "text",
+          "id": "option_3",
+          "label": "t:sections.carousel_section.blocks.slide.settings.option_3.label",
+          "default": "Example 3",
+          "visible_if": "{{ block.settings.first_button_action_type == 'form' }}"
+        },
+        {
+          "type": "text",
+          "id": "option_4",
+          "label": "t:sections.carousel_section.blocks.slide.settings.option_4.label",
+          "default": "Example 4",
+          "visible_if": "{{ block.settings.first_button_action_type == 'form' }}"
+        },
+        {
+          "type": "color_scheme",
+          "id": "form_color_scheme",
+          "default": "scheme3",
+          "label": "t:color_scheme.label",
+          "visible_if": "{{ block.settings.first_button_action_type == 'form' }}"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.carousel_section.blocks.slide.settings.second_button.content"
+        },
+        {
+          "type": "text",
+          "id": "second_button_heading",
+          "label": "t:settings_schema.buttons.settings.button.label",
+          "default": "BUTTON LABEL"
+        },
+        {
+          "type": "url",
+          "id": "second_url",
+          "label": "t:settings_schema.buttons.settings.button.link.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "second_open_new_window",
+          "label": "t:target_blank.label",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "t:layout.content"
+        },
+        {
+          "type": "text_alignment",
+          "id": "block_text_alignment",
+          "label": "t:alignments.text.desktop.label",
+          "default": "left"
+        },
+        {
+          "type": "text_alignment",
+          "id": "block_mobile_text_alignment",
+          "label": "t:alignments.text.mobile.label",
+          "default": "center"
+        },
+        {
+          "type": "color_scheme",
+          "id": "block_color_scheme",
+          "default": "scheme1",
+          "label": "t:color_scheme.label"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:sections.carousel_section.settings.height.scheme.info"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.carousel_section.name",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

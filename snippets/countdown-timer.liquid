@@ -1,0 +1,40 @@
+{%- comment -%}
+  renders countdown timer on page templates
+  usage
+    {%- render 'countdown-timer', end_date: section.settings.end_date, end_type: section.settings.end_type, end_message: section.settings.end_message -%}
+{%- endcomment -%}
+{%- if end_date != blank -%}
+  <countdown-timer class="countdown-timer {% if align_center %}--v-align-middle{% endif %}" end-date="{{- end_date -}}" {% if end_type == 'hide' %}data-parent="true"{% endif %}>
+    {%- if block.settings.end_date == blank -%}
+      <div class="block">
+        <span class="time --word-break">0</span>
+        <span class="text">
+          {{- 'sections.countdown_timer.days_label' | t -}}
+        </span>
+      </div>
+      <div class="block">
+        <span class="time --word-break">0</span>
+        <span class="text">
+          {{- 'sections.countdown_timer.hours_label' | t -}}
+        </span>
+      </div>
+      <div class="block">
+        <span class="time --word-break">0</span>
+        <span class="text">
+          {{- 'sections.countdown_timer.min_label' | t -}}
+        </span>
+      </div>
+      <div class="block">
+        <span class="time --word-break">0</span>
+        <span class="text">
+          {{- 'sections.countdown_timer.sec_label' | t -}}
+        </span>
+      </div>
+    {%- endif -%}
+  </countdown-timer>
+  {%- if end_message != blank and end_type == 'show_message' -%}
+    <strong class="hidden countdown-timer_message --word-break">
+      {{- end_message -}}
+    </strong>
+  {%- endif -%}
+{%- endif -%}

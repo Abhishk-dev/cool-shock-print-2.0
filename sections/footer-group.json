@@ -1,0 +1,100 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer Group",
+  "sections": {
+    "newsletter": {
+      "type": "email-signup",
+      "settings": {
+        "section_heading": "Subscribe to our emails",
+        "section_heading_size": "text-size--xlarge",
+        "section_heading_weight": "--fw-bold",
+        "section_description": "Be the first to know about new collections and exclusive offers.",
+        "description_text_size": "text-size--small",
+        "section_description_weight": "--fw-normal",
+        "button_label_1": "SUBSCRIBE",
+        "type": "primary",
+        "section_text_alignment": "center",
+        "section_mobile_text_alignment": "center",
+        "section_color_scheme": "scheme3",
+        "section_top_padding": 30,
+        "section_bottom_padding": 30
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "description": {
+          "type": "description",
+          "settings": {
+            "form_description": "<p><strong>Coolshock Events LtdT/A Coolshock Print</strong><br/><br/><strong>Address : </strong>Unit 15 Britannia Way<br/>Britannia Enterprise Park<br/>Lichfield<br/>Staffordshire<br/>WS14 9UY</p>",
+            "form_description_size": "text-size--medium",
+            "form_description_weight": "--fw-normal",
+            "description_text_alignment": "center"
+          }
+        },
+        "menu_2": {
+          "type": "menu",
+          "settings": {
+            "menu_heading": "",
+            "menu": "main-menu"
+          }
+        },
+        "menu_xPGybh": {
+          "type": "menu",
+          "settings": {
+            "menu_heading": "",
+            "menu": "footer"
+          }
+        },
+        "description_QCznWf": {
+          "type": "description",
+          "settings": {
+            "form_description": "<p><strong>Support</strong><br/><br/>Telephone: <a href=\"tel:01543419677\">01543 419 677<br/></a>Email : <a href=\"mailto:sales@coolshockprint.co.uk\" target=\"_blank\">sales@coolshockprint.co.uk</a></p>",
+            "form_description_size": "text-size--medium",
+            "form_description_weight": "--fw-normal",
+            "description_text_alignment": "center"
+          }
+        }
+      },
+      "block_order": [
+        "description",
+        "menu_2",
+        "menu_xPGybh",
+        "description_QCznWf"
+      ],
+      "settings": {
+        "enable_language_selector": false,
+        "enable_country_selector": false,
+        "show_payment_icons": false,
+        "copyright_text": "<p>COOL SHOCK PRINT Crafted by <a href=\"https://veritastechcompass.com/\" target=\"_blank\" title=\"https://veritastechcompass.com/\">Veritas Tech Compass</a></p>",
+        "rounded_social_icons": false,
+        "menus_text_alignment": "center",
+        "logo": "shopify://shop_images/Cool_Shock_Print_Logo_landscape.svg",
+        "logo_desktop_width": 170,
+        "logo_mobile_width": 133,
+        "marquee_speed": 15,
+        "marquee_direction": "marquee_backward",
+        "marquee_on_hover": false,
+        "enable_position": true,
+        "show_top_bdr": false,
+        "footer_top_color_scheme": "scheme2",
+        "footer_top_layout": "default",
+        "footer_bottom_color_scheme": "",
+        "footer_bottom_layout": "default"
+      }
+    }
+  },
+  "order": [
+    "newsletter",
+    "footer"
+  ]
+}

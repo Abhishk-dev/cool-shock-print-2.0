@@ -1,0 +1,319 @@
+{%- liquid
+  assign section_prefix_class = 'email-signup'
+-%}
+{%- style -%}
+  .email-signup_description{
+    margin-top: 5px;
+  }
+
+  .email-signup{
+    --q-align-value: var(--mobile-q-align);
+  }
+
+  .email-signup .heading-head{
+    margin-bottom: 27px;
+  }
+
+  .email-signup .align-holder--mcenter .align-holder_wrapper {
+    width: 100%;
+  }
+
+  .email-signup_form-align {
+    padding-top: 0;
+    padding-bottom: 0;
+    max-width: 590px;
+    width: 100%;
+    position: relative;
+  }
+
+  .newsletter-form_group-wrap{
+    position: relative;
+  }
+
+  .newsletter_btns-wrap{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
+
+  .newsletter_submit-btn{
+    --button-padding-y: 1.5rem;
+    max-width: 152px;
+    --button-height: 52px;
+    overflow-y: auto;
+  }
+
+  .email-signup input[type=email]{
+    padding-right: 15rem;
+  }
+
+  .email-signup_error-wrapper{
+    display: flex;
+    align-items: center;
+    line-height: 0;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 10px;
+    font-size: 1.4rem;
+    line-height: 1.8rem;
+    color: var(--section-error-color)
+  }
+
+  .email-signup .success-message{
+    text-align: center;
+  }
+
+  .email-signup .success-message {
+    margin-top: 39px;
+    font-size: 2rem;
+    line-height: 3.3rem;
+    color: var(--section-success-color);
+  }
+
+  .email-signup .success-message p {
+    margin: 0;
+  }
+
+  .email-signup .success-message .image{
+    margin-bottom: 10px;
+  }
+
+  .email-signup .success-message_icn{
+    display: block;
+    margin-bottom: 14px;
+  }
+
+  @media(min-width: 768px){
+    .email-signup_form-align {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+
+    .email-signup{
+      --q-align-value: var(--desktop-q-align);
+    }
+  }
+{%- endstyle -%}
+<div class="global-block {{ section_prefix_class }} {{ section_prefix_class }}-{{ section.id }} scheme scheme--{{ section.settings.section_color_scheme }}" style="--section-padding-top: {{ section.settings.section_top_padding }}px; --section-padding-bottom: {{ section.settings.section_bottom_padding }}px; --mobile-q-align: {{ section.settings.section_mobile_text_alignment }}; --desktop-q-align: {{ section.settings.section_text_alignment }};">
+  <div class="container">
+    <div class="{{ section_prefix_class }}_wrapper align-holder align-holder--mcenter">
+      <div class="{{ section_prefix_class }}_uptoDate {{ section_prefix_class }}_form-align align-holder_wrapper">
+        {%- if section.settings.section_heading != blank or section.settings.section_description != blank -%}
+          <div class="heading-head --word-break --q-align">
+            {%- if section.settings.section_heading != blank -%}
+              <h2 class="{{ section_prefix_class }}_heading {{ section.settings.section_heading_weight }} --h-anchor-none {{ section.settings.section_heading_size }} mty">
+                {{- section.settings.section_heading -}}
+              </h2>
+            {%- endif -%}
+            {%- if section.settings.section_description != blank -%}
+              <div class="{{ section_prefix_class }}_description --word-break {{ section.settings.section_description_weight }} {{ section.settings.description_text_size }} mty">
+                <p>{{- section.settings.section_description -}}</p>
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+        {%- liquid
+          capture button_1_text
+            if section.settings.button_label_1 != blank
+              echo section.settings.button_label_1
+              else
+                echo 'footer.button_label' | t
+            endif
+          endcapture
+          assign id = 'email-signup-' | append: section.id
+          render 'newsletter-form', section_prefix_class: section_prefix_class, form_id: id, button_label: button_1_text
+        -%}
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.email_signup.name",
+  "tag": "footer",
+  "limit": 1,
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "section_heading",
+      "label": "t:heading.label",
+      "default": "Subscribe to our emails"
+    },
+    {
+      "type": "select",
+      "id": "section_heading_size",
+      "label": "t:sizes.heading.label",
+      "options": [
+        {
+          "value": "text-size--small",
+          "label": "t:sizes.text.options.opt_1.label"
+        },
+        {
+          "value": "text-size--medium",
+          "label": "t:sizes.text.options.opt_2.label"
+        },
+        {
+          "value": "text-size--large",
+          "label": "t:sizes.text.options.opt_3.label"
+        },
+        {
+          "value": "text-size--xlarge",
+          "label": "t:sizes.text.options.opt_4.label"
+        }
+      ],
+      "default": "text-size--xlarge"
+    },
+    {
+      "type": "select",
+      "id": "section_heading_weight",
+      "label": "t:weight.heading.label",
+      "options": [
+        {
+          "value": "--fw-bold",
+          "label": "t:weight.heading.options.opt_1.label"
+        },
+        {
+          "value": "--fw-semi-bold",
+          "label": "t:weight.heading.options.opt_5.label"
+        },
+        {
+          "value": "--fw-medium",
+          "label": "t:weight.heading.options.opt_2.label"
+        },
+        {
+          "value": "--fw-normal",
+          "label": "t:weight.heading.options.opt_3.label"
+        }
+      ],
+      "default": "--fw-bold"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_description",
+      "label": "t:description_text.label",
+      "default": "Be the first to know about new collections and exclusive offers."
+    },
+    {
+      "type": "select",
+      "id": "description_text_size",
+      "label": "t:sizes.description_text.label",
+      "options": [
+        {
+          "value": "text-size--small",
+          "label": "t:sizes.text.options.opt_1.label"
+        },
+        {
+          "value": "text-size--medium",
+          "label": "t:sizes.text.options.opt_2.label"
+        },
+        {
+          "value": "text-size--large",
+          "label": "t:sizes.text.options.opt_3.label"
+        },
+        {
+          "value": "text-size--xlarge",
+          "label": "t:sizes.text.options.opt_4.label"
+        }
+      ],
+      "default": "text-size--small"
+    },
+    {
+      "type": "select",
+      "id": "section_description_weight",
+      "label": "t:weight.description_text.label",
+      "options": [
+        {
+          "value": "--fw-bold",
+          "label": "t:weight.heading.options.opt_1.label"
+        },
+        {
+          "value": "--fw-semi-bold",
+          "label": "t:weight.heading.options.opt_5.label"
+        },
+        {
+          "value": "--fw-medium",
+          "label": "t:weight.heading.options.opt_2.label"
+        },
+        {
+          "value": "--fw-normal",
+          "label": "t:weight.heading.options.opt_3.label"
+        }
+      ],
+      "default": "--fw-normal"
+    },
+    {
+      "type": "text",
+      "id": "button_label_1",
+      "label": "t:settings_schema.buttons.settings.button.label",
+      "default": "SUBSCRIBE"
+    },
+    {
+      "type": "select",
+      "id": "type",
+      "label": "t:settings_schema.buttons.settings.button.type.label",
+      "options": [
+        {
+          "value": "primary",
+          "label": "t:settings_schema.buttons.settings.button.type.opt_1.label"
+        },
+        {
+          "value": "secondary",
+          "label": "t:settings_schema.buttons.settings.button.type.opt_2.label"
+        }
+      ],
+      "default": "primary"
+    },
+    {
+      "type": "header",
+      "content": "t:layout.content"
+    },
+    {
+      "type": "text_alignment",
+      "id": "section_text_alignment",
+      "label": "t:alignments.content.desktop.label",
+      "default": "center"
+    },
+    {
+      "type": "text_alignment",
+      "id": "section_mobile_text_alignment",
+      "label": "t:alignments.text.mobile.label",
+      "default": "center"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "default": "scheme3",
+      "label": "t:color_scheme.label"
+    },
+    {
+      "type": "header",
+      "content": "t:spacing.content"
+    },
+    {
+      "type": "range",
+      "id": "section_top_padding",
+      "label": "t:spacing.settings.top.label",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 50,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_bottom_padding",
+      "label": "t:spacing.settings.bottom.label",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 50,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+  ]
+}
+{% endschema %}

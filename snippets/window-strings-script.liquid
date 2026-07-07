@@ -1,0 +1,41 @@
+<script>
+  window.shopUrl = '{{ request.origin }}{{ routes.root_url }}';
+  window.routes = {
+    cart_add_url: '{{ routes.cart_add_url }}',
+    cart_change_url: '{{ routes.cart_change_url }}',
+    cart_update_url: '{{ routes.cart_update_url }}',
+    cart_url: '{{ routes.cart_url }}',
+    predictive_search_url: '{{ routes.predictive_search_url }}'
+  };
+  window.additionalStrings = {
+    countdown_days_label: `{{ 'sections.countdown_timer.days_label' | t }}`,
+    countdown_hours_label: `{{ 'sections.countdown_timer.hours_label' | t }}`,
+    countdown_min_label: `{{ 'sections.countdown_timer.min_label' | t }}`,
+    countdown_sec_label: `{{ 'sections.countdown_timer.sec_label' | t }}`,
+    slideshow: {
+      prev: `{{ 'accessibility.slider.previous' | t }}`,
+      next: `{{ 'accessibility.slider.next' | t }}`,
+      first: `{{ 'accessibility.slider.first' | t }}`,
+      last: `{{ 'accessibility.slider.last' | t }}`,
+      play: `{{ 'accessibility.slider.play' | t }}`,
+      pause: `{{ 'accessibility.slider.pause' | t }}`,
+      carousel: `{{ 'accessibility.slider.carousel' | t }}`,
+      slide: `{{ 'accessibility.slider.slide' | t }}`,
+      select: `{{ 'accessibility.slider.select' | t }}`
+    }
+  };
+  window.variantStrings = {
+    addToCart: `{{ 'product.atc_buttons.add_to_cart' | t }}`,
+    soldOut: `{{ 'product.atc_buttons.soldout' | t }}`,
+    unavailable: `{{ 'product.atc_buttons.unavailable' | t }}`
+  };
+  window.cartStrings = {
+    shippingAmount: `{{ 'cart.shipping_bar.free_html' | t }}`
+  };
+  window.money_format = '{{- shop.money_format -}}';
+  window.accessibilityStrings = {
+    newsletterInValidMessage: `{{ 'newsletter.invalid_message' | t }}`,
+    newsletterValidMessage: `{{ 'newsletter.valid_message' | t }}`,
+    shareSuccess: `{{ 'share_button.success_message' | t }}`
+  };
+</script>

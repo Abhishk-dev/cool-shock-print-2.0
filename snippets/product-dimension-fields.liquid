@@ -1,0 +1,114 @@
+{%- comment -%}
+  Dimension fields for area-based pricing. Required before add to cart.
+  Variant price is treated as price per square meter.
+{%- endcomment -%}
+{{- 'product-dimension-fields.css' | asset_url | stylesheet_tag -}}
+<script src="{{ 'product-dimension-pricing.js' | asset_url }}" defer="defer"></script>
+
+<div
+  class="product-dimension-fields"
+  data-dimension-root="{{ section.id }}"
+  data-form-id="{{ form_id }}"
+  data-main-parent="#{{ section.id }}-description"
+  data-price-render="[{{ price_render_attr }}]"
+  data-qty-render="[{{ qty_render_attr }}]"
+>
+  <p class="product-common_variant-title text-size--small --fw-bold product-dimension-fields_heading">
+    Enter your dimensions
+  </p>
+  <div class="product-dimension-fields_grid">
+    <div class="product-dimension-fields_cell">
+      <label class="product-common_variant-title text-size--small --fw-bold" for="dimension-width-{{ section.id }}">
+        Width<span class="product-dimension-fields_required" aria-hidden="true">*</span>
+      </label>
+      <input
+        type="text"
+        id="dimension-width-{{ section.id }}"
+        class="form-control product-dimension-fields_input"
+        name="properties[Width]"
+        form="{{ form_id }}"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        autocomplete="off"
+        data-dimension-width
+        placeholder="100"
+        required
+      >
+    </div>
+    <div class="product-dimension-fields_cell">
+      <label class="product-common_variant-title text-size--small --fw-bold" for="dimension-height-{{ section.id }}">
+        Height<span class="product-dimension-fields_required" aria-hidden="true">*</span>
+      </label>
+      <input
+        type="text"
+        id="dimension-height-{{ section.id }}"
+        class="form-control product-dimension-fields_input"
+        name="properties[Height]"
+        form="{{ form_id }}"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        autocomplete="off"
+        data-dimension-height
+        placeholder="100"
+        required
+      >
+    </div>
+    <div class="product-dimension-fields_cell product-dimension-fields_cell--units">
+      <label class="product-common_variant-title text-size--small --fw-bold" for="dimension-units-{{ section.id }}">
+        Measurement units<span class="product-dimension-fields_required" aria-hidden="true">*</span>
+      </label>
+      <select
+        id="dimension-units-{{ section.id }}"
+        class="form-control product-dimension-fields_input"
+        name="properties[Measurement units]"
+        form="{{ form_id }}"
+        data-dimension-units
+        required
+      >
+        <option value="" disabled selected>Select unit</option>
+        <option value="cm">cm</option>
+        <option value="meters">meters</option>
+        <option value="in">in</option>
+        <option value="ft">ft</option>
+      </select>
+    </div>
+  </div>
+
+  <input type="hidden" name="properties[Square meters]" form="{{ form_id }}" data-dimension-sqm-hidden value="">
+  <input type="hidden" name="properties[Calculated price]" form="{{ form_id }}" data-dimension-price-hidden value="">
+  <input type="hidden" name="properties[_price_cents]" form="{{ form_id }}" data-dimension-price-cents-hidden value="">
+
+  <div class="product-dimension-fields_summary">
+    <div class="product-dimension-fields_summary-item">
+      <span class="product-common_variant-title text-size--small --fw-bold">Square meters</span>
+      <span
+        class="product-dimension-fields_summary-value product-dimension-fields_summary-value--placeholder text-size--medium"
+        data-dimension-sqm-display
+      >
+        —
+      </span>
+    </div>
+    <div class="product-dimension-fields_summary-item">
+      <span class="product-common_variant-title text-size--small --fw-bold">Calculated price</span>
+      <span
+        class="product-dimension-fields_summary-value product-dimension-fields_summary-value--placeholder text-size--medium"
+        data-dimension-price-display
+      >
+        Enter dimensions
+      </span>
+    </div>
+  </div>
+
+  <p
+    class="product-dimension-fields_error text-size--small --text-error hidden"
+    role="alert"
+    data-dimension-error
+  ></p>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof window.initProductDimensionPricing !== 'function') return;
+    window.initProductDimensionPricing({ sectionId: {{ section.id | json }} });
+  });
+</script>

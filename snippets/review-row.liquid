@@ -1,0 +1,37 @@
+{%- comment -%}
+  renders product review row widget on product templates
+  usage
+    {%- render 'review-row', block: block, index: forloop.index -%}
+{%- endcomment -%}
+<blockquote class="product-common_quote widget--styles --align-{{ review_text_alignment }} {% if block.settings.rating == 'none' or block.settings.heading == blank %}margin-none{% endif %}">
+  {%- if block.settings.main_heading != blank -%}
+    <div class="product-common_quote-heading {{ block.settings.main_heading_size }} {{ block.settings.main_heading_weight }} --word-break">
+      {{- block.settings.main_heading -}}
+    </div>
+  {%- endif -%}
+  <span class="product-common_quote-comma">
+    {%- render 'icons-data', width: 49, height: 33, use_icon: true, icon_reference: 'review-comma' -%}
+  </span>
+  {%- if block.settings.block_description != blank -%}
+    <q class="product-common_quote-text h {{ block.settings.block_description_size }} {{ block.settings.block_description_weight }} --word-break">
+      {{- block.settings.block_description -}}
+    </q>
+  {%- endif -%}
+  <div class="product-common_quote-cite-wrap --v-align-middle">
+    {%- if block.settings.heading != blank -%}
+      <cite class="product-common_quote-cite h --word-break {{ block.settings.block_heading_weight }} {{ block.settings.block_heading_size }}">
+        {{- block.settings.heading -}}
+      </cite>
+    {%- endif -%}
+    {%- unless block.settings.rating == 'none' -%}
+      {%- assign rate_limit = block.settings.block_rating | times: 1 -%}
+      <ul class="list-unstyled rating-list" aria-label="{{- 'product.rating_label' | t: count: 5 -}}">
+        {%- for rate in (1..rate_limit) -%}
+          <li class="rating-list_item">
+            {%- render 'icons-data', width: 15, height: 13, use_icon: true, icon_reference: 'star-filled', section_id: section_id -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endunless -%}
+  </div>
+</blockquote>

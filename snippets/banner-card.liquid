@@ -1,0 +1,197 @@
+{%- comment -%}
+  renders promotion banner on section templates
+  usage
+    {%- render 'promotion-banner', figure: block, index: forloop.index -%}
+{%- endcomment -%}
+{% liquid
+  assign content_position_var = figure.settings.content_position
+  capture content_position
+    case content_position_var
+      when 'top_left'
+        echo '--top-left'
+      when 'top_right'
+        echo '--top-right'
+      when 'bottom_left'
+        echo '--bottom-left'
+      when 'bottom_right'
+        echo '--bottom-right'
+      when 'top_center'
+        echo '--top-center'
+      when 'center'
+        echo '--center'
+      else
+        echo '--bottom-center'
+    endcase
+  endcapture
+
+  capture q_justify_desktop
+    case figure.settings.block_text_alignment
+      when 'left'
+        echo 'text-start'
+      when 'center'
+        echo 'text-center'
+      when 'right'
+        echo 'text-end'
+    endcase
+  endcapture
+
+  capture image_alt
+    unless figure.settings.image.alt == blank
+      echo figure.settings.image.alt
+      else
+      echo 'promotion_banners.alt_label' | t: index: index
+    endunless
+  endcapture
+
+  assign max_width = figure.settings.image.width
+  if figure.settings.image.width > settings.page_width
+    assign max_width = settings.page_width
+  endif
+  assign image_height = max_width | divided_by: figure.settings.image.aspect_ratio | round
+%}
+{%- if figure.settings.link != blank and figure.settings.banner_clickable -%}
+  <a class="banner-card scheme anim--shine scheme--{{ figure.settings.block_color_scheme }}{% if figure.settings.enable_bottom_overlay %} banner-card--bottom-overlay{% endif %}" {% if figure.settings.banner_clickable %}href="{{- figure.settings.link -}}" {% if figure.settings.open_new_window %}target="_blank"{% endif %}{% endif %}>
+    {%- unless figure.settings.image == blank -%}
+      {{-
+        figure.settings.image
+        | image_url: width: max_width
+        | image_tag: loading: 'lazy', width: max_width, height: image_height, alt: image_alt, class: 'object-fit object-fit--absolute'
+      -}}
+      {%- else -%}
+        {%- render 'placeholder-svgs', type: 'hero', index: placeholder_index, class: 'object-fit object-fit--absolute' -%}
+    {%- endunless -%}
+    <span class="visually-hidden">{{- image_alt -}}</span>
+    {%- if figure.settings.block_heading != blank or figure.settings.block_description != blank or block.settings.btn_label != blank or figure.settings.block_tag != blank -%}
+      <header class="heading-head banner-card_content-position {{ content_position }} {{ q_justify_desktop }}">
+        {%- unless figure.settings.make_btn_right_align and figure.settings.enable_full_content -%}
+          {%- if figure.settings.block_tag != blank -%}
+            <div class="banner-card_tag-block">
+              <span class="banner-card_tag" style="--tag-fg: {{ figure.settings.tag_fg }}; --tag-bg: {{ figure.settings.tag_bg }}">
+                {{ figure.settings.block_tag }}
+              </span>
+            </div>
+          {%- endif -%}
+          {%- if figure.settings.block_heading != blank -%}
+            <h2 class="banner-card_heading {{ figure.settings.block_heading_size }} {{ figure.settings.block_heading_weight }} --word-break mty">
+              {{- figure.settings.block_heading -}}
+            </h2>
+          {%- endif -%}
+          {%- if figure.settings.block_description != blank -%}
+            <div class="banner-card_description --word-break {{ figure.settings.block_description_size }} {{ figure.settings.block_description_weight }} mty">
+              {{- figure.settings.block_description -}}
+            </div>
+          {%- endif -%}
+          {%- if figure.settings.btn_label != blank -%}
+            <div class="banner-card_btn button button--{{ figure.settings.btn_type }} button--animate" aria-disabled="true" >
+              {{- figure.settings.btn_label -}}
+            </div>
+          {%- endif -%}
+        {%- else -%}
+          <div class="banner_promo-col">
+            <div class="banner_promo-col_one">
+              {%- if figure.settings.block_tag != blank -%}
+                <div class="banner-card_tag-block">
+                  <span class="banner-card_tag" style="--tag-fg: {{ figure.settings.tag_fg }}; --tag-bg: {{ figure.settings.tag_bg }}">
+                    {{ figure.settings.block_tag }}
+                  </span>
+                </div>
+              {%- endif -%}
+              {%- if figure.settings.block_heading != blank -%}
+                <h2 class="banner-card_heading {{ figure.settings.block_heading_size }} {{ figure.settings.block_heading_weight }} --word-break mty">
+                  {{- figure.settings.block_heading -}}
+                </h2>
+              {%- endif -%}
+              {%- if figure.settings.block_description != blank -%}
+                <div class="banner-card_description --word-break {{ figure.settings.block_description_size }} {{ figure.settings.block_description_weight }} mty">
+                  {{- figure.settings.block_description -}}
+                </div>
+              {%- endif -%}
+            </div>
+            <div class="banner_promo-col_two" >
+              {%- if figure.settings.btn_label != blank -%}
+                <div class="banner-card_btn button button--{{ figure.settings.btn_type }} button--animate" aria-disabled="true" >
+                  {{- figure.settings.btn_label -}}
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endunless -%}
+      </header>
+    {%- endif -%}
+  </a>
+  {%- else -%}
+    <figure class="banner-card anim--shine scheme scheme--{{ figure.settings.block_color_scheme }}{% if figure.settings.enable_bottom_overlay %} banner-card--bottom-overlay{% endif %}">
+      {%- unless figure.settings.image == blank -%}
+        {{-
+          figure.settings.image
+          | image_url: width: max_width
+          | image_tag: loading: 'lazy', width: max_width, height: image_height, alt: image_alt, class: 'object-fit object-fit--absolute'
+        -}}
+        {%- else -%}
+          {%- render 'placeholder-svgs', type: 'hero', index: placeholder_index, class: 'object-fit object-fit--absolute' -%}
+      {%- endunless -%}
+      {%- if figure.settings.block_heading != blank or figure.settings.block_description != blank or block.settings.btn_label != blank or figure.settings.block_tag != blank -%}
+        <header class="heading-head banner-card_content-position {{ content_position }} {{ q_justify_desktop }}">
+          {%- unless figure.settings.make_btn_right_align and figure.settings.enable_full_content -%}
+            {%- if figure.settings.block_tag != blank -%}
+              <div class="banner-card_tag-block">
+                <span class="banner-card_tag" style="--tag-fg: {{ figure.settings.tag_fg }}; --tag-bg: {{ figure.settings.tag_bg }}">
+                  {{ figure.settings.block_tag }}
+                </span>
+              </div>
+            {%- endif -%}
+            {%- if figure.settings.block_heading != blank -%}
+              <h2 class="banner-card_heading {{ figure.settings.block_heading_size }} {{ figure.settings.block_heading_weight }} --word-break mty">
+                {{- figure.settings.block_heading -}}
+              </h2>
+            {%- endif -%}
+            {%- if figure.settings.block_description != blank -%}
+              <div class="banner-card_description --word-break {{ figure.settings.block_description_size }} {{ figure.settings.block_description_weight }} mty">
+                {{- figure.settings.block_description -}}
+              </div>
+            {%- endif -%}
+            {%- if figure.settings.btn_label != blank -%}
+              <a
+                {% unless figure.settings.banner_clickable %}{% if figure.settings.btn_link != blank %}href="{{ figure.settings.btn_link -}}" {% if figure.settings.open_new_window %}target="_blank"{% endif %} {% else %} aria-disabled="true" {% endif %}{% endunless %}
+                class="banner-card_btn button button--{{ figure.settings.btn_type }} button--animate"
+              >
+                {{- figure.settings.btn_label -}}
+              </a>
+            {%- endif -%}
+          {%- else -%}
+            <div class="banner_promo-col">
+              <div class="banner_promo-col_one">
+                {%- if figure.settings.block_tag != blank -%}
+                  <div class="banner-card_tag-block">
+                    <span class="banner-card_tag" style="--tag-fg: {{ figure.settings.tag_fg }}; --tag-bg: {{ figure.settings.tag_bg }}">
+                      {{ figure.settings.block_tag }}
+                    </span>
+                  </div>
+                {%- endif -%}
+                {%- if figure.settings.block_heading != blank -%}
+                  <h2 class="banner-card_heading {{ figure.settings.block_heading_size }} {{ figure.settings.block_heading_weight }} --word-break mty">
+                    {{- figure.settings.block_heading -}}
+                  </h2>
+                {%- endif -%}
+                {%- if figure.settings.block_description != blank -%}
+                  <div class="banner-card_description --word-break {{ figure.settings.block_description_size }} {{ figure.settings.block_description_weight }} mty">
+                    {{- figure.settings.block_description -}}
+                  </div>
+                {%- endif -%}
+              </div>
+              <div class="banner_promo-col_two">
+                {%- if figure.settings.btn_label != blank -%}
+                  <a
+                    {% unless figure.settings.banner_clickable %}{% if figure.settings.btn_link != blank %}href="{{ figure.settings.btn_link -}}" {% if figure.settings.open_new_window %}target="_blank"{% endif %} {% else %} aria-disabled="true" {% endif %}{% endunless %}
+                    class="banner-card_btn button button--{{ figure.settings.btn_type }} button--animate"
+                  >
+                    {{- figure.settings.btn_label -}}
+                  </a>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endunless -%}
+        </header>
+      {%- endif -%}
+    </figure>
+{%- endif -%}

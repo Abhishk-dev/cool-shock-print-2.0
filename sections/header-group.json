@@ -1,0 +1,102 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header Group",
+  "sections": {
+    "announcement_bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "bar_1": {
+          "type": "announcement_text",
+          "settings": {
+            "heading": "Free shipping this week!"
+          }
+        },
+        "bar_2": {
+          "type": "announcement_text",
+          "settings": {
+            "heading": "New arrivals just dropped!"
+          }
+        },
+        "bar_3": {
+          "type": "announcement_text",
+          "settings": {
+            "heading": "Get 15% off your first order."
+          }
+        },
+        "bar_4": {
+          "type": "announcement_text",
+          "settings": {
+            "heading": "Now shipping worldwide 🌍"
+          }
+        }
+      },
+      "block_order": [
+        "bar_1",
+        "bar_2",
+        "bar_3",
+        "bar_4"
+      ],
+      "settings": {
+        "show_only_on_homepage": false,
+        "block_heading_size": "text-size--medium",
+        "block_heading_weight": "--fw-medium",
+        "show_top_bdr": false,
+        "show_bottom_bdr": false,
+        "section_full_width": true,
+        "section_color_scheme": "scheme2",
+        "marquee_speed": 15,
+        "marquee_direction": "marquee_backward",
+        "marquee_on_hover": false
+      }
+    },
+    "header": {
+      "type": "header",
+      "custom_css": [
+        "@media (max-width: 400px) {.page-header_logo-links {display: flex; flex-direction: row-reverse; justify-content: flex-end; }}"
+      ],
+      "settings": {
+        "header_view": "view_1",
+        "header_overlay": false,
+        "menu_style": "drawer",
+        "show_cart": true,
+        "show_customer": false,
+        "show_label": true,
+        "menu": "main-menu",
+        "logo": "shopify://shop_images/Cool_Shock_Print_Logo_landscape.svg",
+        "logo_desktop_width": 200,
+        "logo_mobile_width": 140,
+        "enable_search": true,
+        "enable_opened_search": false,
+        "enable_predictive_suggestions": false,
+        "popular_menu": "main-menu",
+        "quick_menu": "main-menu",
+        "predictive_caption": "",
+        "predictive_caption_weight": "--fw-bold",
+        "predictive_heading": "",
+        "predictive_heading_weight": "--fw-bold",
+        "predictive_link": "",
+        "predictive_open_new_window": false,
+        "section_full_width": true,
+        "show_bottom_bdr": false,
+        "enable_dropdown_hover": false,
+        "enable_sticky": "on_scroll",
+        "section_color_scheme": "scheme1",
+        "menu_drawer_color_scheme": "",
+        "links_font_weight": "--fw-semi-bold"
+      }
+    }
+  },
+  "order": [
+    "announcement_bar",
+    "header"
+  ]
+}

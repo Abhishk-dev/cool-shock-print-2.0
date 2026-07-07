@@ -1,0 +1,88 @@
+{%- comment -%}
+  renders variants select dropdown option on product templates
+  usage
+    {%- render 'product-variant-selects', option: option, product_form_id: id, product: product, disable_combine: true -%}
+{%- endcomment -%}
+{%- liquid
+  assign variants_available_arr = product.variants | map: 'available'
+  assign available_arr = product.variants
+  assign variants_option1_arr = product.variants | map: 'option1'
+  assign variants_option2_arr = product.variants | map: 'option2'
+  assign variants_option3_arr = product.variants | map: 'option3'
+-%}
+{%- for value in option.values -%}
+  {%- liquid
+    assign variant_image_url = ''
+    for check in available_arr
+      if check.option1 == value or check.option2 == value or check.option3 == value
+        unless check.featured_media == blank
+          assign variant_image_url = check.featured_media.preview_image | image_url: width: 30
+        endunless
+        break
+      endif
+    endfor
+
+    unless swatches == 'none'
+      if swatches == 'swatches'
+        assign swatch_value = null
+        if value.swatch.image
+          assign image_url = value.swatch.image | image_url: width: 50
+          assign swatch_value = 'url(' | append: image_url | append: ')'
+          assign swatch_focal_point = value.swatch.image.presentation.focal_point
+          elsif value.swatch.color
+            assign swatch_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+        endif
+        else
+          if is_color_option == 'true'
+            assign swatch_value = value | downcase | replace: ' ', ''
+          endif
+      endif
+    endunless
+
+    assign option_disabled = true
+    for option1_name in variants_option1_arr
+      case option.position
+        when 1
+          if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+            assign option_disabled = false
+          endif
+        when 2
+          if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+            assign option_disabled = false
+          endif
+        when 3
+          if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+            assign option_disabled = false
+          endif
+      endcase
+    endfor
+
+    if swatches == 'images' and is_color_option == 'true'
+      unless variant_image_url == blank
+        assign swatch_value = variant_image_url | prepend: 'url(' | append: ')'
+        else
+          assign swatch_value = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAATCAYAAACdkl3yAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABdaVRYdFNuaXBNZXRhZGF0YQAAAAAAeyJjbGlwUG9pbnRzIjpbeyJ4IjowLCJ5IjowfSx7IngiOjE4LCJ5IjowfSx7IngiOjE4LCJ5IjoxOX0seyJ4IjowLCJ5IjoxOX1dfetuk4EAAAEmSURBVDhPlZPLkkZADIXT2LGywBPg/dfKE1hT3gDFRllYMXMyf7rCjMt8VS0tlyNCm7Isd1Ls+05xHFOaph/PkWEYqK5r8jyPjDGcDxy+OGwYBCR4B0Q0VuEceIvUsZDu4r+C9tWw2bbNimH/BuTpOlNV1a9h+75PYRgeZgcQW5aFpmnimB62Wdd1F4fYvu+pbVtyXZeTBHQQRRHleW4FhG/hH+WzlXW+1/7D+ghegiKgO/6LRyEgXdzxKIQOrrrQXAqJgF4Y9lVnZhxH+zgkg3me+UzJoMUPGwQBn0UtCL8pioKzdHKSJJRlGd8DEYPtuo6aprG/htQ5CMKpF3x6AbHSJayuYSFJAvKEJ3QNePX577Cd4vK2C43U2Blho0/xW46nf6cv9tXO7HWOFxkAAAAASUVORK5CYII=)'
+      endunless
+    endif
+  -%}
+  <li>
+    <button
+      class="dropdown-component_btn-submit product-variant-option_btn-submit --align-left --v-align-middle --word-break {% if option.selected_value == value %}active{% endif %} {% if swatches == 'images' %}--swatch-active{% endif %}"
+      type="button"
+      data-value='{{- value | escape -}}'
+      data-text='{{- value | escape -}}'
+      data-btn-variant=""
+      {% if swatch_value and swatches != 'none' %}
+        style="--variant-swatch: {{ swatch_value }}; {% if swatch_focal_point %}--swatch-focal-point: {{ swatch_focal_point }};{% endif %}"
+      {%- endif -%}
+    >
+      {%- if swatch_value and swatches != 'none' -%}
+        <span aria-hidden="true" class="product-variant-option_swatch-dot"></span>
+      {%- endif -%}
+      {{- value -}}
+      <span class="product-variant-option_status {% unless option_disabled %}hidden{% endunless %}" data-variant-status-text="">
+        {{- 'product.sold_or_unavailable' | t -}}
+      </span>
+    </button>
+  </li>
+{%- endfor -%}

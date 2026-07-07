@@ -1,0 +1,19 @@
+{%- comment -%}
+  renders cart icon inner text with counter
+  usage
+    {%- render 'cart-text' -%}
+{%- endcomment -%}
+{%- liquid
+  capture cart_text
+    if cart.item_count == 0
+      echo 'cart.bubble.zero' | t: count: cart.item_count
+      elsif cart.item_count == 1
+        echo 'cart.bubble.one' | t: count: cart.item_count
+      else
+        echo 'cart.bubble.other' | t: count: cart.item_count
+    endif
+  endcapture
+-%}
+<span class="visually-hidden" data-render-cart-text="">
+  {{- cart_text -}}
+</span>

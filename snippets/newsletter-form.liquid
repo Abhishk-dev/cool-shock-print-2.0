@@ -1,0 +1,70 @@
+{%- comment -%}
+  renders newsletter form
+  usage
+    {%- render 'newsletter-form', section_prefix_class: section_prefix_class, form_id: id -%}
+{%- endcomment -%}
+{%- liquid
+  capture form_class
+    echo 'newsletter-form' | append: ' ' | append: prefix_class | append: '--newsletter-form'
+  endcapture
+-%}
+{% form 'customer', id: form_id, class: form_class %}
+  <input type="hidden" name="contact[tags]" value="newsletter">
+  <div class="newsletter-form_form-group">
+    <label class="visually-hidden" for="{{ section.id }}NewsletterForm-input">
+      {{- 'newsletter.label' | t -}}
+    </label>
+    <div class="newsletter-form_group-wrap">
+      <input
+        id="{{ section.id }}NewsletterForm-input"
+        type="email"
+        name="contact[email]"
+        value="{{- form.email -}}"
+        aria-required="true"
+        onkeydown="validation()"
+        autocapitalize="off"
+        autocomplete="email"
+        title="{{- 'newsletter.label' | t -}}"
+        {% if form.errors %}
+          autofocus
+          aria-invalid="true"
+          aria-describedby="NewsletterFormError-{{- section.id -}}"
+        {% elsif form.posted_successfully? %}
+          aria-describedby="NewsletterFormSuccess-{{- section.id -}}"
+        {% endif %}
+        placeholder="{{- 'newsletter.placeholder' | t -}}"
+        required
+      >
+      <div class="newsletter_btns-wrap --justify-center">
+        <button type="submit" class="newsletter_submit-btn button button--{{ section.settings.type }} button--animate">
+            <span class="">{{ button_label }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="newsletter-form_results-wrap results-wrap_message">
+    {%- if form.errors -%}
+      <div class="newsletter-form_errors-wrap">
+        <div id="NewsletterFormError-{{- section.id -}}" class="{{ section_prefix_class }}_error-wrapper" role="status">
+          <i class="{{ section_prefix_class }}_error-icn">
+            {%- render 'icons-data', width: 22, height: 22, use_icon: true, icon_reference: 'error' -%}
+          </i>
+          <span class="visually-hidden">
+            {{- 'newsletter.error_text' | t -}}
+          </span>
+          {{- form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email -}}
+        </div>
+      </div>
+    {%- endif -%}
+    {%- if form.posted_successfully? -%}
+      <div class="newsletter-form_success-wrap">
+        <div id="NewsletterFormSuccess-{{- section.id -}}" class="success-message mty" role="alert" tabindex="-1" autofocus>
+          <i class="success-message_icn">
+            {%- render 'icons-data', width: 54, height: 54, use_icon: true, icon_reference: 'smile' -%}
+          </i>
+          <p>{{- 'newsletter.success_text' | t -}}</p>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+{% endform %}

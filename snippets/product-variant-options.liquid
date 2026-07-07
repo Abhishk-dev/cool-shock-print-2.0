@@ -1,0 +1,268 @@
+{%- comment -%}
+  renders variants checkbox option on product templates
+  usage
+    {%- render 'product-variant-options', option: option, product_form_id: id, product: product, disable_combine: true -%}
+{%- endcomment -%}
+{%- liquid
+  assign variants_available_arr = product.variants | map: 'available'
+  assign available_arr = product.variants
+  assign variants_option1_arr = product.variants | map: 'option1'
+  assign variants_option2_arr = product.variants | map: 'option2'
+  assign variants_option3_arr = product.variants | map: 'option3'
+
+  if limit != null
+    assign count_limit = 0
+  endif
+-%}
+{%- for value in option.values -%}
+  {%- liquid
+    assign variant_image_url = ''
+    for check in available_arr
+      if check.option1 == value or check.option2 == value or check.option3 == value
+        unless check.featured_media == blank
+          assign variant_image_url = check.featured_media.preview_image | image_url: width: 50
+        endunless
+        break
+      endif
+    endfor
+    
+    unless swatches == 'none'
+      if swatches == 'swatches'
+        assign swatch_value = null
+        if value.swatch.image
+          assign image_url = value.swatch.image | image_url: width: 50
+          assign swatch_value = 'url(' | append: image_url | append: ')'
+          assign swatch_focal_point = value.swatch.image.presentation.focal_point
+          if swatch_value == blank
+            assign custom_values_string = settings.variant_swatches_values
+            assign custom_values = custom_values_string | split: '||'
+            for custom_value in custom_values
+              assign value_data = custom_value | remove: '{' | remove: '}' | split: ','
+              assign value_text = value_data[0]
+              assign background_color = value_data[1]
+              if value_text == value
+                assign swatch_value = background_color | file_url | prepend: 'url(' | append: ')'
+                break
+              endif
+            endfor
+          endif
+          elsif value.swatch.color
+            assign swatch_value = 'rgb(' | append: value.swatch.color.rgb | append: ')'
+          else
+            if swatch_value == blank
+              assign custom_values_string = settings.variant_swatches_values
+              assign custom_values = custom_values_string | split: '||'
+              for custom_value in custom_values
+                assign value_data = custom_value | remove: '{' | remove: '}' | split: ','
+                assign value_text = value_data[0]
+                assign background_color = value_data[1]
+                if value_text == value
+                  if background_color contains 'png' or background_color contains 'PNG'
+                    assign swatch_value = background_color | file_url | prepend: 'url(' | append: ')'
+                    else
+                      assign swatch_value = background_color
+                  endif
+                  break
+                endif
+              endfor
+            endif
+        endif
+        else
+          if is_color_option == 'true'
+            assign swatch_value = null
+            assign custom_values_string = settings.variant_swatches_values
+            assign custom_values = custom_values_string | split: '||'
+            for custom_value in custom_values
+              assign value_data = custom_value | remove: '{' | remove: '}' | split: ','
+              assign value_text = value_data[0]
+              assign background_color = value_data[1]
+              if value_text == value
+                assign swatch_value = background_color
+                break
+              endif
+            endfor
+            if swatch_value == blank
+              assign swatch_value = value | downcase | replace: ' ', ''
+            endif
+          endif
+      endif
+    endunless
+
+    assign option_disabled = true
+    for option1_name in variants_option1_arr
+      case option.position
+        when 1
+          if variants_option1_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+            assign option_disabled = false
+          endif
+        when 2
+          if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+            assign option_disabled = false
+          endif
+        when 3
+          if option1_name == product.selected_or_first_available_variant.option1 and variants_option2_arr[forloop.index0] == product.selected_or_first_available_variant.option2 and variants_option3_arr[forloop.index0] == value and variants_available_arr[forloop.index0]
+            assign option_disabled = false
+          endif
+      endcase
+    endfor
+
+    if swatches == 'images' and is_color_option == 'true'
+      unless variant_image_url == blank
+        assign swatch_value = variant_image_url | prepend: 'url(' | append: ')'
+        else
+          assign swatch_value = null
+          assign custom_values_string = settings.variant_swatches_values
+          assign custom_values = custom_values_string | split: '||'
+          for custom_value in custom_values
+            assign value_data = custom_value | remove: '{' | remove: '}' | split: ','
+            assign value_text = value_data[0]
+            assign background_color = value_data[1]
+            if value_text == value
+              assign swatch_value = background_color | file_url | prepend: 'url(' | append: ')'
+              break
+            endif
+          endfor
+          comment
+            unless show_only_color
+              assign swatch_value = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAATCAYAAACdkl3yAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABdaVRYdFNuaXBNZXRhZGF0YQAAAAAAeyJjbGlwUG9pbnRzIjpbeyJ4IjowLCJ5IjowfSx7IngiOjE4LCJ5IjowfSx7IngiOjE4LCJ5IjoxOX0seyJ4IjowLCJ5IjoxOX1dfetuk4EAAAEmSURBVDhPlZPLkkZADIXT2LGywBPg/dfKE1hT3gDFRllYMXMyf7rCjMt8VS0tlyNCm7Isd1Ls+05xHFOaph/PkWEYqK5r8jyPjDGcDxy+OGwYBCR4B0Q0VuEceIvUsZDu4r+C9tWw2bbNimH/BuTpOlNV1a9h+75PYRgeZgcQW5aFpmnimB62Wdd1F4fYvu+pbVtyXZeTBHQQRRHleW4FhG/hH+WzlXW+1/7D+ghegiKgO/6LRyEgXdzxKIQOrrrQXAqJgF4Y9lVnZhxH+zgkg3me+UzJoMUPGwQBn0UtCL8pioKzdHKSJJRlGd8DEYPtuo6aprG/htQ5CMKpF3x6AbHSJayuYSFJAvKEJ3QNePX577Cd4vK2C43U2Blho0/xW46nf6cv9tXO7HWOFxkAAAAASUVORK5CYII=)'
+            endunless
+          endcomment
+      endunless
+    endif
+  -%}
+  {%- unless show_only_color -%}
+    <div class="product-variant-option">
+      <input
+        type="radio"
+        id='{{ section.id }}-{{ product.id }}-{{ product_form_id }}-{{ option.position }}-{{ forloop.index0 }}-{{ prefix }}-{{ tabid }}'
+        name='{{ section.id }}-{{ product.id }}-{{ product_form_id }}-{{ option.name }}'
+        value='{{ value | escape }}'
+        form='{{ product_form_id }}'
+        title='{{ value | escape }}'
+        {% if check_selected %}
+          {% if selected_variant == value %}
+            checked
+          {% endif %}
+          {% else %}
+            {% if option.selected_value == value %}
+              checked
+            {% endif %}
+        {% endif %}
+        {% unless check_available %}
+          {% if option_disabled %}
+            class="disabled form-control--resest" 
+            {% else %}
+              class="form-control--resest"
+          {% endif %}
+          {% else %}
+            {% unless available_sets contains value %}
+              class="disabled form-control--resest" 
+              {% else %}
+                class="form-control--resest"
+            {% endunless %}
+        {% endunless %}
+      >
+      <label
+        {% if swatch_value and swatches != 'none' %}
+          class="product-variant-option_label product-variant-option_label--swatch --word-break --swatch-active"
+          style="--variant-swatch: {{ swatch_value }}; {% if swatch_focal_point %}--swatch-focal-point: {{ swatch_focal_point }};{% endif %}"
+          {% else %}
+            class="product-variant-option_label product-variant-option_label--simple --word-break"
+        {% endif %}
+        for='{{ section.id }}-{{ product.id }}-{{ product_form_id }}-{{ option.position }}-{{ forloop.index0 }}-{{ prefix }}-{{ tabid }}'
+      >
+        {%- if swatch_value and swatches != 'none' -%}
+          <span class="visually-hidden">
+            {{- value -}}
+          </span>
+          <span class="product-variant-option_label-icn --swatch-icn" aria-hidden="true">
+            {%- render 'icons-data', width: 14, height: 14, use_icon: true, icon_reference: 'disabled' -%}
+          </span>
+          {%- else -%}
+            <span class="product-variant-option_text">
+              {{- value -}}
+            </span>
+        {%- endif -%}
+        <span class="{% if option_disabled %}visually-hidden{% else %}hidden{% endif %}" data-variant-status-text="">
+          {{- 'product.sold_or_unavailable' | t -}}
+        </span>
+      </label>
+    </div>
+    {%- liquid
+      if limit != null
+        assign count_limit = count_limit | plus: 1
+        if count_limit == limit
+          break
+        endif
+      endif
+    -%}
+    {%- else -%}
+      {%- unless swatch_value == blank -%}
+        <div class="product-variant-option">
+          <input
+            type="radio"
+            id='{{ section.id }}-{{ product.id }}-{{ product_form_id }}-{{ option.position }}-{{ forloop.index0 }}-{{ prefix }}-{{ tabid }}'
+            name='{{ section.id }}-{{ product.id }}-{{ product_form_id }}-{{ option.name }}'
+            value='{{ value | escape }}'
+            form='{{ product_form_id }}'
+            title='{{ value | escape }}'
+            {% if check_selected %}
+              {% if selected_variant == value %}
+                checked
+              {% endif %}
+              {% else %}
+                {% if option.selected_value == value %}
+                  checked
+                {% endif %}
+            {% endif %}
+            {% unless check_available %}
+              {% if option_disabled %}
+                class="disabled form-control--resest" 
+                {% else %}
+                  class="form-control--resest"
+              {% endif %}
+              {% else %}
+                {% unless available_sets contains value %}
+                  class="disabled form-control--resest" 
+                  {% else %}
+                    class="form-control--resest"
+                {% endunless %}
+            {% endunless %}
+          >
+          <label
+            {% if swatch_value and swatches != 'none' %}
+              class="product-variant-option_label product-variant-option_label--swatch --word-break --swatch-active"
+              style="--variant-swatch: {{ swatch_value }}; {% if swatch_focal_point %}--swatch-focal-point: {{ swatch_focal_point }};{% endif %}"
+              {% else %}
+                class="product-variant-option_label product-variant-option_label--simple --word-break"
+            {% endif %}
+            for='{{ section.id }}-{{ product.id }}-{{ product_form_id }}-{{ option.position }}-{{ forloop.index0 }}-{{ prefix }}-{{ tabid }}'
+          >
+            {%- if swatch_value and swatches != 'none' -%}
+              <span class="visually-hidden">
+                {{- value -}}
+              </span>
+              <span class="product-variant-option_label-icn --swatch-icn" aria-hidden="true">
+                {%- render 'icons-data', width: 14, height: 14, use_icon: true, icon_reference: 'disabled' -%}
+              </span>
+              {%- else -%}
+                <span class="product-variant-option_text">
+                  {{- value -}}
+                </span>
+            {%- endif -%}
+            <span class="{% if option_disabled %}visually-hidden{% else %}hidden{% endif %}" data-variant-status-text="">
+              {{- 'product.sold_or_unavailable' | t -}}
+            </span>
+          </label>
+        </div>
+        {%- liquid
+          if limit != null
+            assign count_limit = count_limit | plus: 1
+            if count_limit == limit
+              break
+            endif
+          endif
+        -%}
+      {%- endunless -%}
+  {%- endunless -%}
+{%- endfor -%}

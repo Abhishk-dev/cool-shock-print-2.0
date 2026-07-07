@@ -1,0 +1,81 @@
+{% style %}
+  {%- liquid
+    assign gen_font_300 = settings.body_font | font_modify: 'weight', '300'
+    assign gen_font_400 = settings.body_font | font_modify: 'weight', '400'
+    assign gen_font_500 = settings.body_font | font_modify: 'weight', '500'
+    assign gen_font_600 = settings.body_font | font_modify: 'weight', '600'
+    assign gen_font_700 = settings.body_font | font_modify: 'weight', '700'
+  -%}
+  {{- gen_font_300 | font_face: font_display: 'swap' -}}
+  {{- gen_font_400 | font_face: font_display: 'swap' -}}
+  {{- gen_font_500 | font_face: font_display: 'swap' -}}
+  {{- gen_font_600 | font_face: font_display: 'swap' -}}
+  {{- gen_font_700 | font_face: font_display: 'swap' -}}
+  {%- if settings.headings_font.family != settings.body_font.family -%}
+    {%- liquid
+      assign heading_font_300 = settings.headings_font | font_modify: 'weight', '300'
+      assign heading_font_400 = settings.headings_font | font_modify: 'weight', '400'
+      assign heading_font_500 = settings.headings_font | font_modify: 'weight', '500'
+      assign heading_font_600 = settings.headings_font | font_modify: 'weight', '600'
+      assign heading_font_700 = settings.headings_font | font_modify: 'weight', '700'
+    -%}
+    {{- heading_font_300 | font_face: font_display: 'swap' -}}
+    {{- heading_font_400 | font_face: font_display: 'swap' -}}
+    {{- heading_font_500 | font_face: font_display: 'swap' -}}
+    {{- heading_font_600 | font_face: font_display: 'swap' -}}
+    {{- heading_font_700 | font_face: font_display: 'swap' -}}
+  {%- endif -%}
+  :root {
+    --font-general-family: {{ settings.body_font.family }}, {{ settings.body_font.fallback_families }};
+    --font-general-weight: {{ settings.body_font.weight }};
+    --font-general-style: {{ settings.body_font.style }};
+    --font-general-sacle: {{ settings.font_scale | divided_by: 100.0 }};
+    --font-headings-family: {{ settings.headings_font.family }}, {{ settings.headings_font.fallback_families }};
+    --font-headings-weight: {{ settings.headings_font.weight }};
+    --font-headings-style: {{ settings.headings_font.style }};
+    --cp-width: {{ settings.page_width }};
+    --cp-width-px: {{ settings.page_width }}px;
+    --button-border-width: {{ settings.buttons_bdr_width }}px;
+    --button-corner-radius: {{ settings.buttons_bdr_radius }}px;
+    --input-border-width: {{ settings.inputs_bdr_width }}px;
+    --input-corner-radius: {{ settings.inputs_bdr_radius }}px;
+    --section-radius: {{ settings.sections_bdr_radius }}px;
+  }
+  {%- for scheme in settings.color_schemes -%}
+    .scheme--{{ scheme.id }} {
+      --section-background-color: {{ scheme.settings.background }};
+      --section-foreground-color: {{ scheme.settings.text }};
+      --section-heading-color: {{ scheme.settings.heading }};
+      --section-links-color: {{ scheme.settings.links }};
+      --section-border-color: {{ scheme.settings.border }};
+      --section-alternative-color: {{ scheme.settings.alter_clr }};
+      --section-active-hover-color: {{ scheme.settings.hover_active }};
+      --section-error-color: {{ scheme.settings.form_error }};
+      --section-warning-color: {{ scheme.settings.form_warning }};
+      --section-success-color: {{ scheme.settings.form_success }};
+      --section-focus-outline-color: {{ scheme.settings.element_focus }};
+      --section-primary-bg: {{ scheme.settings.primary_bg }};
+      --section-primary-text-color: {{ scheme.settings.primary_text }};
+      --section-primary-border-color: {{ scheme.settings.primary_bdr }};
+      --section-secondary-bg: {{ scheme.settings.secondary_bg }};
+      --section-secondary-text-color: {{ scheme.settings.secondary_text }};
+      --section-secondary-border-color: {{ scheme.settings.secondary_bdr }};
+      --section-input-background-color: {{ scheme.settings.input_background }};
+      --section-input-text-color: {{ scheme.settings.input_text }};
+      --section-input-bdr-color: {{ scheme.settings.input_bdr }};
+      --section-widget-background-color: {{ scheme.settings.widget_background }};
+      --section-widget-foreground-color: {{ scheme.settings.widget_text }};
+      --section-widget-heading-color: {{ scheme.settings.widget_heading }};
+      --section-widget-links-color: {{ scheme.settings.widget_links }};
+      --section-widget-border-color: {{ scheme.settings.widget_border }};
+      --section-widget-alternative-color: {{ scheme.settings.widget_alter_clr }};
+      --section-widget-active-hover-color: {{ scheme.settings.widget_hover_active }};
+      --section-widget-error-color: {{ scheme.settings.widget_form_error }};
+      --section-widget-warning-color: {{ scheme.settings.widget_form_warning }};
+      --section-widget-success-color: {{ scheme.settings.widget_form_success }};
+      --section-widget-focus-outline-color: {{ scheme.settings.widget_element_focus }};
+      --section-hotspot-glow-rgba-nill: rgba({{ scheme.settings.secondary_text | color_to_rgb | remove: 'rgb(' | remove: ')' }}, 0);
+      --section-hotspot-glow-rgba-full: rgba({{ scheme.settings.secondary_text | color_to_rgb | remove: 'rgb(' | remove: ')' }}, 0.7);
+    }
+  {%- endfor -%}
+{%- endstyle -%}

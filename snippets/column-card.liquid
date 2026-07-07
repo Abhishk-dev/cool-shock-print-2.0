@@ -1,0 +1,314 @@
+{%- comment -%}
+  renders column card on page templates
+  usage
+    {%- render 'column-card', card: block, prefix_class: section_prefix_class -%}
+{%- endcomment -%}
+{%- liquid
+  capture image_alt
+    if card.settings.image.alt != blank
+      echo card.settings.image.alt
+      else
+        echo card.settings.heading | escape
+    endif
+  endcapture
+
+  capture card_media_size
+    if section.settings.card_media_size == 'adapt'
+      echo card.settings.image.aspect_ratio | default: '1'
+      else 
+        echo '1'
+    endif
+  endcapture
+
+  assign image_height = 372 | divided_by: card.settings.image.aspect_ratio | round
+-%}
+<article class="column-card {{ prefix_class }}_column-card --q-align">
+  {%- if section.settings.card_layout_style == 'inline' -%}
+    {%- if card.settings.image != blank -%}
+      <div class="column-card_left-wrap">
+        {%- case section.settings.card_media_width -%}
+          {% when 'one-third' %}
+            {%- unless section.settings.card_media_size == 'adapt' -%}
+              <div class="column-card_image column-card_image--one-third column-card_image--tag-full --media-size-{{ section.settings.card_media_size }} anim--shine"  style="--media-ratio: {{ card_media_size }};">
+                {{- card.settings.image | image_url: width: 372 | image_tag:
+                  alt: image_alt,
+                  class: 'object-fit object-fit--absolute',
+                  loading: loading_attr,
+                  width: 372,
+                  height: image_height,
+                  widths: '177, 226, 278, 290, 301, 310, 372',
+                  sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                -}}
+              </div>
+              {% else %}
+                <div class="column-card_image column-card_image--one-third column-card_image--tag-full anim--shine">
+                  {{- card.settings.image | image_url: width: 372 | image_tag:
+                    alt: image_alt,
+                    loading: loading_attr,
+                    width: 372,
+                    height: image_height,
+                    widths: '177, 226, 278, 290, 301, 310, 372',
+                    sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                  -}}
+                </div>
+            {% endunless %}
+          {% when 'icon_width' %}
+            {%- liquid
+              assign logo_width = card.settings.image.width | round
+              capture image_alt
+                unless card.settings.image.alt == blank
+                  echo card.settings.image.alt
+                  else
+                    echo card.settings.heading | escape
+                endunless
+              endcapture
+
+              capture logo_widths
+                echo logo_width
+              endcapture
+            -%}
+            {%- capture logo_sizes -%}
+              {{- logo_width | prepend: '(min-width: 50px) ' | append: 'px' -}}
+            {%- endcapture -%}
+            <div class="column-card_image --icon-width anim--shine">
+              {{- card.settings.image | image_url: width: logo_width | image_tag: sizes: logo_sizes, alt: image_alt, widths: logo_widths, loading: loading_attr -}}
+            </div>
+          {% when 'half' %}
+            {%- unless section.settings.card_media_size == 'adapt' -%}
+              <div class="column-card_image column-card_image--half column-card_image--tag-full --media-size-{{ section.settings.card_media_size }} anim--shine" style="--media-ratio: {{ card_media_size }};">
+                {{- card.settings.image | image_url: width: 372 | image_tag:
+                  alt: image_alt,
+                  class: 'object-fit object-fit--absolute',
+                  loading: loading_attr,
+                  width: 372,
+                  height: image_height,
+                  widths: '177, 226, 278, 290, 301, 310, 372',
+                  sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                -}}
+              </div>
+              {% else %}
+              <div class="column-card_image column-card_image--half column-card_image--tag-full anim--shine">
+                {{- card.settings.image | image_url: width: 372 | image_tag:
+                  alt: image_alt,
+                  loading: loading_attr,
+                  width: 372,
+                  height: image_height,
+                  widths: '177, 226, 278, 290, 301, 310, 372',
+                  sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                -}}
+              </div>
+            {% endunless %}
+          {% when 'full' %}
+            {%- unless section.settings.card_media_size == 'adapt' -%}
+              <div class="column-card_image column-card_image--full column-card_image--tag-full --media-size-{{ section.settings.card_media_size }} anim--shine" style="--media-ratio: {{ card_media_size }};">
+                {{- card.settings.image | image_url: width: 372 | image_tag:
+                  alt: image_alt,
+                  class: 'object-fit object-fit--absolute',
+                  loading: loading_attr,
+                  width: 372,
+                  height: image_height,
+                  widths: '177, 226, 278, 290, 301, 310, 372',
+                  sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                -}}
+              </div>
+              {% else %}
+                <div class="column-card_image column-card_image--full column-card_image--tag-full anim--shine">
+                  {{- card.settings.image | image_url: width: 372 | image_tag:
+                    alt: image_alt,
+                    loading: loading_attr,
+                    width: 372,
+                    height: image_height,
+                    widths: '177, 226, 278, 290, 301, 310, 372',
+                    sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                  -}}
+                </div>
+            {% endunless %}
+          {% else %}
+            {%- unless section.settings.card_media_size == 'adapt' -%}
+              <div class="column-card_image column-card_image--{{ section.settings.card_media_width }} column-card_image--tag-full --media-size-{{ section.settings.card_media_size }} anim--shine" style="--media-ratio: {{ card_media_size }};">
+                {{- card.settings.image | image_url: width: 372 | image_tag:
+                  alt: image_alt,
+                  class: 'object-fit object-fit--absolute',
+                  loading: loading_attr,
+                  width: 372,
+                  height: image_height,
+                  widths: '177, 226, 278, 290, 301, 310, 372',
+                  sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                -}}
+              </div>
+              {% else %}
+                <div class="column-card_image column-card_image--{{ section.settings.card_media_width }} column-card_image--tag-full anim--shine">
+                  {{- card.settings.image | image_url: width: 372 | image_tag:
+                    alt: image_alt,
+                    loading: loading_attr,
+                    width: 372,
+                    height: image_height,
+                    widths: '177, 226, 278, 290, 301, 310, 372',
+                    sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                  -}}
+                </div>
+            {% endunless %}
+        {% endcase %}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+  <div class="column-card_top-wrap">
+    {%- if section.settings.card_layout_style == 'card' -%}
+      {%- if card.settings.image != blank -%}
+        {%- case section.settings.card_media_width -%}
+          {% when 'one-third' %}
+            {%- unless section.settings.card_media_size == 'adapt' -%}
+              <div class="column-card_image column-card_image--one-third column-card_image--tag-full --media-size-{{ section.settings.card_media_size }} anim--shine"  style="--media-ratio: {{ card_media_size }};">
+                {{- card.settings.image | image_url: width: 372 | image_tag:
+                  alt: image_alt,
+                  class: 'object-fit object-fit--absolute',
+                  loading: loading_attr,
+                  width: 372,
+                  height: image_height,
+                  widths: '177, 226, 278, 290, 301, 310, 372',
+                  sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                -}}
+              </div>
+              {% else %}
+                <div class="column-card_image column-card_image--one-third column-card_image--tag-full anim--shine">
+                  {{- card.settings.image | image_url: width: 372 | image_tag:
+                    alt: image_alt,
+                    loading: loading_attr,
+                    width: 372,
+                    height: image_height,
+                    widths: '177, 226, 278, 290, 301, 310, 372',
+                    sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                  -}}
+                </div>
+            {% endunless %}
+          {% when 'icon_width' %}
+            {%- liquid
+              assign logo_width = card.settings.image.width | round
+              capture image_alt
+                unless card.settings.image.alt == blank
+                  echo card.settings.image.alt
+                  else
+                    echo card.settings.heading | escape
+                endunless
+              endcapture
+
+              capture logo_widths
+                echo logo_width
+              endcapture
+            -%}
+            {%- capture logo_sizes -%}
+              {{- logo_width | prepend: '(min-width: 50px) ' | append: 'px' -}}
+            {%- endcapture -%}
+            <div class="column-card_image anim--shine">
+              {{- card.settings.image | image_url: width: logo_width | image_tag: sizes: logo_sizes, alt: image_alt, widths: logo_widths, loading: loading_attr -}}
+            </div>
+          {% when 'half' %}
+            {%- unless section.settings.card_media_size == 'adapt' -%}
+              <div class="column-card_image column-card_image--half column-card_image--tag-full --media-size-{{ section.settings.card_media_size }} anim--shine" style="--media-ratio: {{ card_media_size }};">
+                {{- card.settings.image | image_url: width: 372 | image_tag:
+                  alt: image_alt,
+                  class: 'object-fit object-fit--absolute',
+                  loading: loading_attr,
+                  width: 372,
+                  height: image_height,
+                  widths: '177, 226, 278, 290, 301, 310, 372',
+                  sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                -}}
+              </div>
+              {% else %}
+              <div class="column-card_image column-card_image--half column-card_image--tag-full anim--shine">
+                {{- card.settings.image | image_url: width: 372 | image_tag:
+                  alt: image_alt,
+                  loading: loading_attr,
+                  width: 372,
+                  height: image_height,
+                  widths: '177, 226, 278, 290, 301, 310, 372',
+                  sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                -}}
+              </div>
+            {% endunless %}
+          {% when 'full' %}
+            {%- unless section.settings.card_media_size == 'adapt' -%}
+              <div class="column-card_image column-card_image--full column-card_image--tag-full --media-size-{{ section.settings.card_media_size }} anim--shine" style="--media-ratio: {{ card_media_size }};">
+                {{- card.settings.image | image_url: width: 372 | image_tag:
+                  alt: image_alt,
+                  class: 'object-fit object-fit--absolute',
+                  loading: loading_attr,
+                  width: 372,
+                  height: image_height,
+                  widths: '177, 226, 278, 290, 301, 310, 372',
+                  sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                -}}
+              </div>
+              {% else %}
+                <div class="column-card_image column-card_image--full column-card_image--tag-full anim--shine">
+                  {{- card.settings.image | image_url: width: 372 | image_tag:
+                    alt: image_alt,
+                    loading: loading_attr,
+                    width: 372,
+                    height: image_height,
+                    widths: '177, 226, 278, 290, 301, 310, 372',
+                    sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                  -}}
+                </div>
+            {% endunless %}
+          {% else %}
+            {%- unless section.settings.card_media_size == 'adapt' -%}
+              <div class="column-card_image column-card_image--{{ section.settings.card_media_width }} column-card_image--tag-full --media-size-{{ section.settings.card_media_size }} anim--shine" style="--media-ratio: {{ card_media_size }};">
+                {{- card.settings.image | image_url: width: 372 | image_tag:
+                  alt: image_alt,
+                  class: 'object-fit object-fit--absolute',
+                  loading: loading_attr,
+                  width: 372,
+                  height: image_height,
+                  widths: '177, 226, 278, 290, 301, 310, 372',
+                  sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                -}}
+              </div>
+              {% else %}
+                <div class="column-card_image column-card_image--{{ section.settings.card_media_width }} column-card_image--tag-full anim--shine">
+                  {{- card.settings.image | image_url: width: 372 | image_tag:
+                    alt: image_alt,
+                    loading: loading_attr,
+                    width: 372,
+                    height: image_height,
+                    widths: '177, 226, 278, 290, 301, 310, 372',
+                    sizes: '(max-width: 413px) calc(100vw - 30px), (max-width: 767px) calc((100vw / 2) - 30px), (max-width: 991px) calc((100vw / 3) - 30px), calc((var(--cp-width-px) / 4) - 30px)'
+                  -}}
+                </div>
+            {% endunless %}
+        {% endcase %}
+      {%- endif -%}
+    {%- endif -%}
+    {%- if card.settings.heading != blank -%}
+      <h3 class="{{ section.settings.card_heading_size }} --h-anchor-none mty column-card_heading {{ section.settings.card_heading_weight }} --word-break">
+        {{- card.settings.heading -}}
+      </h3>
+    {%- endif -%}
+    {%- if card.settings.description != blank -%}
+      <div class="mty column-card_description {{ section.settings.card_description_weight }} {{ section.settings.card_description_size }} mty --word-break">
+        <p>{{- card.settings.description -}}</p>
+      </div>
+    {%- endif -%}
+    {%- if card.settings.button_label != blank and section.settings.card_layout_style == 'inline' -%}
+      <footer class="column-card_foot">
+        <a
+          {% if card.settings.url != blank %}href="{{- card.settings.url -}}" {% if card.settings.open_new_window %}target="_blank"{% endif %} {% else %} aria-disabled="true" {% endif %}
+          class="button button--{{ card.settings.type }} button--animate"
+        >
+          {{- card.settings.button_label -}}
+        </a>
+      </footer>
+    {%- endif -%}
+  </div>
+  {%- if card.settings.button_label != blank and section.settings.card_layout_style == 'card' -%}
+    <footer class="column-card_foot">
+      <a
+        {% if card.settings.url != blank %}href="{{- card.settings.url -}}" {% if card.settings.open_new_window %}target="_blank"{% endif %} {% else %} aria-disabled="true" {% endif %}
+        class="button button--{{ card.settings.type }} button--animate"
+      >
+        {{- card.settings.button_label -}}
+      </a>
+    </footer>
+  {%- endif -%}
+</article>

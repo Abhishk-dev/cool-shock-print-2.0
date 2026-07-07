@@ -1,0 +1,45 @@
+{%- comment -%}
+  renders product stock tag
+  usage
+    {%- render 'product-stock-tag', product: product -%}
+{%- endcomment -%}
+{%- if product.title == blank -%}
+    <span class="product-tag --v-align-middle --word-break" style="--bg-clr: var(--section-error-color);">
+      <span class="product-tag_dot"></span>
+      {{- 'product.stock.soldout' | t -}}
+    </span>
+    {%- else -%}
+      {%- if product.selected_or_first_available_variant.inventory_management == 'shopify' -%}
+        {%- liquid
+          assign inventory_count = product.selected_or_first_available_variant.inventory_quantity | times: 1
+          if product.selected_or_first_available_variant.inventory_policy == 'continue'
+            if inventory_count < 1
+              assign inventory_text = 'product.stock.pre_order' | t
+              assign stock_bar_color = 'var(--section-foreground-color)'
+              else
+                assign inventory_text = 'product.stock.in_stock' | t
+                assign stock_bar_color = 'var(--section-success-color)'
+            endif
+            else
+              capture inventory_text
+                if inventory_count < 1
+                  assign stock_bar_color = 'var(--section-error-color)'
+                  echo 'product.stock.soldout' | t
+                  elsif inventory_count < 50
+                    assign stock_bar_color = 'var(--section-warning-color)'
+                    echo 'product.stock.low_stock' | t
+                  else
+                    assign stock_bar_color = 'var(--section-success-color)'
+                    echo 'product.stock.in_stock' | t
+                endif
+              endcapture
+          endif
+        -%}
+        <span class="product-tag --v-align-middle --word-break" style="--bg-clr: {{ stock_bar_color }};">
+          <span class="product-tag_dot"></span>
+          {{- inventory_text -}}
+        </span>
+        {%- else -%}
+          <span class="product-tag hidden">&nbsp;</span>
+      {%- endif -%}
+  {%- endif -%}

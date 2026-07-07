@@ -1,0 +1,610 @@
+{%- liquid
+  assign section_prefix_class = 'main-login'
+  assign section_scheme_class = section.settings.section_color_scheme | prepend: 'scheme scheme--'
+
+  capture main_heading
+    if section.settings.heading != blank
+      echo section.settings.heading
+      else
+        echo 'main_login.main_heading' | t
+    endif
+  endcapture
+
+  capture loading_attr
+    if section.index > 1
+      echo 'lazy'
+      else
+        echo 'eager'
+    endif
+  endcapture
+
+  if section.settings.enable_shop_login_button == false
+    assign hide_shop_login_button = true
+  endif
+  
+-%}
+{%- style -%}
+  .breadcrumb-nav{
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .breadcrumb-list_item + .breadcrumb-list_item::before,
+  .product-variant-option_swatch-dot{
+    border-radius: 100%;
+  }
+
+  .breadcrumb-list [aria-current="page"],
+  .breadcrumb-list_link{
+    font-weight: 700;
+  }
+
+  .breadcrumb-list [aria-current="page"]{
+    color: var(--heading-color);
+  }
+
+  .breadcrumb-list{
+    flex-wrap: wrap;
+    font-size: 1.4rem;
+    line-height: 2rem;
+    padding: 10px 22px;
+  }
+
+  .breadcrumb-list_item + .breadcrumb-list_item::before{
+    content: '';
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    display: inline-block;
+    margin-left: 11px;
+    margin-right: 11px;
+    background: var(--section-links-color);
+  }
+
+  .breadcrumb-list_link{
+    transition: color 0.3s ease;
+    text-decoration: none;
+    font-size: 1.2rem;
+  }
+
+  .breadcrumb-list,
+  .breadcrumb-list_item,
+  .breadcrumb-nav{
+    display: flex;
+  }
+
+  .main-login{
+    --section-padding-top: 0;
+    --section-padding-bottom: 0;
+    position: relative;
+  }
+
+  .main-login_wrapper{
+    display: flex;
+    justify-content: center;
+  }
+
+  .main-login_column{
+    flex-grow: 1;
+    flex-basis: 0;
+    min-width: 50%;
+  }
+
+  .main-login_column--image{
+    display: none;
+  }
+
+  .main-login_wrapper .align-holder--mcenter .align-holder_wrapper{
+    width: 100%;
+  }
+
+  .main-login_img{
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .main-login_btn-wrapper{
+    --mt-top: 20px;
+  }
+
+  .main-login_heading-head{
+    margin-bottom: 29px;
+  }
+
+  .main-login_form-align{
+    padding-top: 44px;
+    padding-bottom: 44px;
+    max-width: 595px;
+    width: 100%;
+    position: relative;
+  }
+
+  .main-login_form-btn{
+    width: 100%;
+    display: block;
+  }
+
+  .main-login_form-btn.button--link,
+  .main-login_pass-btn.button--link{
+    --button-padding-x: 0;
+  }
+
+  .main-login_pass-btn .button_icn,
+  .main-login_form-btn .button_icn,
+  .main-login_role-icn{
+    vertical-align: -0.4em;
+    margin-right: 8px;
+  }
+
+  .main-login_form-btn .button_icn,
+  .main-login_pass-btn--back .button_icn,
+  .main-login_btn--back .button_icn{
+    vertical-align: -0.15em;
+  }
+
+  .transit{
+    animation-duration: 0.4s;
+    animation-iteration-count: 1;
+    opacity: 0;
+    max-height: 0;
+    display: none;
+  }
+
+  .transit--in{
+    opacity: 1;
+    max-height: 9999px;
+    animation-name: opac-in;
+    display: block;
+    opacity: 1;
+  }
+
+  .transit--in:focus{
+    outline: 2px solid currentColor !important;
+  }
+
+  .transit--out{
+    opacity: 0;
+    max-height: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -999;
+  }
+
+  .main-login_error-wrapper,
+  .main-login_success-wrapper,
+  .main-login_results-wrap{
+    color: var(--section-error-color);
+    font-size: 14px;
+    margin-top: 10px;
+    outline: none;
+  }
+
+  .main-login_error-wrapper{
+    text-align: right;
+  }
+
+  .main-login_success-wrapper{
+    color: var(--section-success-color);
+  }
+
+  .main-login_results-wrap:empty{
+    display: none;
+  }
+
+  .main-login_logo-heading{
+    --mt-bottom: 24px;
+    --logo-width: var(--logo-mobile-width);
+    max-width: var(--logo-width);
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .main-login_shop-msg{
+    margin-top: 24px;
+  }
+
+  .main-login_pass-icn{
+    color: var(--section-foreground-color);
+    display: block;
+    margin-top: 40px;
+    margin-bottom: 23px;
+    line-height: 1;
+  }
+
+  .main-login_description{
+    color: var(--section-error-color);
+    font-size: 1.8rem;
+    line-height: 2.8rem;
+  }
+
+  .main-login_form-group + .main-login_form-group{
+    margin-top: 27px;
+  }
+
+  .main-login_foot-wrapper{
+    --mt-top: 47px;
+    font-weight: 500;
+  }
+
+  .main-login_cancel-btn.button--link{
+    margin-top: 27px;
+    font-weight: 500;
+  }
+
+  .main-login_forget-btn.button--link,
+  .main-login_register-link.button--link,
+  .main-login_cancel-btn.button--link{
+    --button-font-size: inherit;
+    --button-font-family: inherit;
+    --button-padding-y: 0;
+    --button-padding-x: 0;
+    --button-font-weight: inherit;
+    --button-background: transparent;
+    --button-text: var(--section-links-color);
+    --button-border-color: transparent;
+    --button-hover-background: transparent;
+    --button-hover-text: var(--section-active-hover-color);
+    --button-hover-border-color: transparent;
+    text-decoration: underline;
+  }
+
+  .main-login .form__message{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.8rem;
+    font-weight: 400;
+    padding: 3px 0;
+  }
+
+  .main-login .error-message_wrapper{
+    margin-bottom: 60px;
+  }
+
+  .main-login .errors ul{
+    padding-left: 0;
+    list-style: none;
+    margin-bottom: 25px;
+  }
+
+  .error-message-wrapper{
+    margin-bottom: 7px;
+  }
+
+  .main-login_form-input-lable{
+    font-size: 1.8rem;
+    line-height: 2.2rem;
+  }
+
+  .main-login .ico-error{
+    color: var(--section-error-color);
+  }
+
+  .main-login .success-message {
+    text-align: center;
+    margin-top: 39px;
+    font-size: 2rem;
+    line-height: 3.3rem;
+    color: var(--section-success-color);
+  }
+    
+  .main-login .success-message p {
+    margin: 0;
+  }
+
+  .main-login .success-message_icn {
+    display: block;
+    margin-bottom: 14px;
+  }
+
+  @media(min-width: 768px){
+    .main-login_column--image{
+      display: block;
+    }
+
+    .main-login .container-fluid{
+      --cp-spacer-left: 0;
+      --cp-spacer-right: 0;
+    }
+
+    .main-login_form-align{
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+
+    .main-login_logo-heading{
+      --logo-width: var(--logo-desktop-width);
+    }
+
+    .main-login_column--form{
+      min-height: calc(100vh - 93px);
+    }
+  }
+
+  @media (min-width: 992px){
+    .main-login_heading-head{
+      margin-bottom: 48px;
+    }
+
+    .main-login_btn-wrapper{
+      --mt-top: 32px;
+    }
+  }
+{%- endstyle -%}
+<script src="{{ 'login-component.js' | asset_url }}" defer="defer"></script>
+{%- liquid
+  if section.settings.show_breadcrumb
+    render 'breadcrumb', color_scheme: section.settings.breadcrumb_color_scheme
+  endif
+-%}
+<div class="global-block {{ section_prefix_class }} {{ section_prefix_class }}-{{ section.id }} {{ section_scheme_class }}">
+  <div class="container-fluid">
+    <div class="{{ section_prefix_class }}_wrapper">
+      {%- if section.settings.image != blank -%}
+        <div class="{{ section_prefix_class }}_column {{ section_prefix_class }}_column--image">
+          <div class="{{ section_prefix_class }}_img">
+            {{- section.settings.image | image_url: width: 1944 | image_tag: class: 'object-fit object-fit--absolute', loading: loading_attr, alt: main_heading, widths: '972, 1944', sizes: '(max-width: 767px) 972vw, 1944vw' -}}
+          </div>
+        </div>
+      {%- endif -%}
+      <div class="{{ section_prefix_class }}_column {{ section_prefix_class }}_column--form align-holder align-holder--mcenter">
+        <div class="{{ section_prefix_class }}_form-align align-holder_wrapper">
+          <login-component>
+            <div id="access-element1" class="transit transit--in">
+              {%- if section.settings.heading != blank -%}
+                <header class="{{ section_prefix_class }}_heading-head --align-center">
+                  <h1 class="{{ section_prefix_class }}_heading --h-anchor-none {{ section.settings.section_heading_size }} {{ section.settings.section_heading_weight }} mty">
+                    {{- main_heading -}}
+                  </h1>
+                  <div class="{{ section_prefix_class }}_description text-size--medium mty">
+                    <p>{{- 'account.req_fields_text' | t -}}</p>
+                  </div>
+                </header>
+                {%- else -%}
+                  <header class="visually-hidden --align-center">
+                    <h1>
+                      {{- main_heading -}}
+                    </h1>
+                  </header>
+                  <div class="{{ section_prefix_class }}_description text-size--medium mty">
+                    <p>{{- 'account.req_fields_text' | t -}}</p>
+                  </div>
+              {%- endif -%}
+              {%- if shop.features.login_with_shop_classic_customer_accounts? -%}
+                <div name="sign-in-with-shop-provider" class="--align-center">
+                  {{ shop | login_button: hide_button: hide_shop_login_button }}
+        
+                  {%- unless hide_shop_login_button -%}
+                    <p>
+                      {{ 'customer.login_page.alternate_provider_separator' | t }}
+                    </p>
+                  {%- endunless -%}
+                </div>
+              {%- endif -%}
+              {%- form 'customer_login', novalidate: 'novalidate' -%}
+                {%- if form.errors != blank -%}
+                  <strong class="form__message mty" role="alert" tabindex="-1" autofocus>
+                    {%- render 'icons-data', width: 22, height: 22, use_icon: true, icon_reference: 'error' -%}
+                    {{- 'erorr.common_heading' | t -}}
+                  </strong>
+                  {{- form.errors | default_errors -}}
+                {%- endif -%}
+                <div class="{{ section_prefix_class }}_form-group">
+                  <label for="loginemailaddress" class="{{ section_prefix_class }}_form-input-lable">
+                    {{- 'account.email_label' | t -}}
+                  </label>
+                  <input
+                    type="email"
+                    name="customer[email]"
+                    id="loginemailaddress"
+                    autocomplete="email"
+                    autocapitalize="off"
+                    {% if form.errors contains 'form' %}
+                      aria-invalid="true"
+                    {% endif %}
+                    placeholder="{{- 'account.email_label' | t -}}"
+                  >
+                </div>
+                {%- if form.password_needed -%}
+                  <div class="{{ section_prefix_class }}_form-group">
+                    <label for="loginpassword" class="{{ section_prefix_class }}_form-input-lable">
+                      {{- 'account.pass_label' | t -}}
+                    </label>
+                    <input
+                      type="password"
+                      name="customer[password]"
+                      id="loginpassword"
+                      autocomplete="current-password"
+                      autocapitalize="off"
+                      value=""
+                      {% if form.errors contains 'form' %}
+                        aria-invalid="true"
+                      {% endif %}
+                      placeholder="{{- 'account.pass_label' | t -}}"
+                    >
+                  </div>
+                {%- endif -%}
+                <div class="{{ section_prefix_class }}_btn-wrapper mty">
+                  <button type="submit" class="button button--primary {{ section_prefix_class }}_form-btn button--animate">
+                    {{- 'account.btn_label' | t -}}
+                  </button>
+                </div>
+                <div class="{{ section_prefix_class }}_foot-wrapper text-size--small mty --align-center">
+                  {%- if form.password_needed -%}
+                    <button class="button button--link {{ section_prefix_class }}_forget-btn" type="button" data-target-id="access-element2">
+                      {{- 'main_login.forgot_btn_label' | t -}}
+                    </button>
+                  {%- endif -%}
+                  <p>
+                    {{- 'main_login.create_account' | t }} <a href="{{- routes.account_register_url -}}" class="button button--link {{ section_prefix_class }}_register-link">{{- 'account.sign_up' | t -}}</a>
+                  </p>
+                </div>
+              {%- endform -%}
+            </div>
+            <div id="access-element2" class="transit transit--out">
+              <header class="{{ section_prefix_class }}_heading-head --align-center">
+                <h2 class="{{ section_prefix_class }}_heading --h-anchor-none {{ section.settings.section_heading_size }} {{ section.settings.section_heading_weight }} mty">
+                  {{- 'account.reset_heading' | t -}}
+                </h2>
+                <div class="{{ section_prefix_class }}_description text-size--medium mty">
+                  <p>{{- 'account.req_fields_text' | t -}}</p>
+                </div>
+              </header>
+              {%- form 'recover_customer_password' -%}
+                {% assign recover_success = form.posted_successfully? %}
+                <div class="{{ section_prefix_class }}_form-group">
+                  <label for="recoveremail" class="{{ section_prefix_class }}_form-input-lable">
+                    {{- 'account.email_label' | t -}}
+                  </label>
+                  <input
+                    type="email"
+                    value=""
+                    name="email"
+                    id="recoveremail"
+                    autocapitalize="off"
+                    autocomplete="email"
+                    {% if form.errors %}
+                      aria-invalid="true"
+                      aria-describedby="recoveremail-email-error"
+                      autofocus
+                    {% endif %}
+                    placeholder="{{ 'account.email_label' | t }}"
+                  >
+                  {%- if form.errors -%}
+                    <div id="recoveremail-email-error" class="{{ section_prefix_class }}_error-wrapper" role="status">
+                      <i class="{{ section_prefix_class }}_role-icn">
+                        {%- render 'icons-data', width: 22, height: 22, use_icon: true, icon_reference: 'error' -%}
+                      </i>
+                      {{- form.errors.messages.form -}}
+                    </div>
+                  {%- endif -%}
+                </div>
+                <div class="{{ section_prefix_class }}_btn-wrapper text-size--small mty --align-center">
+                  <button type="submit" class="button button--primary {{ section_prefix_class }}_form-btn button--animate">
+                      {{- 'main_login.reset_btn_label' | t -}}
+                  </button>
+                  <button class="button button--link {{ section_prefix_class }}_cancel-btn" type="button" data-target-id="access-element1">
+                    {{- 'main_login.cancel_btn_label' | t -}}
+                  </button>
+                </div>
+                {%- if recover_success == true -%}
+                  <div id="recoveremail-email-success" class="success-message mty" role="alert" tabindex="-1" autofocus>
+                    <i class="success-message_icn">
+                      {%- render 'icons-data', width: 54, height: 54, use_icon: true, icon_reference: 'smile' -%}
+                    </i>
+                    <p>{{- 'main_login.recover_success' | t -}}</p>
+                  </div>
+                {%- endif -%}
+              {%- endform -%}
+            </div>
+          </login-component>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.main_login.name",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_shop_login_button",
+      "label": "t:sections.main_login.settings.shop_login_button.label",
+      "default": true
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:heading.label",
+      "default": "Customer Login"
+    },
+    {
+      "type": "select",
+      "id": "section_heading_size",
+      "label": "t:sizes.heading.label",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sizes.heading.options.opt_2.label"
+        },
+        {
+          "value": "h3",
+          "label": "t:sizes.heading.options.opt_3.label"
+        },
+        {
+          "value": "h4",
+          "label": "t:sizes.heading.options.opt_4.label"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "select",
+      "id": "section_heading_weight",
+      "label": "t:weight.heading.label",
+      "options": [
+        {
+          "value": "--fw-bold",
+          "label": "t:weight.heading.options.opt_1.label"
+        },
+        {
+          "value": "--fw-semi-bold",
+          "label": "t:weight.heading.options.opt_5.label"
+        },
+        {
+          "value": "--fw-medium",
+          "label": "t:weight.heading.options.opt_2.label"
+        },
+        {
+          "value": "--fw-normal",
+          "label": "t:weight.heading.options.opt_3.label"
+        }
+      ],
+      "default": "--fw-bold"
+    },
+    {
+      "type": "header",
+      "content": "t:settings_schema.layout.name"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:banner_image.label",
+      "info": "t:sections.before_login.settings.banner.info"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "default": "scheme1",
+      "label": "t:settings_schema.color_schemes.name"
+    },
+    {
+      "type": "header",
+      "content": "t:breadcrumb.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "t:breadcrumb.label",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "breadcrumb_color_scheme",
+      "default": "scheme2",
+      "label": "t:color_scheme.label"
+    }
+  ]
+}
+{% endschema %}

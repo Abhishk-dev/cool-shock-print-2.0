@@ -1,0 +1,75 @@
+{%- comment -%}
+  renders products featured image
+  usage
+    {%- render 'product-featured-image', product: product, loading: loading_attr -%}
+{%- endcomment -%}
+{%- liquid
+  if product.selected_or_first_available_variant.featured_media != null
+    assign media = product.selected_or_first_available_variant.featured_media
+    else
+      for media in product.media
+        assign media = media
+        break
+      endfor
+  endif
+
+  capture image_alt
+    if media.preview_image.alt != blank
+      echo media.preview_image.alt | escape
+      else
+        echo product.title | escape
+    endif
+  endcapture
+-%}
+{%- case size -%}
+  {%- when 'full' -%}
+    {%- capture featured_img_tag -%}
+      <img
+        srcset="{%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
+                {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
+                {%- if media.preview_image.width >= 1445 -%}{{ media.preview_image | image_url: width: 1445 }} 1445w,{%- endif -%}
+                {%- if media.preview_image.width >= 1680 -%}{{ media.preview_image | image_url: width: 1680 }} 1680w,{%- endif -%}
+                {%- if media.preview_image.width >= 2048 -%}{{ media.preview_image | image_url: width: 2048 }} 2048w,{%- endif -%}
+                {%- if media.preview_image.width >= 2200 -%}{{ media.preview_image | image_url: width: 2200 }} 2200w,{%- endif -%}
+                {%- if media.preview_image.width >= 2890 -%}{{ media.preview_image | image_url: width: 2890 }} 2890w,{%- endif -%}
+                {%- if media.preview_image.width >= 4096 -%}{{ media.preview_image | image_url: width: 4096 }} 4096w,{%- endif -%}
+                {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
+        sizes="{{ sizes }}"
+        src="{{- media.preview_image | image_url: width: 1445 -}}"
+        alt="{{- image_alt -}}"
+        loading="{{ loading }}"
+        width="1445"
+        height="{{- 1445 | divided_by: media.preview_image.aspect_ratio | round -}}"
+        class="object-fit object-fit--absolute"
+      >
+    {%- endcapture -%}
+  {%- when 'thumbnail' -%}
+    {%- capture featured_img_tag -%}
+      <img
+        srcset="{%- if media.preview_image.width >= 652 -%}{{ media.preview_image | image_url: width: 652 }} 652px,{%- endif -%}
+                {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
+        sizes="{{ sizes }}"
+        src="{{- media.preview_image | image_url: width: 652 -}}"
+        alt="{{- image_alt -}}"
+        loading="{{ loading }}"
+        width="652"
+        height="{{- 652 | divided_by: media.preview_image.aspect_ratio | round -}}"
+        class="object-fit object-fit--absolute"
+      >
+    {%- endcapture -%}
+  {%- when 'small' -%}
+    {%- capture featured_img_tag -%}
+      <img
+        srcset="{%- if media.preview_image.width >= 380 -%}{{ media.preview_image | image_url: width: 380 }} 380px,{%- endif -%}
+                {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
+        sizes="{{ sizes }}"
+        src="{{- media.preview_image | image_url: width: 380 -}}"
+        alt="{{- image_alt -}}"
+        loading="{{ loading }}"
+        width="380"
+        height="{{- 380 | divided_by: media.preview_image.aspect_ratio | round -}}"
+        class="object-fit object-fit--absolute"
+      >
+    {%- endcapture -%}
+{%- endcase -%}
+{{- featured_img_tag -}}

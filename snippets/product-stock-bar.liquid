@@ -1,0 +1,54 @@
+{%- comment -%}
+  renders product stock bar with stock text
+  usage
+    {%- render 'product-stock-bar', product: product -%}
+{%- endcomment -%}
+{%- if product.title == blank -%}
+  <div class="product-stock-bar" style="--bar-clr: var(--error-color); --bar-size: 0%;">
+    <span class="product-stock-bar_title">
+      {{- 'product.stock.bar.soldout' | t -}}
+    </span>
+    <span class="product-stock-bar_wrap">
+      <span class="product-stock-bar_span"></span>
+    </span>
+  </div>
+  {%- else -%}
+    {%- if product.selected_or_first_available_variant.inventory_management == 'shopify' -%}
+      {%- liquid
+        assign inventory_count = product.selected_or_first_available_variant.inventory_quantity | times: 1
+        assign stock_bar_width = inventory_count | divided_by: 1.00
+
+        if product.selected_or_first_available_variant.inventory_policy == 'continue'
+          if inventory_count < 1
+            assign inventory_text = 'product.stock.bar.pre_order' | t
+            assign stock_bar_width = 100
+            else
+              assign inventory_text = 'product.stock.bar.in_stock' | t: count: inventory_count
+              assign stock_bar_color = 'var(--section-success-color)'
+          endif
+          else
+            capture inventory_text
+              if inventory_count < 1
+                echo 'product.stock.soldout' | t
+                assign stock_bar_color = 'var(--section-error-color)'
+                assign stock_bar_width = 100
+                elsif inventory_count < 50
+                  echo 'product.stock.bar.low_stock' | t: count: inventory_count
+                  assign stock_bar_color = 'var(--section-warning-color)'
+                else
+                  assign stock_bar_color = 'var(--section-success-color)'
+                  echo 'product.stock.bar.in_stock' | t: count: inventory_count
+              endif
+            endcapture
+        endif
+      -%}
+      <div class="product-stock-bar" style="--bar-clr: {{ stock_bar_color }}; --bar-size: {{ stock_bar_width }}%;">
+        <span class="product-stock-bar_title">
+          {{- inventory_text -}}
+        </span>
+        <span class="product-stock-bar_wrap">
+          <span class="product-stock-bar_span"></span>
+        </span>
+      </div>
+    {%- endif -%}
+{%- endif -%}

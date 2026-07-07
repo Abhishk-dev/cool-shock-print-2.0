@@ -1,0 +1,6 @@
+<div id="modal-facets">
+  {%- liquid
+    assign result = search | default: collection
+    render 'facets', results: result
+  -%}
+</div>

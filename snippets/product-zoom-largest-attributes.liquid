@@ -1,0 +1,44 @@
+{%- comment -%}
+  renders product zoom media largest attributes
+  usage
+    {%- render 'product-zoom-largest-attributes', media: media -%}
+{%- endcomment -%}
+{%- capture attributes -%}
+  {%- liquid
+    assign media_largest = media.preview_image | image_url | append: '&' | append: media.preview_image.width | append: 'w'
+
+    case media.preview_image.width
+      when 550
+        assign media_largest = media.preview_image | image_url: width: 550 | append: '550w'
+      when 1100
+        assign media_largest = media.preview_image | image_url: width: 1100 | append: '1100w'
+      when 1445
+        assign media_largest = media.preview_image | image_url: width: 1445 | append: '1445w'
+      when 1680
+        assign media_largest = media.preview_image | image_url: width: 1680 | append: '1680w'
+      when 2048
+        assign media_largest = media.preview_image | image_url: width: 2048 | append: '2048w'
+      when 2200
+        assign media_largest = media.preview_image | image_url: width: 2200 | append: '2200w'
+      when 2890
+        assign media_largest = media.preview_image | image_url: width: 2890 | append: '2890w'
+      when 4096
+        assign media_largest = media.preview_image | image_url: width: 4096 | append: '4096w'
+    endcase
+  -%}
+  href="{{ media_largest }}"
+  data-pswp-width="{{ media.preview_image.width }}"
+  data-pswp-height="{{ media.preview_image.height }}"
+  data-pswp-srcset="
+                    {%- if media.preview_image.width >= 550 -%}{{ media.preview_image | image_url: width: 550 }} 550w,{%- endif -%}
+                    {%- if media.preview_image.width >= 1100 -%}{{ media.preview_image | image_url: width: 1100 }} 1100w,{%- endif -%}
+                    {%- if media.preview_image.width >= 1445 -%}{{ media.preview_image | image_url: width: 1445 }} 1445w,{%- endif -%}
+                    {%- if media.preview_image.width >= 1680 -%}{{ media.preview_image | image_url: width: 1680 }} 1680w,{%- endif -%}
+                    {%- if media.preview_image.width >= 2048 -%}{{ media.preview_image | image_url: width: 2048 }} 2048w,{%- endif -%}
+                    {%- if media.preview_image.width >= 2200 -%}{{ media.preview_image | image_url: width: 2200 }} 2200w,{%- endif -%}
+                    {%- if media.preview_image.width >= 2890 -%}{{ media.preview_image | image_url: width: 2890 }} 2890w,{%- endif -%}
+                    {%- if media.preview_image.width >= 4096 -%}{{ media.preview_image | image_url: width: 4096 }} 4096w,{%- endif -%}
+                    {{ media.preview_image | image_url }} {{ media.preview_image.width }}w
+                  "
+{%- endcapture -%}
+{{- attributes -}}

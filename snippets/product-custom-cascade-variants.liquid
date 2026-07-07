@@ -1,0 +1,358 @@
+{%- comment -%}
+  Custom 2-level variant UI (dropdown-component) for products with exactly two options.
+{%- endcomment -%}
+{%- liquid
+  assign opt1 = product.options[0]
+  assign opt2 = product.options[1]
+-%}
+{{- 'product-custom-cascade-variants.css' | asset_url | stylesheet_tag -}}
+
+<script id="CustomVariantsFull-{{ section.id }}" type="application/json">
+  {{- product.variants | json -}}
+</script>
+
+<div
+  class="product-custom-cascade-ui"
+  data-cascade-root="{{ section.id }}"
+  data-json-selector="{{ product_json_id | prepend: '#' }}"
+  data-forms='["#{{ product_form_installment_id }}", "#{{ form_id }}"]'
+  data-renders='["[{{ stock_render_attr }}]", "[{{ price_render_attr }}]", "[{{ sku_render_attr }}]", "[{{ price_unit_render_attr }}]", "[{{ share_render_attr }}]", "[{{ qty_render_attr }}]", "[{{ pickup_render_attr }}]", "[{{ stockbar_render_attr }}]"]'
+  data-section-id="{{ section.id }}"
+  data-product-url="{{ product.url }}"
+  data-main-parent="#{{ section.id }}-description"
+  data-galleries='["[{{ media_slider_attr }}]", "[{{ media_static_attr }}]"]'
+  data-error-selector="[{{ error_render_attr }}]"
+  data-update-url="true"
+>
+  <div class="product-variant_row product-custom-cascade_field">
+    <div class="product-variant_title-wrap --v-align-middle product-custom-cascade_title">
+      <label
+        class="product-common_variant-title text-size--medium --fw-bold h"
+        id="cascade-heading-1-{{ section.id }}"
+        for="cascade-opt1-btn-{{ section.id }}"
+      >
+        {{- opt1 | escape -}}:
+      </label>
+    </div>
+    <div class="dropdown-component dropdown-component--variant product-custom-cascade_dd">
+      <dropdown-component>
+        <button
+          type="button"
+          id="cascade-opt1-btn-{{ section.id }}"
+          class="dropdown-component_opener dropdown-variant_opener --align-left --word-break"
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          aria-controls="cascade-opt1-list-{{ section.id }}"
+          aria-labelledby="cascade-heading-1-{{ section.id }}"
+        >
+          <span class="product-custom-cascade_dd-value" data-cascade-opener="1"></span>
+          <i class="dropdown-componenet_icn-caret" aria-hidden="true">
+            {%- render 'icons-data',
+              width: 9,
+              height: 5,
+              use_icon: true,
+              icon_reference: 'chevron-down',
+              section_id: section.id
+            -%}
+          </i>
+        </button>
+        <div class="dropdown-component_wrapper dropdown-variant_wrapper" tabindex="-1">
+          <ul
+            id="cascade-opt1-list-{{ section.id }}"
+            class="list-unstyled dropdown-variant_items --align-left"
+            role="listbox"
+            data-cascade-list="1"
+          ></ul>
+        </div>
+      </dropdown-component>
+    </div>
+  </div>
+
+  <div class="product-variant_row product-custom-cascade_field">
+    <div class="product-variant_title-wrap --v-align-middle product-custom-cascade_title">
+      <label
+        class="product-common_variant-title text-size--medium --fw-bold h"
+        id="cascade-heading-2-{{ section.id }}"
+        for="cascade-opt2-btn-{{ section.id }}"
+      >
+        {{- opt2 | escape -}}:
+      </label>
+    </div>
+    <div class="dropdown-component dropdown-component--variant product-custom-cascade_dd">
+      <dropdown-component>
+        <button
+          type="button"
+          id="cascade-opt2-btn-{{ section.id }}"
+          class="dropdown-component_opener dropdown-variant_opener --align-left --word-break"
+          aria-expanded="false"
+          aria-haspopup="listbox"
+          aria-controls="cascade-opt2-list-{{ section.id }}"
+          aria-labelledby="cascade-heading-2-{{ section.id }}"
+        >
+          <span class="product-custom-cascade_dd-value" data-cascade-opener="2"></span>
+          <i class="dropdown-componenet_icn-caret" aria-hidden="true">
+            {%- render 'icons-data',
+              width: 9,
+              height: 5,
+              use_icon: true,
+              icon_reference: 'chevron-down',
+              section_id: section.id
+            -%}
+          </i>
+        </button>
+        <div class="dropdown-component_wrapper dropdown-variant_wrapper" tabindex="-1">
+          <ul
+            id="cascade-opt2-list-{{ section.id }}"
+            class="list-unstyled dropdown-variant_items --align-left"
+            role="listbox"
+            data-cascade-list="2"
+          ></ul>
+        </div>
+      </dropdown-component>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var sectionId = {{ section.id | json }};
+    var soldOutLabel = {{ 'product.atc_buttons.soldout' | t | json }};
+    var root = document.querySelector('.product-custom-cascade-ui[data-cascade-root="' + sectionId + '"]');
+    var fullJsonEl = document.getElementById('CustomVariantsFull-' + sectionId);
+    if (!root || !fullJsonEl || typeof window.themeOnVariantChange !== 'function') return;
+
+    var jsonSelector = root.getAttribute('data-json-selector');
+    var formsSelector = root.getAttribute('data-forms');
+    var renders = root.getAttribute('data-renders');
+    var mainParent = root.getAttribute('data-main-parent');
+    var galleries = root.getAttribute('data-galleries');
+    var secId = root.getAttribute('data-section-id');
+    var productUrl = root.getAttribute('data-product-url');
+    var updateUrl = root.getAttribute('data-update-url');
+
+    var fullVariants;
+    try {
+      fullVariants = JSON.parse(fullJsonEl.textContent);
+    } catch (e) {
+      return;
+    }
+    if (!fullVariants || !fullVariants.length) return;
+
+    var cardJson = document.querySelector(jsonSelector);
+    if (!cardJson) return;
+    var cardData;
+    try {
+      cardData = JSON.parse(cardJson.textContent);
+    } catch (e) {
+      return;
+    }
+    var cardVariants = cardData.variants || [];
+
+    var opener1 = root.querySelector('[data-cascade-opener="1"]');
+    var opener2 = root.querySelector('[data-cascade-opener="2"]');
+    var list1 = root.querySelector('[data-cascade-list="1"]');
+    var list2 = root.querySelector('[data-cascade-list="2"]');
+    if (!opener1 || !opener2 || !list1 || !list2) return;
+
+    var opt1Key = 'option1';
+    var opt2Key = 'option2';
+    var moneyFormat = window.money_format || {{ shop.money_format | json }};
+    var state = { o1: '', o2: '', currentVariant: null };
+
+    function formatMoney(cents) {
+      if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
+        return Shopify.formatMoney(cents, moneyFormat);
+      }
+      return (cents / 100).toFixed(2);
+    }
+
+    function uniqueOption1() {
+      var seen = {};
+      var out = [];
+      fullVariants.forEach(function (v) {
+        var val = v[opt1Key];
+        if (val != null && !seen[val]) {
+          seen[val] = true;
+          out.push(val);
+        }
+      });
+      return out;
+    }
+
+    function variantsForOption1(val) {
+      return fullVariants.filter(function (v) {
+        return v[opt1Key] === val;
+      });
+    }
+
+    function widthSort(a, b) {
+      var na = parseInt(String(a[opt2Key]), 10);
+      var nb = parseInt(String(b[opt2Key]), 10);
+      if (!isNaN(na) && !isNaN(nb) && String(na) === String(a[opt2Key]).trim() && String(nb) === String(b[opt2Key]).trim()) {
+        return na - nb;
+      }
+      return String(a[opt2Key]).localeCompare(String(b[opt2Key]), undefined, { numeric: true });
+    }
+
+    function option2Label(v) {
+      var w = v[opt2Key];
+      var side = v[opt1Key];
+      var price = formatMoney(v.price);
+      return w + ' ' + side + ' - ' + price;
+    }
+
+    function findCardVariant(opt1, opt2) {
+      return cardVariants.find(function (cv) {
+        return String(cv.option1) === String(opt1) && String(cv.option2) === String(opt2);
+      });
+    }
+
+    function closeDropdownFrom(node) {
+      var dd = node.closest('dropdown-component');
+      if (dd && typeof dd.close === 'function') dd.close();
+    }
+
+    function notifyVariantChange(variant) {
+      state.currentVariant = variant;
+      document.dispatchEvent(
+        new CustomEvent('cascade:variant-change', {
+          detail: { sectionId: sectionId, variant: variant }
+        })
+      );
+    }
+
+    function applySelection() {
+      var errSel = root.getAttribute('data-error-selector');
+      if (errSel) {
+        var errElem = document.querySelector(errSel);
+        if (errElem) errElem.classList.add('hidden');
+      }
+      var cardMatch = findCardVariant(state.o1, state.o2);
+      if (!cardMatch || !cardMatch.options) return;
+      var fullMatch = fullVariants.find(function (v) {
+        return v.id === cardMatch.id;
+      });
+      notifyVariantChange(fullMatch || cardMatch);
+      window.themeOnVariantChange(
+        jsonSelector,
+        cardMatch.options,
+        formsSelector,
+        renders,
+        mainParent,
+        galleries,
+        secId,
+        productUrl,
+        updateUrl,
+        null
+      );
+    }
+
+    function makeItemButton(tier, value, displayText, active, unavailable) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className =
+        'dropdown-component_btn-submit product-variant-option_btn-submit --align-left --v-align-middle --word-break product-custom-cascade_dd-item';
+      b.setAttribute('data-cascade-tier', tier);
+      b.dataset.value = String(value);
+      b.dataset.text = displayText;
+      b.textContent = displayText;
+      if (active) b.classList.add('active');
+      if (unavailable) {
+        b.disabled = true;
+        b.textContent = displayText + ' (' + soldOutLabel + ')';
+      }
+      return b;
+    }
+
+    function renderTier1() {
+      list1.innerHTML = '';
+      uniqueOption1().forEach(function (val) {
+        var li = document.createElement('li');
+        li.appendChild(makeItemButton('1', val, val, val === state.o1, false));
+        list1.appendChild(li);
+      });
+      opener1.textContent = state.o1 || '';
+    }
+
+    function openerLabelForPick(pick) {
+      if (!pick) return '';
+      return option2Label(pick) + (!pick.available ? ' (' + soldOutLabel + ')' : '');
+    }
+
+    function fillTier2(preferredWidth) {
+      var rows = variantsForOption1(state.o1).slice();
+      rows.sort(widthSort);
+
+      if (rows.length === 0) {
+        list2.innerHTML = '';
+        opener2.textContent = '';
+        state.o2 = '';
+        return;
+      }
+
+      var match =
+        preferredWidth != null
+          ? rows.find(function (v) {
+              return String(v[opt2Key]) === String(preferredWidth);
+            })
+          : null;
+      var pick =
+        match ||
+        rows.find(function (v) {
+          return v.available;
+        }) ||
+        rows[0];
+
+      state.o2 = pick[opt2Key];
+      list2.innerHTML = '';
+
+      rows.forEach(function (v) {
+        var label = option2Label(v);
+        var li = document.createElement('li');
+        var isPick = pick === v;
+        li.appendChild(makeItemButton('2', v[opt2Key], label, isPick && v.available, !v.available));
+        list2.appendChild(li);
+      });
+
+      opener2.textContent = openerLabelForPick(pick);
+    }
+
+    root.addEventListener('click', function (e) {
+      var item = e.target.closest('.product-custom-cascade_dd-item');
+      if (!item || !root.contains(item) || item.disabled) return;
+      e.preventDefault();
+      var tier = item.getAttribute('data-cascade-tier');
+      if (tier === '1') {
+        state.o1 = item.dataset.value;
+        renderTier1();
+        fillTier2(state.o2);
+        applySelection();
+        closeDropdownFrom(item);
+      } else if (tier === '2') {
+        state.o2 = item.dataset.value;
+        opener2.textContent = item.textContent.trim();
+        list2.querySelectorAll('.product-custom-cascade_dd-item').forEach(function (b) {
+          b.classList.toggle('active', !b.disabled && String(b.dataset.value) === String(state.o2));
+        });
+        applySelection();
+        closeDropdownFrom(item);
+      }
+    });
+
+    var form = document.getElementById({{ form_id | json }});
+    var currentId = form ? parseInt(form.querySelector('input[name="id"]').value, 10) : null;
+    var currentFull = fullVariants.find(function (v) {
+      return v.id === currentId;
+    });
+    if (currentFull) {
+      state.o1 = currentFull[opt1Key];
+      state.o2 = currentFull[opt2Key];
+    } else {
+      var opts = uniqueOption1();
+      state.o1 = opts[0] || '';
+    }
+    renderTier1();
+    fillTier2(currentFull ? currentFull[opt2Key] : null);
+    if (currentFull) notifyVariantChange(currentFull);
+  });
+</script>

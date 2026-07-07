@@ -1,0 +1,137 @@
+{%- comment -%}
+  renders collection card
+  usage
+    {%- render 'collection-grid-card', card: collection, block: block, prefix_class: section_prefix_class, heading_size: section.settings.card_heading_size, heading_weight: section.settings.card_heading_weight, media_size: section.settings.card_media_size, show_title: section.settings.show_title -%}
+{%- endcomment -%}
+{%- liquid
+  capture card_media_ratio
+    if media_size == 'adapt'
+      if custom_image == blank
+        echo card.featured_image.aspect_ratio | default: '1'
+        else
+          echo custom_image.aspect_ratio | default: '1'
+      endif
+      else
+        echo '1'
+    endif
+  endcapture
+
+  capture heading_tag
+    echo heading_tag | default: 'h3'
+  endcapture
+
+  capture collection_title
+    if card.title != blank
+      echo card.title
+      else
+        echo 'collection.title' | t
+    endif
+  endcapture
+
+  capture image_alt
+    if card.title != blank
+      if card.featured_image.alt != blank
+        echo card.featured_image.alt
+      endif
+      else
+        echo 'collection.title' | t
+    endif
+  endcapture
+-%}
+<a
+  {% if card.title != blank %}href="{{- card.url -}}"{% else %}aria-disabled="true"{% endif %}
+  class="collection-card {{ prefix_class }}_collection-card"
+>
+  <div class="collection-card_image anim--shine --media-size-{{ media_size }}" style="--media-ratio: {{ card_media_ratio }}">
+    {%- if card.title == blank -%}
+      {% liquid
+        if custom_image.alt != blank
+          assign image_alt = custom_image.alt
+        endif
+      %}
+      {%- if custom_image != blank -%}
+        {%- assign image_height = 117 | divided_by: custom_image.aspect_ratio | round -%}
+        {{- custom_image | image_url: width: 390 | image_tag:
+          width: 117,
+          height: image_height,
+          alt: image_alt,
+          class: 'object-fit object-fit--cover object-fit--absolute',
+          loading: loading_attr,
+          widths: widths_attr,
+          sizes: size_attr
+        -}}
+      {%- else -%}
+        {%- render 'placeholder-svgs', type: 'collection', index: 4, class: 'object-fit object-fit--absolute' -%}
+      {%- endif -%}
+    {%- else -%}
+      {%- if custom_image == blank -%}
+        {%- if card.featured_image != blank -%}
+          <img
+            srcset="{%- if card.featured_image.width >= 117 -%}{{ card.featured_image | image_url: width: 117 }} 117w,{%- endif -%}
+                    {%- if card.featured_image.width >= 157 -%}{{ card.featured_image | image_url: width: 157 }} 157w,{%- endif -%}
+                    {%- if card.featured_image.width >= 164 -%}{{ card.featured_image | image_url: width: 164 }} 164w,{%- endif -%}
+                    {%- if card.featured_image.width >= 201 -%}{{ card.featured_image | image_url: width: 201 }} 201w,{%- endif -%}
+                    {%- if card.featured_image.width >= 257 -%}{{ card.featured_image | image_url: width: 257 }} 257w,{%- endif -%}
+                    {%- if card.featured_image.width >= 260 -%}{{ card.featured_image | image_url: width: 260 }} 260w,{%- endif -%}
+                    {%- if card.featured_image.width >= 370 -%}{{ card.featured_image | image_url: width: 370 }} 370w,{%- endif -%}
+                    {%- if card.featured_image.width >= 390 -%}{{ card.featured_image | image_url: width: 390 }} 390w,{%- endif -%}
+                    {{ card.featured_image | image_url }} {{ card.featured_image.width }}w"
+            sizes="{{- size_attr -}}"
+            src="{{- card.featured_image | image_url: width: 117 -}}"
+            alt="{{- image_alt -}}"
+            loading="{{- loading_attr -}}"
+            width="117"
+            height="{{- 117 | divided_by: card.featured_image.aspect_ratio | round -}}"
+            class="object-fit object-fit--absolute"
+          >
+        {%- else -%}
+          {%- render 'placeholder-svgs', type: 'collection', index: 4, class: 'object-fit object-fit--absolute' -%}
+        {%- endif -%}
+      {%- else -%}
+        {%- assign image_height = 117 | divided_by: custom_image.aspect_ratio | round -%}
+        {{- custom_image | image_url: width: 390 | image_tag:
+          width: 117,
+          height: image_height,
+          alt: image_alt,
+          class: 'object-fit object-fit--cover object-fit--absolute',
+          loading: loading_attr,
+          widths: widths_attr,
+          sizes: size_attr
+        -}}
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+  <div class="collection-card_content --align-{{ section.settings.card_text_alignment }}">
+    {%- if show_title or tag != blank -%}
+      <div class="collection-card_caption-wrap align-holder align-holder--{{ content_position }}">
+        <div class="collection-card_align align-holder_wrapper">
+          {%- if show_title -%}
+            <{{ heading_tag }} class="collection-card_heading mty h {{ heading_weight }} {{ heading_size }}">
+              {{- collection_title -}}
+            </{{ heading_tag }}>
+          {%- endif -%}
+          {%- unless section.settings.full_card_border -%}
+            <div class="collection-card_icn">
+              {%- render 'icons-data', width: 15, height: 15, use_icon: true, icon_reference: 'card-arrow', section_id: section_id -%}
+            </div>
+          {%- endunless -%}
+        </div>
+      </div>
+    {%- endif -%}
+    {%- if show_counts -%}
+      <span class="collection-card_text-count mty text-size--small --fw-medium" data-render-counts="">
+        {%- liquid
+          if card.products_count == card.all_products_count
+            if card.all_products_count == 1
+              echo 'filters.count.one' | t: count: card.products_count
+              else
+                echo 'filters.count.other' | t: count: card.all_products_count
+            endif
+            else
+              echo 'filters.count.facet_by' | t: count: card.products_count, count_all: card.all_products_count
+          endif
+        -%}
+      </span>
+    {%- endif -%}
+  </div>
+</a>

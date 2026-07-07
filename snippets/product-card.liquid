@@ -1,0 +1,114 @@
+{%- comment -%}
+  renders product column on section templates
+  usage
+    {%- render 'product-card', product: product -%}
+{%- endcomment -%}
+{%- liquid
+  unless product.media.size == 0
+    assign featured_media = product.selected_or_first_available_variant.featured_media
+    unless featured_media != blank
+      for media in product.media
+        assign featured_media = media
+        break
+      endfor
+    endunless
+  endunless
+
+  capture featured_media_ratio
+    if media_size == 'adapt'
+      echo featured_media.preview_image.aspect_ratio | default: '1'
+    else 
+      echo '1'
+    endif
+  endcapture
+
+  capture product_clean_url
+    if product.url contains '?'
+      assign parts = product.url | split: '?'
+      echo parts[0]
+    else
+      echo product.url
+    endif
+  endcapture
+
+  capture loading_attr
+    unless fetchpriority
+      if section.index > 1
+        echo 'lazy'
+        else
+          echo 'eager'
+      endif
+      else
+        echo 'lazy'
+    endunless
+  endcapture
+
+  capture image_alt
+    unless featured_media.preview_image.alt == blank
+      echo featured_media.preview_image
+      else
+        echo product.title | escape
+    endunless
+  endcapture
+-%}
+<focused-element class="product-card --align-center">
+  <div class="product-card_top-wrap">
+    <div class="product-card_media-wrap">
+      <a href="{{- product_clean_url -}}" class="product-card_image --media-size-{{ media_size }}" style="--media-ratio: {{ featured_media_ratio }};">
+        {%- unless featured_media == blank -%}
+          <img
+            srcset="{%- if featured_media.preview_image.width >= 194 -%}{{ featured_media.preview_image | image_url: width: 194 }} 194w,{%- endif -%}
+                    {%- if featured_media.preview_image.width >= 216 -%}{{ featured_media.preview_image | image_url: width: 216 }} 216w,{%- endif -%}
+                    {%- if featured_media.preview_image.width >= 218 -%}{{ featured_media.preview_image | image_url: width: 218 }} 218w,{%- endif -%}
+                    {%- if featured_media.preview_image.width >= 251 -%}{{ featured_media.preview_image | image_url: width: 251 }} 251w,{%- endif -%}
+                    {%- if featured_media.preview_image.width >= 269 -%}{{ featured_media.preview_image | image_url: width: 269 }} 269w,{%- endif -%}
+                    {%- if featured_media.preview_image.width >= 312 -%}{{ featured_media.preview_image | image_url: width: 312 }} 312w,{%- endif -%}
+                    {%- if featured_media.preview_image.width >= 543 -%}{{ featured_media.preview_image | image_url: width: 543 }} 543w,{%- endif -%}
+                    {{ featured_media.preview_image | image_url: width: featured_media.preview_image.width }} {{ featured_media.preview_image.width }}w"
+            sizes="(max-width: 575px) calc(100vw - 102px), (max-width: 767px) calc((100vw / 2) - 72px), (max-width: 991px) calc((100vw / 3) - 62px), calc((var(--cp-width-px) / 4) - 57px)"
+            src="{{- featured_media.preview_image | image_url: width: 194 -}}"
+            alt="{{- image_alt -}}"
+            loading="{{- loading_attr -}}"
+            width="194"
+            height="{{- 194 | divided_by: featured_media.preview_image.aspect_ratio | round -}}"
+            class="object-fit object-fit--absolute"
+          >
+          {%- else -%}
+            {%- render 'placeholder-svgs', type: 'product', class: 'object-fit object-fit--absolute', index: 1  -%}
+        {%- endunless -%}
+        <span class="visually-hidden">{{- image_alt -}}</span>
+      </a>
+    </div>
+    {%- if show_stock_tag -%}
+      <ul class="list-unstyled tags-list product-card_tags-list --v-align-middle">
+        <li class="tags-list_item parent-node">
+          <strong class="tags-list_tag --fw-medium">
+            {%- render 'product-stock-tag', product: product -%}
+          </strong>
+        </li>
+        <li class="tags-list_item parent-node">
+          <strong class="tags-list_tag --fw-medium">
+            {%- render 'product-discount-tag', product: product -%}
+          </strong>
+        </li>
+      </ul>
+    {%- endif -%}
+  </div>
+  <div class="product-card_details-wrap text--{{ card_content_alignment }}">
+    <{{- heading_tag }} class="mty {{ heading_size }} {{ heading_weight }} product-card_heading">
+      <a href="{{- product_clean_url -}}" class="">
+        {{- product.title -}}
+      </a>
+    </{{- heading_tag -}}>
+    {%- if show_vendor -%}
+      <strong class="h text-size--small --fw-medium --word-break product-card_vendor">
+        {{- product.vendor -}}
+      </strong>
+    {%- endif -%}
+    {%- if show_price -%}
+      <strong class="--fw-normal text-size--small product-card_price">
+        {%- render 'product-price', product: product, use_variant: false, show_unit_price: true -%}
+      </strong>
+    {%- endif -%}
+  </div>
+</focused-element>

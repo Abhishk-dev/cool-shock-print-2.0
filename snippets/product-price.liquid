@@ -1,0 +1,95 @@
+{%- comment -%}
+  renders product price
+  usage
+    {%- render 'product-price', product: product, use_variant: true, show_unit_price: false -%}
+{%- endcomment -%}
+{%- liquid
+  assign target = product
+  if use_variant
+    assign target = product.selected_or_first_available_variant
+  endif
+
+  assign compare_at_price = target.compare_at_price
+  assign price = target.price | default: 1999
+
+  assign onsale = false
+  if compare_at_price > price
+    assign onsale = true
+  endif
+
+  assign money_price = price | money
+  if settings.show_currency_code
+    assign money_price = price | money_with_currency
+  endif
+
+  if target == product and product.price_varies
+    assign text_from = 'price.from' | t
+    assign money_price = money_price | prepend: text_from
+  endif
+
+  assign discount = compare_at_price | minus: price
+  assign discount_display = discount | money
+  if settings.show_currency_code
+    assign discount_display = discount | money_with_currency
+  endif
+-%}
+<span class="product-price --word-break">
+  <span class="product-price_pricing">
+    {%- if onsale -%}
+      <span class="visually-hidden">
+        {{- 'product.sale_price' | t -}}
+      </span>
+      <span class="sale-price main-price --text-alternative">
+        {{- money_price -}}
+      </span>
+      {%- unless product.price_varies == false and product.compare_at_price_varies -%}
+        {%- comment -%} On sale - Regular price {%- endcomment -%}
+        <span class="visually-hidden">
+          {{- 'product.regular_price' | t -}}
+        </span>
+        <s class="regular-price product-regular-price">
+          {%- if settings.show_currency_code -%}
+            {{- compare_at_price | money_with_currency -}}
+            {%- else -%}
+              {{- compare_at_price | money -}}
+          {%- endif -%}
+        </s>
+      {%- endunless -%}
+      {%- else -%}
+        {%- comment -%} Regular price {%- endcomment -%}
+        <span class="visually-hidden">
+          {{- 'product.regular_price' | t -}}
+        </span>
+        <span class="regular-price main-price --text-alternative">
+          {{- money_price -}}
+        </span>
+    {%- endif -%}
+    {% if show_discount and onsale %}
+      <span class="discount-amount text-size-small --fw-bold">
+        {{ 'product.save_text' | t }} {{ discount_display }}
+      </span>
+    {%- endif -%}
+  </span>
+  {%- if show_unit_price -%}
+    {%- unless product.selected_or_first_available_variant.unit_price_measurement == nil -%}
+      <span class="product-price_unit-pricing --text-alternative">
+        <span class="visually-hidden">
+          {{- 'product.unit_price' | t -}}
+        </span>
+        <span class="unit-price">
+          <span>
+            {{- product.selected_or_first_available_variant.unit_price | money -}}
+          </span>
+          <span aria-hidden="true">/</span>
+          <span class="visually-hidden">&nbsp;{{- 'product.unit_price_separator' | t -}}&nbsp;</span>
+          <span>
+            {%- if product.selected_or_first_available_variant.unit_price_measurement.reference_value != 1 -%}
+              {{- product.selected_or_first_available_variant.unit_price_measurement.reference_value -}}
+            {%- endif -%}
+            {{- product.selected_or_first_available_variant.unit_price_measurement.reference_unit -}}
+          </span>
+        </span>
+      </span>
+    {%- endunless -%}
+  {%- endif -%}
+</span>

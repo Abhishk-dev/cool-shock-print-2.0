@@ -1,0 +1,44 @@
+{%- comment -%}
+  Customer note as a line item property; associates with main ATC form via form="{{ form_id }}".
+  Pass: block, form_id, buttons_exist (string 'true' or not), section
+{%- endcomment -%}
+{{- 'product-additional-information.css' | asset_url | stylesheet_tag -}}
+{%- liquid
+  assign visible_label = block.settings.label | default: 'Additional information'
+  assign prop_name = block.settings.line_item_property_name | strip
+  if prop_name == blank
+    assign prop_name = visible_label
+  endif
+  assign field_id = 'additional-info-' | append: section.id | append: '-' | append: block.id
+-%}
+<div class="product-additional-information">
+  <label
+    class="product-additional-information__label product-common_variant-title text-size--medium --fw-bold h"
+    for="{{ field_id }}"
+  >
+    {{- visible_label | escape -}}
+  </label>
+  <textarea
+    id="{{ field_id }}"
+    class="form-control form-control--textarea product-additional-information__textarea"
+    rows="{{ block.settings.rows }}"
+    name="properties[{{ prop_name | escape }}]"
+    {% if buttons_exist == 'true' %}
+      form="{{ form_id }}"
+    {% endif %}
+    {% if block.settings.placeholder != blank %}
+      placeholder="{{ block.settings.placeholder | escape }}"
+    {% endif %}
+    {% if block.settings.maxlength > 0 %}
+      maxlength="{{ block.settings.maxlength }}"
+    {% endif %}
+    {% if block.settings.required %}
+      required
+    {% endif %}
+  ></textarea>
+  {%- if buttons_exist != 'true' and request.design_mode -%}
+    <p class="product-additional-information__hint text-size--small">
+      Add an <strong>Add to cart</strong> block so this field is submitted with the order.
+    </p>
+  {%- endif -%}
+</div>

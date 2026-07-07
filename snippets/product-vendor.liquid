@@ -1,0 +1,17 @@
+{%- comment -%}
+  renders product vendor name
+  usage
+    {%- render 'product-vendor', product: product, show_label: true -%}
+{%- endcomment -%}
+<span class="product-vendor_label product-common_stat-label {% unless show_label %}visually-hidden{% endunless %}">
+  {{- 'product.vendor_label' | t -}}:
+</span>
+{%- if product.title != blank -%}
+<span class="product-vendor_text --word-break">
+  {{- product.vendor -}}
+</span>
+{%- else -%}
+  <span class="product-vendor_text --word-break">
+    {{- 'product.vendor_label' | t -}}
+  </span>
+{%- endif -%}

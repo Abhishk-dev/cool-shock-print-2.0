@@ -1,0 +1,260 @@
+{%- comment -%}
+  renders cart drawer on page templates
+  usage
+    {%- render 'cart-drawer' -%}
+{%- endcomment -%}
+
+{%- liquid
+  assign drawer_render_attr = 'data-line-items-drawer-container'
+-%}
+<modal-component
+data-modal="modal-cart-drawer"
+>
+    <div
+      class="modal modal-component --drawer modal-component--cart-drawer scheme--{{ settings.cart_draw_color_scheme }}"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-cart-drawer-heading"
+      aria-describedby="modal-cart-drawer"
+      tabindex="-1"
+    >
+      <div class="modal-component_wrapper" id="modal-cart-drawer">
+        <modal-component-toggler>
+          <button
+            type="button"
+            data-expanded="true"
+            data-toggle-attribute="false"
+            data-modal-ref="modal-cart-drawer"
+            class="modal-component_btn-close button button--icn"
+          >
+            <span class="btn-icn-ixi_wrapper">
+              {%- render 'icons-data', width: 14, height: 14, use_icon: true, icon_reference: 'cross' -%}
+              <span class="visually-hidden">{{- 'accessibility.close' | t -}}</span>
+            </span>
+          </button>
+        </modal-component-toggler>
+        <div class="modal-component_body" {{ drawer_render_attr }}>
+          {{- 'main-cart.css' | asset_url | stylesheet_tag -}}
+          {%- if cart != empty -%}
+            <div class="modal-component_head">
+              <strong class="mty h6 cart-drawer_heading --fw-bold" id="modal-cart-drawer-heading">
+                {{- 'cart.drawer.heading' | t -}}
+                <span class="cart-drawer_heading-buble">
+                  {%- liquid
+                    render 'cart-drawer-bubble'
+                    render 'cart-drawer-text'
+                  -%}
+                </span>
+              </strong>
+              {%- if settings.cart_draw_welcome_message != blank -%}
+                <div class="mty text-size--small cart-drawer_welcome-msg --word-break --fw-normal">
+                  <p>{{- settings.cart_draw_welcome_message -}}</p>
+                </div>
+              {%- endif -%}
+              {%- if settings.enable_free_shipping_message -%}
+                <div data-render-drawer-shipping-bar="">
+                  <shipping-bar class="shipping-bar" data-amount="{{- settings.free_shipping_amount -}}" data-cart-totals="{{- cart.total_price -}}">
+                    <progress class="shipping-bar_progress" value="0" max="100">0</progress>
+                    <strong class="shipping-bar_text text-size--small">
+                      {{- settings.free_shipping_text -}}
+                    </strong>
+                  </shipping-bar>
+                </div>
+              {%- endif -%}
+            </div>
+            <div class="modal-component_content">
+              <div class="cart_drawer_content">
+                {%- for item in cart.items -%}
+                  {% render 'line-item-compact', item: item, loading_attr: 'lazy', index: forloop.index, drawer_render_attr: drawer_render_attr, color_scheme: settings.cart_draw_color_scheme, section_id: section.id %}
+                {%- endfor -%}
+              </div>
+              {% if settings.cart_related_collection != null %}
+                {%- if settings.cart_related_collection.all_products_count > 0 -%}
+                  <div class="cart-drawer_related-wrapper">
+                    {%- if settings.cart_draw_related_heading != blank -%}
+                      <strong class="cart-drawer_rel-title {% if settings.cart_show_pagination %}--padding-rel-title{% endif %} h --word-break text-size--small --fw-bold">
+                        {{- settings.cart_draw_related_heading -}}
+                      </strong>
+                    {%- endif -%}
+                    <splide-slider
+                      data-slider-type="default"
+                      data-go-to="true"
+                    >
+                      <div
+                        class="splide cart-product_slider"
+                        data-splide='{
+                          "type": "slide",
+                          "live": true,
+                          "drag": true,
+                          "gap": "10px",
+                          "autoplay": {{ settings.cart_auto_play }},
+                          "rewind": false,
+                          "interval": {{- settings.cart_change_slides_every | times: 1000 -}},
+                          "padding": "0px",
+                          "perMove": 1,
+                          "perPage": 1,
+                          "arrows": false,
+                          "pagination": {{ settings.cart_show_pagination }},
+                          "mediaQuery": "min",
+                          "breakpoints": {
+                            "768": {
+                              "perPage": 1,
+                              "padding": "25px"
+                            },
+                            "1260": {
+                              "perPage": 1
+                            }
+                          }
+                        }'
+                      >
+                        <div class="splide__track">
+                          <div class="splide__list">
+                            {%- liquid
+                              assign collection_all_products_count = settings.cart_related_collection.products
+                              assign products_to_show = settings.cart_related_max_to_show
+                            -%}
+                            {%- for product in collection_all_products_count limit: products_to_show -%}
+                              <div class="splide__slide" {{ block.shopify_attributes }}>
+                               <article class="cart-product-complementary">
+                                {%- render 'product-column-row', product: product, show_swatches: settings.cart_show_swatches, enable_atc: settings.enable_atc -%}
+                               </article>
+                              </div>
+                            {%- endfor -%}
+                          </div>
+                        </div>
+                        {%- if settings.cart_show_pagination -%}
+                          <div class="splide-controls splide__arrows --justify-center">
+                            <ul class="splide__pagination" role="tablist" aria-label="{{- 'accessibility.slider.pagination_label' | t -}}"></ul>
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    </splide-slider>
+                  </div>
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+            <div class="modal-component_foot">
+              <div class="cart-drawer_foot-wrap widget--styles">
+                {%- if settings.enable_order_notes -%}
+                  <details class="main-cart_widget--collapse cart-drawer_widget--collapse">
+                    <summary class="main-cart_widget-opener text-size--small h --fw-semi-bold">
+                      {%- liquid
+                        render 'icons-data', width: 16, height: 16, use_icon: true, icon_reference: 'pencil'
+                        echo 'cart.write_note' | t
+                      -%}
+                      <i class="main-cart_widget-icn">
+                        {%- render 'icons-data', width: 10, height: 10, use_icon: true, icon_reference: 'chevron-down', section_id: section.id -%}
+                      </i>
+                    </summary>
+                    <div class="main-cart_widget-slide-content cart-drawer_widget-slide-content">
+                      <label class="visually-hidden" for="Cart-note">
+                        {{- 'cart.note_textarea_placeholder' | t -}}
+                      </label>
+                      <textarea
+                        name="note"
+                        id="Cart-note"
+                        form="cart-form"
+                        class="main-cart_textarea"
+                        placeholder="{{- 'cart.note_textarea_placeholder' | t -}}"
+                      >
+                        {{- cart.note -}}
+                      </textarea>
+                    </div>
+                  </details>
+                {%- endif -%}
+                <form action="{{- routes.cart_url -}}" method="post" class="cart-drawer_form" id="cart-form">
+                  <div data-render-cart-drawer-totals="">
+                    <div class="cart-drawer_totals-wrap --v-align-start">
+                      <strong class="cart-drawer_total-title h text-size--small --fw-semi-bold">
+                        {{- 'cart.subtotal' | t -}}:
+                      </strong>
+                      <strong class="cart-drawer_total-price --word-break text-size--small --fw-semi-bold">
+                        {{- cart.total_price | money_with_currency -}}
+                      </strong>
+                    </div>
+                    {%- if cart.cart_level_discount_applications.size > 0 -%}
+                      <div class="cart-drawer_discounts-wrap">
+                        <ul class="cart-drawer_discounts-list list-unstyled">
+                          {%- for discount in cart.cart_level_discount_applications -%}
+                            <li class="cart-drawer_discounts-item --word-break">
+                              {%- render 'icons-data', width: 14, height: 14, use_icon: true, icon_reference: 'discount' -%}
+                              {{- discount.title }} (-{{ discount.total_allocated_amount | money -}})
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      </div>
+                    {%- endif -%}
+                    <div class="cart-drawer_others-wrap text-size--small --fw-normal">
+                      <small class="cart-drawer_tax-note">
+                        {%- liquid
+                          if cart.taxes_included and shop.shipping_policy.body != blank
+                            echo 'cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url
+                            elsif cart.taxes_included
+                              echo 'cart.taxes_included_but_shipping_at_checkout' | t
+                            elsif shop.shipping_policy.body != blank
+                              echo 'cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url
+                            else
+                              echo 'cart.taxes_and_shipping_at_checkout' | t
+                          endif
+                        -%}
+                      </small>
+                    </div>
+                  </div>
+                  <div class="cart-drawer_btn-wrap --align-center">
+                    <button
+                      type="submit"
+                      id="checkout"
+                      class="button button--primary cart-drawer_btn-submit button--animate"
+                      name="checkout"
+                      {% if cart == empty %}
+                        disabled
+                      {% endif %}
+                    >
+                      <span class="cart_cricle"></span>
+                      {{- 'cart.checkout' | t -}}
+                    </button>
+                    <a href="{{- routes.all_products_collection_url -}}" class="button button--secondary cart-drawer_btn-continue button--animate">
+                      <span class="cart_cricle"></span>
+                      {{- 'cart.continue_shopping' | t -}}
+                    </a>
+                    <a href="{{- routes.cart_url -}}" class="button button--link cart-drawer_btn-cart --hover-underline">
+                      <span class="cart_cricle"></span>
+                      {{- 'cart.drawer.view_label' | t -}}
+                    </a>
+                  </div>
+                </form>
+              </div>
+            </div>
+            {%- else -%}
+              <div class="modal-component_content">
+                <div class="cart-drawer_empty --align-center">
+                  <div class="cart-drawer_empty-align">
+                    <i class="cart-drawer_head-icn">
+                      {%- render 'icons-data', width: 41, height: 41, use_icon: true, icon_reference: 'empty-box' -%} 
+                    </i>
+                    <strong class="mty h3 cart-drawer_heading" id="modal-cart-drawer-heading">
+                      {{- 'cart.empty.heading' | t -}}
+                    </strong>
+                    <a href="{{- routes.all_products_collection_url -}}" class="button cart-drawer_continue-btn button--primary">
+                      {{- 'cart.empty.continue_shopping' | t -}}
+                    </a>
+                    {%- if shop.customer_accounts_enabled -%}
+                      {%- unless customer -%}
+                        <div class="cart-drawer_text-wrap mty text-size--medium">
+                          <strong class="cart-drawer_title">
+                            {{- 'cart.empty.already_account' | t -}}
+                          </strong>
+                          <strong class="cart-drawer_subtitle">
+                            {{- 'cart.drawer.empty.login_link_html' | t: link: routes.account_login_url -}}
+                          </strong>
+                        </div>
+                      {%- endunless -%}
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+</modal-component>

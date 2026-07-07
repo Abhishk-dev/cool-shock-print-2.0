@@ -1,0 +1,207 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main_page": {
+      "type": "main-page",
+      "settings": {
+        "section_caption": "",
+        "section_description": "Bold, sustainable sneakers built for confidence and everyday adventure.",
+        "section_color_scheme": "scheme4",
+        "section_bottom_padding": 10
+      }
+    },
+    "richtext_1": {
+      "type": "richtext",
+      "blocks": {
+        "description": {
+          "type": "description",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "description"
+      ],
+      "settings": {
+        "section_bottom_padding": 18
+      }
+    },
+    "promotion_banner": {
+      "type": "promotion-banner",
+      "blocks": {
+        "banner_one": {
+          "type": "banner",
+          "settings": {
+            "block_tag": "",
+            "block_heading": "",
+            "block_description": "",
+            "btn_label": ""
+          }
+        },
+        "banner_two": {
+          "type": "banner",
+          "settings": {
+            "block_tag": "",
+            "block_heading": "",
+            "block_description": "",
+            "btn_label": ""
+          }
+        }
+      },
+      "block_order": [
+        "banner_one",
+        "banner_two"
+      ],
+      "settings": {
+        "section_top_padding": 18,
+        "section_bottom_padding": 23
+      }
+    },
+    "multicolumn": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_1": {
+          "type": "column",
+          "settings": {
+            "heading": "Sustainability at Heart",
+            "description": "We focus on reducing our footprint with eco-friendly materials and ethical processes. Every pair is designed to tread lighter on the planet—without compromising on performance.",
+            "block_text_alignment": "left",
+            "block_mobile_text_alignment": "left"
+          }
+        },
+        "column_2": {
+          "type": "column",
+          "settings": {
+            "heading": "Empowering Communities",
+            "description": "We collaborate with ethical partners and local artisans to create jobs, support education, and uplift communities through every purchase.",
+            "block_text_alignment": "left",
+            "block_mobile_text_alignment": "left"
+          }
+        },
+        "column_3": {
+          "type": "column",
+          "settings": {
+            "heading": "Uncompromising Quality",
+            "description": "Quality is in every stitch. We design shoes built to last—with care, precision, and materials that extend product life and minimize waste.",
+            "block_text_alignment": "left",
+            "block_mobile_text_alignment": "left"
+          }
+        },
+        "column_4": {
+          "type": "column",
+          "settings": {
+            "heading": "Customer-Centric Commitment",
+            "description": "You’re at the heart of what we do. From thoughtful service to standout design, we aim to make your experience as dependable as your favorite pair of sneakers.",
+            "block_text_alignment": "left",
+            "block_mobile_text_alignment": "left"
+          }
+        }
+      },
+      "block_order": [
+        "column_1",
+        "column_2",
+        "column_3",
+        "column_4"
+      ],
+      "settings": {
+        "section_heading": "Responsibility",
+        "section_heading_size": "h4",
+        "section_description": "At Zero-9 Shoes, we take pride in being a brand that goes beyond crafting exceptional footwear. Our responsibilities include:",
+        "card_description_weight": "--fw-light",
+        "section_text_alignment": "left",
+        "section_mobile_text_alignment": "left",
+        "enable_slideshow": false,
+        "section_top_padding": 20,
+        "section_bottom_padding": 12
+      }
+    },
+    "multirow": {
+      "type": "multirow",
+      "blocks": {
+        "row_one": {
+          "type": "row",
+          "settings": {
+            "block_caption": "",
+            "block_heading": "Mission",
+            "block_heading_size": "h6",
+            "block_heading_weight": "--fw-bold",
+            "block_description": "<p>We’re here to empower your movement—designing shoes that blend comfort, urban style, and smart innovation. From ethical sourcing to mindful design, we build for people and planet alike.</p>",
+            "description_text_size": "text-size--medium",
+            "block_description_weight": "--fw-light",
+            "view_more_label": "",
+            "view_more_link": "",
+            "open_new_window": false,
+            "block_media_order": "row",
+            "content_alignment": "middle",
+            "block_text_alignment": "left",
+            "block_mobile_text_alignment": "left",
+            "block_color_scheme": ""
+          }
+        },
+        "row_two": {
+          "type": "row",
+          "settings": {
+            "block_caption": "",
+            "block_heading": "Innovation in Every Step",
+            "block_heading_size": "h6",
+            "block_heading_weight": "--fw-bold",
+            "block_description": "<p>We believe every step should feel good and do good. Our designs go beyond looks—crafted for performance, comfort, and sustainability. Whether you're on city streets or off the grid, Zero-9 is your go-to for conscious movement and confident living.</p>",
+            "description_text_size": "text-size--medium",
+            "block_description_weight": "--fw-light",
+            "view_more_label": "",
+            "view_more_link": "",
+            "open_new_window": false,
+            "block_media_order": "row_reverse",
+            "content_alignment": "middle",
+            "block_text_alignment": "left",
+            "block_mobile_text_alignment": "left",
+            "block_color_scheme": ""
+          }
+        }
+      },
+      "block_order": [
+        "row_one",
+        "row_two"
+      ],
+      "settings": {
+        "section_caption": "Brand",
+        "section_heading": "ZERO-9 Think",
+        "section_description": "At Zero-9, being a brand means leading with values and walking the talk.",
+        "section_full_width": false,
+        "section_carousel_height": "small",
+        "section_top_padding": 14,
+        "section_bottom_padding": 0
+      }
+    },
+    "image_banner": {
+      "type": "image-banner",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "We're driven by purpose—to create responsible sneakers using innovative, future-ready materials like recycled, regenerative, and plant-based fibers."
+          }
+        }
+      },
+      "block_order": [
+        "heading"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main_page",
+    "richtext_1",
+    "promotion_banner",
+    "multicolumn",
+    "multirow",
+    "image_banner"
+  ]
+}

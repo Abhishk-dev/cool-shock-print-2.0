@@ -1,0 +1,13 @@
+{%- comment -%}
+  renders page card for search page template
+  usage
+    {%- render 'page-card', page: page -%}
+{%- endcomment -%}
+<a class="page-card product-column page-card_link--absolute widget--styles --v-align-middle --justify-center" href="{{- page.url -}}">
+  <h2 class="mt h4 {{ prefix_class }}_page-heading page-card_heading">
+    {{- page.title -}}
+  </h2>
+  <span class="search-page_tag">
+    {{- 'page.current_label_uppercase' | t -}}
+  </span>
+</a>

@@ -1,0 +1,33 @@
+{%- comment -%}
+  renders main menu dropdown product images
+  usage
+    {%- render 'dropdown-product-images', handle: title_handle -%}
+{%- endcomment -%}
+{%- liquid
+  assign matching_product = all_products[handle]
+  assign media = null
+  if matching_product.selected_or_first_available_variant.featured_media != null
+    assign media = matching_product.selected_or_first_available_variant.featured_media
+    else
+      for media in matching_product.media
+        assign media = media
+        break
+      endfor
+  endif
+-%}
+{%- if matching_product.title != blank and media.preview_image != blank -%}
+  <div class="collection-images main-navigation_collection-images">
+    <span class="collection-images_img --media-size-square" style="--media-ratio: 1;">
+      {%- liquid
+        capture image_alt
+          if media.preview_image.alt != blank
+            echo media.preview_image.alt
+            else
+              echo matching_product.title | escape
+          endif
+        endcapture
+      -%}
+      {{- media.preview_image | image_url: width: 130 | image_tag: class: 'object-fit object-fit--absolute', loading: 'lazy', widths: '65, 130', sizes: '(max-width: 767px) 50vw, 100vw', alt: image_alt -}}
+    </span>
+  </div>
+{%- endif -%}

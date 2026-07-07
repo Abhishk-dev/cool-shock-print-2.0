@@ -1,0 +1,73 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-products-grid",
+      "custom_css": [
+        ".main-grid_tabs .tab-item {padding: 4px 8px; background-color: #000; color: white; border-radius: 8px;}"
+      ],
+      "settings": {
+        "page_image": "shopify://shop_images/generic.jpg",
+        "parallax_effect": false,
+        "enable_banner_overlay": true,
+        "banner_overlay_opacity": 45,
+        "page_caption": "",
+        "page_caption_size": "text-size--medium",
+        "page_caption_weight": "--fw-bold",
+        "page_heading_size": "h2",
+        "page_heading_weight": "--fw-bold",
+        "page_description": "",
+        "page_text_size": "text-size--medium",
+        "page_description_weight": "--fw-normal",
+        "banner_color_scheme": "scheme4",
+        "section_heading_size": "text-size--xlarge",
+        "section_heading_weight": "--fw-bold",
+        "section_description_size": "text-size--medium",
+        "section_description_weight": "--fw-light",
+        "show_breadcrumb": false,
+        "breadcrumb_color_scheme": "",
+        "number_of_columns_on_desktop": 4,
+        "number_of_rows_on_desktop": 4,
+        "number_of_columns_on_mobile": "2",
+        "card_view": "view_1",
+        "product_media_size": "adapt",
+        "product_heading_size": "text-size--small",
+        "product_heading_weight": "--fw-semi-bold",
+        "card_text_alignment": "center",
+        "enable_atc": true,
+        "enable_quick_view": true,
+        "show_swatches": true,
+        "show_price": true,
+        "show_product_time": false,
+        "show_vendor": true,
+        "show_stock_tag": true,
+        "show_sale_tag": true,
+        "show_custom_tag": false,
+        "section_height": "small",
+        "section_text_alignment": "center",
+        "section_mobile_text_alignment": "center",
+        "show_description": "top",
+        "show_featured_image": true,
+        "enable_filters": true,
+        "enable_search": true,
+        "enable_sort": true,
+        "show_top_bdr": false,
+        "paging_type": "pagination",
+        "section_color_scheme": "scheme1",
+        "section_top_padding": 0,
+        "section_bottom_padding": 50
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

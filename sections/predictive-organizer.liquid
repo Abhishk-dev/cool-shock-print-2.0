@@ -1,0 +1,105 @@
+{% comment %}theme-check-disable ImgLazyLoading{% endcomment %}
+<predictive-organizer id="{{- section.id -}}">
+  <div class="predictive-container_col predictive-container_col--results" data-render-predict-results="">
+    {%- if predictive_search.performed -%}
+      {%- if predictive_search.resources.queries.size == 0 and predictive_search.resources.collections.size == 0 and predictive_search.resources.products.size == 0 and predictive_search.resources.pages.size == 0 -%}
+        <div class="predictive-container_empty-content --align-left">
+          <i class="predictive-container_icn">
+            {%- render 'icons-data', width: 38, height: 38, use_icon: true, icon_reference: 'empty-box' -%} 
+          </i>
+          <div class="predictive-container_empty-descr text-size--large mty">
+            <p>{{- 'search.no_results' | t -}}</p>
+          </div>
+        </div>
+        {%- else -%}
+          <div class="predictive-container_inner-wrap">
+            {%- if predictive_search.resources.queries.size > 0 or predictive_search.resources.collections.size > 0 or predictive_search.resources.pages.size > 0 -%}
+              <div class="predictive-container_inner-col predictive-container_inner-col--suggest --word-break {% if predictive_search.resources.products.size > 0 %}--half-width{% endif %}">
+                <strong class="predictive-container_title --fw-bold --word-break">
+                  {{- 'search.suggestions' | t -}}
+                </strong>
+                <ul class="list-unstyled predictive-container_list">
+                  {%- for page in predictive_search.resources.pages -%}
+                    <li class="predictive-container_list-item h">
+                      <a href="{{- page.url -}}" class="predictive-container_list-link --word-break">
+                        {{- page.title -}}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                  {%- for collection in predictive_search.resources.collections -%}
+                    <li class="predictive-container_list-item h">
+                      <a href="{{- collection.url -}}" class="predictive-container_list-link --word-break">
+                        {{- collection.title -}}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                  {%- for query in predictive_search.resources.queries -%}
+                    <li class="predictive-container_list-item h">
+                      <a href="{{- query.url -}}" class="predictive-container_list-link --word-break">
+                        {{- query.styled_text -}}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endif -%}
+            {%- if predictive_search.resources.products.size > 0 -%}
+              <div class="predictive-container_inner-col predictive-container_inner-col--products {% if predictive_search.resources.queries.size > 0 or predictive_search.resources.collections.size > 0 or predictive_search.resources.pages.size > 0  %}--half-width{% else %}--full-width{% endif %}">
+                <strong class="predictive-container_title --fw-bold --word-break">
+                  {{- 'search.products' | t -}}
+                </strong>
+                  <div class="custom-scroll custom-scroll--horizontal predictive_cs-scroll">
+                    {%- for product in predictive_search.resources.products -%}
+                      {%- liquid
+                        assign media = null
+                        if product.selected_or_first_available_variant.featured_media != null
+                          assign media = product.selected_or_first_available_variant.featured_media
+                        else
+                          for media in product.media
+                            assign media = media
+                            break
+                          endfor
+                        endif
+                      -%}
+                      <div class="cs-col predictive-container_items-item predictive-container_marquee-col {% if predictive_search.resources.queries.size > 0 or predictive_search.resources.collections.size > 0 or predictive_search.resources.pages.size > 0 %}--normal{% else %}--full{% endif %}">
+                        <a class="predictive-container_items-link anim--shine" href="{{- product.url -}}">
+                          <span class="predictive-container_items-image">
+                            {%- if media != null -%}
+                              {%- liquid
+                                capture image_alt
+                                  if media.preview_image.alt != blank
+                                    echo media.preview_image.alt
+                                  else
+                                    echo product.title | escape
+                                  endif
+                                endcapture
+                              -%}
+                              {%- capture image_sizes -%}
+                                (max-width: 410px) 186px, width: 360px;
+                              {%- endcapture -%}
+                              {{- media.preview_image | image_url: width: 360 | image_tag: class: 'object-fit object-fit--absolute', loading: 'lazy', widths: '186, 360', sizes: image_sizes, alt: image_alt -}}
+                            {%- else -%}
+                              {%- render 'placeholder-svgs', type: 'product', class: 'object-fit object-fit--absolute', index: 1  -%}
+                            {%- endif -%}
+                          </span>
+                          <div class="predictive-container_items-descr">
+                            <strong class="predictive-container_items-text predictive-container_text--title --word-break">
+                              {{- product.title -}}
+                            </strong>
+                          </div>
+                        </a>
+                      </div> 
+                    {%- endfor -%}
+                  </div>
+              </div>
+            {%- endif -%}
+          </div>
+          <div class="predictive-container_btn-wrapper">
+            <button type="submit" class="button button--secondary predictive-container_btn">
+              {{ 'search.view_more' | t: terms: predictive_search.terms }}
+            </button>
+          </div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</predictive-organizer>

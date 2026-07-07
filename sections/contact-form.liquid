@@ -1,0 +1,801 @@
+{%- liquid
+  assign section_prefix_class = 'contact-form'
+  assign section_scheme_class = section.settings.section_color_scheme | prepend: 'scheme scheme--'
+
+  capture max_header_size
+    echo settings.page_width | times: section.settings.max_header_size | divided_by: 100
+  endcapture
+
+  capture form_text_alignment
+    case section.settings.form_text_alignment
+      when 'left'
+        echo 'form-header-start'
+      when 'center'
+        echo 'form-header-center'
+      when 'right'
+        echo 'form-header-end'
+    endcase
+  endcapture
+
+  capture form_alignment
+    unless section.settings.form_full_width
+      case section.settings.form_alignment
+        when 'left'
+          echo 'form-left'
+        when 'center'
+          echo 'form-center'
+        when 'right'
+          echo 'form-right'
+      endcase
+    endunless
+  endcapture
+-%}
+{%- style -%}
+  .locator-row_heading-head,
+  .locator-row_store-content{
+    border: 0.4px solid var(--section-border-color);
+  }
+
+  .form-header-center{
+    justify-content: center;
+  }
+
+  .form-header-start{
+    justify-content: start;
+  }
+
+  .form-header-end{
+    justify-content: right;
+  }
+
+  .form-left{
+    margin-right: auto;
+  }
+
+  .form-right{
+    margin-left: auto;
+  }
+
+  .form-center{
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .input_label{
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: var(--font-headings-family);
+    color: var(--section-heading-color);
+    flex-shrink: 0;
+  }
+
+  .form-wrapper_btn-wrap{
+    text-align: end;
+  }
+
+  .contact-form .inner-container{
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .locator-row_store-content{
+    border-top: none;
+  }
+
+  .locator-row_heading-head{
+    border: 0.4px solid var(--section-border-color);
+    padding: 20px 25px;
+  }
+
+  .locator-row_store-content{
+    padding: 31px 27px 26px 27px;
+  }
+
+  .locator-row_address{
+    --mt-top: 15px;
+  }
+
+  .locator-row_store-address-section,
+  .locator-row_store-hours-section,
+  .locator-row_store-email-section{
+    margin-bottom: 13px;
+  }
+
+
+  .locator-row_store-time p,
+  .locator-row_store-address-description p,
+  .locator-row_store-email-address p,
+  .locator-row_store-opening-time p{
+    margin: 0;
+  }
+
+  .locator-row_description{
+    margin-top: 20px;
+  }
+
+  .form__message, 
+  .contact-form_col-form .heading-head,
+  .contact-form_form-wrapper .form-group,
+  .error-email {
+    display: flex;
+  }
+
+  .img_icon,
+  .form-group{
+    position: relative;
+  }
+
+  .img_icon{
+    min-width: 36px;
+    height: 36px;
+    margin-left: 12px;
+  }
+
+  .form__message,
+  .error-email{
+    align-items: center;
+  }
+  
+  .contact-form .form-wrapper_heading svg{
+    margin-left: 10px;
+    margin-bottom: -4px;
+  }
+
+  .form__message,
+  .error-email {
+    gap: 10px;
+  }
+
+  .contact-form_form-wrapper .form-group{
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .form__message {
+    font-weight: 400;
+    font-size: 1.8rem;
+    line-height: 2.8rem;
+  }
+
+  .newsletter-form_results-wrap,
+  .form__message svg,
+  .errors-list_link {
+    color: var(--section-error-color);
+  }
+
+  .success-message .image,
+  .errors-list {
+    margin-bottom: 10px;
+  }
+
+  .errors-list_link {
+    text-decoration: none;
+  }
+
+  .error-email,
+  .contact__field-error {
+    font-size: 1.4rem;
+    line-height: 2.1rem;
+  }
+
+  .success-message {
+    text-align: center;
+    margin-top: 39px;
+    font-size: 2rem;
+    line-height: 3.3rem;
+    color: var(--section-success-color);
+  }
+
+  .success-message p {
+    margin: 0;
+  }
+
+  .success-message_icn {
+    display: block;
+    margin-bottom: 14px;
+  }
+
+  .form-group textarea,
+  .error-email{
+    margin-top: 10px;
+  }
+
+  .form-wrapper_btn-wrap{
+    margin-top: 19px;
+  }
+
+  .form-wrapper_button {
+    --button-padding-y: 1.1rem;
+    --button-padding-x: 1.6rem;
+    --button-font-size: 1.4rem;
+    --button-line-height: 2rem;
+    --button-font-family: var(--body-font-family);
+  }
+
+  .contact-form{
+    --q-align-value: var(--mobile-q-align);
+  }
+
+  .contact-form .container-fluid{
+    --cp-spacer-left: 0;
+    --cp-spacer-right: 0;
+  }
+
+  .locator-row--iframe {
+    position: relative;
+  }
+
+  .contact-form .form-group textarea {
+    resize: none;
+    --input-height: 45px;
+    overflow: hidden;
+  }
+
+  .contact-form .form-group input{
+    --input-height: 4.6rem;
+  }
+
+  .contact-form .form-group textarea,
+  .contact-form .form-group input{
+    border-width: 0 0 1px 0;
+    border-color: var(--section-input-bdr-color);
+    border-radius: 0;
+  }
+
+  .contact-form_wrapper,
+  .contact-form .two-form-group {
+    display: flex;
+  }
+
+  .contact-form .two-form-group{
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .contact-form_form-wrapper .form-group--email,
+  .contact-form_form-wrapper .form-group--name{
+    margin-bottom: 26px;
+    width: 100%;
+  }
+
+  .contact-form_wrapper {
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 20px;
+  }
+  
+  .input_wrapper{
+    flex-grow: 1;
+  }
+
+  .contact-form_col-form,
+  .input_wrapper,
+  .locator-row--iframe iframe,
+  .locator-row--iframe svg{
+    width: 100%;
+  }
+
+  .contact-form_col-info {
+    flex-grow: 1;
+    flex-basis: 0;
+  }
+
+  .contact-form_col-form .heading-head{
+    margin-bottom: 25px;
+    align-items: center;
+  }
+
+  .form-wrapper_main-heading{
+    --mt-bottom: 28px;
+  }
+
+  .locator-row--iframe{
+    line-height: 0;
+    height: 100%;
+  }
+
+  .locator-row--iframe iframe,
+  .locator-row--iframe svg{
+    margin: 0;
+    height: 300px;
+  }
+
+  .locator-row_col--iframe{
+    margin-top: 37px;
+  }
+
+  .form--max-width{
+    max-width: 700px;
+  }
+
+  @media (min-width: 768px) {
+    .contact-form{
+      --q-align-value: var(--desktop-q-align);
+    }
+
+    .input_label {
+      font-size: 3rem;
+      font-weight: 700;
+    }
+
+    .contact-form_form-wrapper .form-group{
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .contact-form{
+      overflow: visible;
+    }
+
+    .contact-form_wrapper {
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .contact-form--form-center .contact-form_col-form {
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+      max-width: 703px;
+    }
+
+    .locator-row--iframe iframe,
+    .locator-row--iframe svg{
+      height: 400px;
+    }
+  }
+
+  @media (min-width:1200px) {
+    .contact-form_wrapper {
+      gap: 54px;
+    }
+
+    .locator-row--iframe iframe,
+    .locator-row--iframe svg{
+      height: 686px;
+    }
+  }
+{%- endstyle -%}
+<div class="global-block {{ section_prefix_class }} {{ section_prefix_class }}-{{ section.id }} {{ section_scheme_class }}" style="--section-padding-top: {{ section.settings.section_top_padding }}px; --section-padding-bottom: {{ section.settings.section_bottom_padding }}px; --mobile-q-align: {{ section.settings.section_mobile_text_alignment }}; --desktop-q-align: {{ section.settings.section_text_alignment }};">
+  <div class="container">
+    <div class="{{ section_prefix_class }}_header-wrapper">
+      {%- if section.settings.section_main_heading != blank or section.settings.section_main_description != blank -%}
+        <header class="heading-head inner-container --word-break --q-align" style="--max-content: {{ max_header_size }}px;">
+          {%- if section.settings.section_caption != blank -%}
+            <div class="{{ section_prefix_class }}_caption h --word-break {{ section.settings.section_caption_size }} {{ section.settings.section_caption_weight }} mty">
+              {{- section.settings.section_caption -}}
+            </div>
+          {%- endif -%}
+          {%- if section.settings.section_main_heading != blank -%}
+            <h2 class="{{ section_prefix_class }}_heading --h-anchor-none {{ section.settings.section_main_heading_size }} {{ section.settings.section_main_heading_weight }} mty">
+              {{- section.settings.section_main_heading -}}
+            </h2>
+          {%- endif -%}
+          {%- if section.settings.section_main_description != blank -%}
+            <div class="{{ section_prefix_class }}_description --word-break {{ section.settings.main_description_text_size }} {{ section.settings.section_main_description_weight }} mty">
+              {{- section.settings.section_main_description -}}
+            </div>
+          {%- endif -%}
+        </header>
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="container">
+    <div class="{{ section_prefix_class }}_wrapper simple">
+      <div class="{{ section_prefix_class }}_col {{ section_prefix_class }}_col-form {% unless section.settings.form_full_width %}form--max-width{% endunless %} {{ form_alignment }}">
+        {%- if section.settings.form_heading != blank or section.settings.form_description != blank -%}
+          <header class="heading-head {{ form_text_alignment }}">
+            {%- if section.settings.form_heading != blank -%}
+              <h2 class="form-wrapper_heading {{ section_prefix_class }}_heading {{ section.settings.form_heading_weight }} {{ section.settings.form_heading_size }} --word-break --h-anchor-none mty">
+                {{ section.settings.form_heading }}
+              </h2>
+            {%- endif -%}
+            {%- if section.settings.icon != blank -%}
+              <div class="img_icon">
+                <img
+                  srcset="{%- if section.settings.icon.width >= 100 -%}{{ section.settings.icon | image_url: width: 100 }} 100w,{%- endif -%}
+                            {{ section.settings.icon | image_url: width: section.settings.icon.width }} {{ section.settings.icon.width }}w"
+                  sizes="100px"
+                  src="{{- section.settings.icon | image_url: width: 100 -}}"
+                  alt="{{- product.title | escape -}}"
+                  loading="eager"
+                  width= "36"
+                  height="{{- 36 | divided_by: section.settings.icon.aspect_ratio | round -}}"
+                  class="object-fit object-fit--absolute"
+                >
+              </div>
+            {%- endif -%}
+          </header>
+        {%- endif -%}
+        <div class="form-wrapper {{ section_prefix_class }}_form-wrapper">
+          {%- assign form_id = 'ContactForm' | append: section.id -%}
+            {%- form 'contact', id: form_id, class: 'isolate' -%}
+              {%- if form.errors != blank -%}
+                <strong class="form__message --fw-normal mty" role="alert" tabindex="-1" autofocus>
+                  {%- render 'icons-data', width: 22, height: 22, use_icon: true, icon_reference: 'error' -%}
+                  {{- 'erorr.common_heading' | t -}}
+                </strong>
+                <ul class="errors-list list-unstyled">
+                  <li class="errors-list_item">
+                    <smooth-anchor data-offset=".sticky-header-wrapper">
+                      <a class="errors-list_link text-size--small" href="#ContactForm-email-{{ form_id }}">
+                        *{{- form.errors.translated_fields.email | capitalize }}
+                        {{ form.errors.messages.email -}}
+                      </a>
+                    </smooth-anchor>
+                  </li>
+                </ul>
+              {%- endif -%}
+              <div class="form-group form-group--name">
+                <label class="input_label" for="contact-name">{{- 'contact_form.form_label.name.label' | t -}}</label>
+                <input type="text" class="input_wrapper" id="contact-name" name="contact[Name]" placeholder="{{- 'contact_form.form_placeholder.name.label' | t -}}">
+              </div>
+              <div class="form-group form-group--email">
+                <label class="input_label" for="ContactForm-email-{{ form_id }}">{{- 'contact_form.form_label.email.label' | t -}}</label>
+                <div class="input_wrapper">
+                  <input type="email" id="ContactForm-email-{{ form_id }}" name="contact[email]" placeholder="{{- 'contact_form.form_placeholder.email.label' | t -}}"
+                    onkeydown="validation()">
+                    <div class="newsletter-form_results-wrap results-wrap_message text-size--small">
+                      {%- if form.errors contains 'email' -%}
+                        <div class="error-email">
+                          {%- render 'icons-data', width: 22, height: 22, use_icon: true, icon_reference: 'error' -%}
+                          <small class="contact__field-error" id="ContactForm-email-{{ form_id }}-error">
+                            {{- form.errors.translated_fields.email | capitalize }}
+                            {{ form.errors.messages.email -}}
+                          </small>
+                        </div>
+                      {%- endif -%}
+                    </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="input_label" for="contact-textarea">{{- 'contact_form.form_label.your_request.label' | t -}}</label>
+                <textarea class="input_wrapper" name="contact[textarea]" id="contact-textarea" placeholder="{{- 'contact_form.form_placeholder.your_request.label' | t -}}"></textarea>
+              </div>
+              <div class="form-wrapper_btn-wrap">
+                <button class="button button--primary form-wrapper_button button--animate" type="submit">
+                  {{- 'contact_form.submit_label' | t -}}
+                </button>
+              </div>
+              {%- if form.posted_successfully? -%}
+                <div class="success-message" role="alert" tabindex="-1" autofocus>
+                  <i class="success-message_icn">
+                    {%- render 'icons-data', width: 54, height: 54, use_icon: true, icon_reference: 'smile' -%}
+                  </i>
+                  <p>{{- 'contact_form.success.heading1' | t -}}</p>
+                  <p>{{- 'contact_form.success.heading2' | t -}}</p>
+                </div>
+              {%- endif -%}
+            {%- endform -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "t:sections.contact_form.name",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.head.content"
+    },
+    {
+      "type": "text",
+      "id": "section_caption",
+      "label": "t:caption.label",
+      "default": "Caption"
+    },
+    {
+      "type": "select",
+      "id": "section_caption_size",
+      "label": "t:sizes.caption.label",
+      "options": [
+        {
+          "value": "text-size--xlarge",
+          "label": "t:sizes.text.options.opt_4.label"
+        },
+        {
+          "value": "text-size--large",
+          "label": "t:sizes.text.options.opt_3.label"
+        },
+        {
+          "value": "text-size--medium",
+          "label": "t:sizes.text.options.opt_2.label"
+        },
+        {
+          "value": "text-size--small",
+          "label": "t:sizes.text.options.opt_1.label"
+        }
+      ],
+      "default": "text-size--medium"
+    },
+    {
+      "type": "select",
+      "id": "section_caption_weight",
+      "label": "t:weight.caption.label",
+      "options": [
+        {
+          "value": "--fw-bold",
+          "label": "t:weight.heading.options.opt_1.label"
+        },
+        {
+          "value": "--fw-semi-bold",
+          "label": "t:weight.heading.options.opt_5.label"
+        },
+        {
+          "value": "--fw-medium",
+          "label": "t:weight.heading.options.opt_2.label"
+        },
+        {
+          "value": "--fw-normal",
+          "label": "t:weight.heading.options.opt_3.label"
+        }
+      ],
+      "default": "--fw-bold"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_main_heading",
+      "label": "t:heading.label",
+      "default": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "section_main_heading_size",
+      "label": "t:sizes.heading.label",
+      "options": [
+        {
+          "value": "h1",
+          "label": "t:sizes.heading.options.opt_1.label"
+        },
+        {
+          "value": "h2",
+          "label": "t:sizes.heading.options.opt_2.label"
+        },
+        {
+          "value": "h3",
+          "label": "t:sizes.heading.options.opt_3.label"
+        },
+        {
+          "value": "h4",
+          "label": "t:sizes.heading.options.opt_4.label"
+        }
+      ],
+      "default": "h3"
+    },
+    {
+      "type": "select",
+      "id": "section_main_heading_weight",
+      "label": "t:weight.heading.label",
+      "options": [
+        {
+          "value": "--fw-bold",
+          "label": "t:weight.heading.options.opt_1.label"
+        },
+        {
+          "value": "--fw-semi-bold",
+          "label": "t:weight.heading.options.opt_5.label"
+        },
+        {
+          "value": "--fw-medium",
+          "label": "t:weight.heading.options.opt_2.label"
+        },
+        {
+          "value": "--fw-normal",
+          "label": "t:weight.heading.options.opt_3.label"
+        }
+      ],
+      "default": "--fw-bold"
+    },
+    {
+      "type": "richtext",
+      "id": "section_main_description",
+      "label": "t:description_text.label",
+      "default": "<p>Be the first to know about new collections and exclusive offers.</p>"
+    },
+    {
+      "type": "select",
+      "id": "main_description_text_size",
+      "label": "t:sizes.description_text.label",
+      "options": [
+        {
+          "value": "text-size--xlarge",
+          "label": "t:sizes.text.options.opt_4.label"
+        },
+        {
+          "value": "text-size--large",
+          "label": "t:sizes.text.options.opt_3.label"
+        },
+        {
+          "value": "text-size--medium",
+          "label": "t:sizes.text.options.opt_2.label"
+        },
+        {
+          "value": "text-size--small",
+          "label": "t:sizes.text.options.opt_1.label"
+        }
+      ],
+      "default": "text-size--small"
+    },
+    {
+      "type": "select",
+      "id": "section_main_description_weight",
+      "label": "t:weight.description_text.label",
+      "options": [
+        {
+          "value": "--fw-bold",
+          "label": "t:weight.heading.options.opt_1.label"
+        },
+        {
+          "value": "--fw-semi-bold",
+          "label": "t:weight.heading.options.opt_5.label"
+        },
+        {
+          "value": "--fw-medium",
+          "label": "t:weight.heading.options.opt_2.label"
+        },
+        {
+          "value": "--fw-normal",
+          "label": "t:weight.heading.options.opt_3.label"
+        },
+        {
+          "value": "--fw-light",
+          "label": "t:weight.heading.options.opt_4.label"
+        }
+      ],
+      "default": "--fw-normal"
+    },
+    {
+      "type": "range",
+      "id": "max_header_size",
+      "label": "t:sections.head.size.label",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "default": 100,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.contact_form.settings.form_settings.title"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "form_heading",
+      "label": "t:sections.contact_form.settings.form_heading.label",
+      "default": "Get in Touch with Us"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon",
+      "label": "t:sections.contact_form.settings.icon.label",
+      "info": "t:sections.contact_form.settings.image_info.info"
+      },
+    {
+      "type": "select",
+      "id": "form_heading_size",
+      "label": "t:sizes.heading.label",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sizes.heading.options.opt_2.label"
+        },
+        {
+          "value": "h3",
+          "label": "t:sizes.heading.options.opt_3.label"
+        },
+        {
+          "value": "h4",
+          "label": "t:sizes.heading.options.opt_4.label"
+        }
+      ],
+      "default": "h3"
+    },
+    {
+      "type": "select",
+      "id": "form_heading_weight",
+      "label": "t:weight.heading.label",
+      "options": [
+        {
+          "value": "--fw-bold",
+          "label": "t:weight.heading.options.opt_1.label"
+        },
+        {
+          "value": "--fw-semi-bold",
+          "label": "t:weight.heading.options.opt_5.label"
+        },
+        {
+          "value": "--fw-medium",
+          "label": "t:weight.heading.options.opt_2.label"
+        },
+        {
+          "value": "--fw-normal",
+          "label": "t:weight.heading.options.opt_3.label"
+        },
+      ],
+      "default": "--fw-bold"
+    },
+    {
+      "type": "text_alignment",
+      "id": "form_text_alignment",
+      "label": "t:alignments.text.label",
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "form_full_width",
+      "label": "t:sections.contact_form.settings.form_full_width.label",
+      "default": true
+    },
+    {
+      "type": "text_alignment",
+      "id": "form_alignment",
+      "label": "t:sections.contact_form.settings.form_alignment.label",
+      "default": "center",
+      "info": "t:sections.contact_form.settings.form_alignment.info"
+    },
+    {
+      "type": "header",
+      "content": "t:layout.content"
+    },
+    {
+      "type": "text_alignment",
+      "id": "section_text_alignment",
+      "label": "t:alignments.text.desktop.label",
+      "default": "left"
+    },
+    {
+      "type": "text_alignment",
+      "id": "section_mobile_text_alignment",
+      "label": "t:alignments.text.mobile.label",
+      "default": "left"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "default": "scheme1",
+      "label": "t:color_scheme.label"
+    },
+    {
+      "type": "header",
+      "content": "t:spacing.content"
+    },
+    {
+      "type": "range",
+      "id": "section_top_padding",
+      "label": "t:spacing.settings.top.label",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 65,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_bottom_padding",
+      "label": "t:spacing.settings.bottom.label",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 65,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.contact_form.name",
+    }
+  ]
+}
+{% endschema %}

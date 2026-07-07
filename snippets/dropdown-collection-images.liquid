@@ -1,0 +1,53 @@
+{%- comment -%}
+  renders main menu dropdown collection images
+  usage
+    {%- render 'dropdown-collection-images', handle: title_handle -%}
+{%- endcomment -%}
+{%- liquid
+  assign matching_collection = collections[handle]
+
+  capture show_collection_images
+    if matching_collection.title != blank
+      for product in matching_collection.products limit: 10
+        if product.media.size > 0
+          for media in product.media
+            echo 'true'
+            break
+          endfor
+          break
+        endif
+      endfor
+    endif
+  endcapture
+-%}
+{%- if matching_collection.title != blank and show_collection_images == 'true' -%}
+  <div class="collection-images main-navigation_collection-images">
+    {%- for product in matching_collection.products limit: 3 -%}
+      {%- liquid
+        assign media = null
+        if product.selected_or_first_available_variant.featured_media != null
+          assign media = product.selected_or_first_available_variant.featured_media
+          else
+            for media in product.media
+              assign media = media
+              break
+            endfor
+        endif
+      -%}
+      {%- if media.preview_image != blank -%}
+        <span class="collection-images_img --media-size-square" style="--media-ratio: 1;">
+          {%- liquid
+            capture image_alt
+              if media.preview_imagealt != blank
+                echo media.preview_imagealt
+                else
+                  echo product.title | escape
+              endif
+            endcapture
+          -%}
+          {{- media.preview_image | image_url: width: 130 | image_tag: class: 'object-fit object-fit--absolute', loading: 'lazy', widths: '65, 130', sizes: '(max-width: 767px) 50vw, 100vw', alt: image_alt -}}
+        </span>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endif -%}

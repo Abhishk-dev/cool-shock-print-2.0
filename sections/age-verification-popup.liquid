@@ -1,0 +1,332 @@
+{%- style -%}
+  .modal-component--age-verifier .modal-component_body{
+    max-width: 488px;
+    padding: 25px;
+    border-radius: var(--section-radius);
+  }
+
+  .modal-component--age-verifier{
+    z-index: 9999;
+  }
+
+  .age-verifier_image path{
+    fill: currentColor;
+  }
+
+  .age-verifier_description,
+  .age-verifier_heading{
+    word-break: break-word;
+  }
+
+  .age-verifier_description p{
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .age-error-container:not(.hidden){
+    margin-top: 34px;
+  }
+
+  .age-verifier_heading{
+    display: block;
+  }
+
+  .age-verifier_btns-wrap{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .age-verifier_image{
+    line-height: 0;
+  }
+
+  .modal-component--age-verifier .--mobile-hidden{
+    display: none;
+  }
+
+  .modal-component--age-verifier .mty {
+    --mt-bottom: calc(var(--block-spacing)/1.5);
+  }
+
+  .age-verifier_image .img--placeholder path{
+    fill: currentColor;
+  }
+
+  .age-error-container{
+    color: var(--section-error-color);
+  }
+
+  .age-verifier_btn,
+  .age-verifier_btns-wrap,
+  .age-verifier_btns-wrap modal-component-toggler{
+    width: 100%;
+  }
+
+  .age-verifier_btn{
+    --button-padding-y: 1.7rem;
+    --button-font-size: 1.6rem;
+    --button-font-weight: 300;
+  }
+
+  @media (min-width: 768px) {
+    .modal-component--age-verifier .modal-component_body{
+      padding: 35px 58px;
+    }
+
+    .modal-component--age-verifier .--mobile-hidden{
+      display: block;
+    }
+  }
+
+  @media (min-width: 1200px){
+    .modal-component--age-verifier .mty{
+      --mt-bottom: var(--block-spacing);
+    }
+  }
+{%- endstyle -%}
+{%- render 'age-verifier-modal' -%}
+<script defer>
+  const button = document.getElementById('age-validator-fail');
+  button.addEventListener('click', function(e){
+    e.preventDefault();
+    const errorContainer = document.getElementById('age-error-container');
+    errorContainer.classList.remove('hidden');
+  });
+</script>
+ 
+{% schema %}
+{
+  "name": "t:sections.age_verifier.name",
+  "limit": 1,
+  "enabled_on": {
+    "groups": [
+      "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.age_verifier.settings.buttons.accept.content"
+    },
+    {
+      "type": "text",
+      "id": "button_label_1",
+      "label": "t:settings_schema.buttons.settings.button.label",
+      "default": "YES, I'M OVER 18"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.age_verifier.settings.buttons.reject.content"
+    },
+    {
+      "type": "text",
+      "id": "button_label_2",
+      "label": "t:settings_schema.buttons.settings.button.label",
+      "default": "NO, I'M UNDER 18"
+    },
+    {
+      "type": "header",
+      "content": "t:layout.content"
+    },
+    {
+      "type": "select",
+      "id": "age_position",
+      "label": "t:positions.label",
+      "options": [
+        {
+          "value": "centered",
+          "label": "t:positions.options.center"
+        },
+        {
+          "value": "bt-left",
+          "label": "t:positions.options.bottom_left"
+        },
+        {
+          "value": "bt-right",
+          "label": "t:positions.options.bottom_right"
+        }
+      ],
+      "default": "centered"
+    },
+    {
+      "type": "text_alignment",
+      "id": "age_text_alignment",
+      "label": "t:alignments.content.label",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.age_verifier.settings.buttons.style.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "age_color_scheme",
+      "default": "scheme3",
+      "label": "t:color_scheme.label"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "t:sections.age_verifier.blocks.image.name",
+      "type": "image",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:image.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_image_on_mobile",
+          "label": "t:sections.age_verifier.blocks.image.hide.label",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "block_spacing",
+          "label": "t:bottom_margin.label",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "default": 15,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "name": "t:heading.name",
+      "type": "heading",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:heading.label",
+          "default": "Age verifier"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "t:sizes.heading.label",
+          "options": [
+             {
+              "value": "h2",
+              "label": "t:sizes.heading.options.opt_2.label"
+            },
+            {
+              "value": "h3",
+              "label": "t:sizes.heading.options.opt_3.label"
+            },
+            {
+              "value": "h4",
+              "label": "t:sizes.heading.options.opt_4.label"
+            }
+          ],
+          "default": "h3"
+        },
+        {
+          "type": "select",
+          "id": "heading_weight",
+          "label": "t:weight.heading.label",
+          "options": [
+            {
+              "value": "--fw-bold",
+              "label": "t:weight.heading.options.opt_1.label"
+            },
+            {
+              "value": "--fw-semi-bold",
+              "label": "t:weight.heading.options.opt_5.label"
+            },
+            {
+              "value": "--fw-medium",
+              "label": "t:weight.heading.options.opt_2.label"
+            },
+            {
+              "value": "--fw-normal",
+              "label": "t:weight.heading.options.opt_3.label"
+            }
+          ],
+          "default": "--fw-bold"
+        },
+        {
+          "type": "range",
+          "id": "block_spacing",
+          "label": "t:bottom_margin.label",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "default": 15,
+          "unit": "px"
+        }
+      ]
+    },
+    {
+      "name": "t:sections.age_verifier.blocks.text.name",
+      "type": "text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "t:description_text.label",
+          "default": "<p>You must be 18 years old to access this website. Please verify your age.</p>"
+        },
+        {
+          "type": "select",
+          "id": "block_text_size_heading",
+          "label": "t:sizes.description_text.label",
+          "options": [
+            {
+              "value": "h4",
+              "label": "t:sizes.heading.options.opt_4.label"
+            },
+            {
+              "value": "h5",
+              "label": "t:sizes.heading.options.opt_5.label"
+            },
+            {
+              "value": "h6",
+              "label": "t:sizes.heading.options.opt_6.label"
+            }
+          ],
+          "default": "h6"
+        },
+        {
+          "type": "select",
+          "id": "description_weight",
+          "label": "t:weight.description_text.label",
+          "options": [
+            {
+              "value": "--fw-bold",
+              "label": "t:weight.heading.options.opt_1.label"
+            },
+            {
+              "value": "--fw-semi-bold",
+              "label": "t:weight.heading.options.opt_5.label"
+            },
+            {
+              "value": "--fw-medium",
+              "label": "t:weight.heading.options.opt_2.label"
+            },
+            {
+              "value": "--fw-normal",
+              "label": "t:weight.heading.options.opt_3.label"
+            }
+          ],
+          "default": "--fw-medium"
+        },
+        {
+          "type": "range",
+          "id": "block_spacing",
+          "label": "t:bottom_margin.label",
+          "min": 0,
+          "max": 50,
+          "step": 1,
+          "default": 34,
+          "unit": "px"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

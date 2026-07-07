@@ -1,0 +1,86 @@
+{%- comment -%}
+  renders product card
+  usage
+    {%- render 'product-card', product: product, prefix_class: section_prefix_class -%}
+{%- endcomment -%}
+{%- liquid
+  if product.selected_or_first_available_variant.featured_media != null
+    assign media = product.selected_or_first_available_variant.featured_media
+    
+    else
+      for media in product.media
+        assign media = media
+        break
+      endfor
+  endif
+
+  capture loading_attr
+      echo 'lazy'
+  endcapture
+
+  capture product_clean_url
+    if product.url contains '?'
+      assign parts = product.url | split: '?'
+      echo parts[0]
+      else
+        echo product.url
+    endif
+  endcapture
+
+  capture media_ratio
+    if media_height == 'adapt'
+    echo media.preview_image.aspect_ratio | default: '1'
+    else 
+        echo '1'
+    endif
+  endcapture
+
+  if media != blank
+    capture image_alt
+      echo media.preview_image.alt | default: product.title | escape
+    endcapture
+  endif
+-%}
+<div class="mega-mpc --align-center">
+  <div class="mega-mpc__inner">
+    <a class="mega-mpc_image {{ menu_media_height }}" href="{{- product.url -}}" style="--media-ratio: {{ media_ratio }}">
+      <span class="visually-hidden">{{ product.title }}</span>
+      {%- if media != null -%}
+        <img
+          srcset="{%- if media.preview_image.width >= 233 -%}{{ media.preview_image | image_url: width: 233 }} 233w,{%- endif -%}
+                  {%- if media.preview_image.width >= 293 -%}{{ media.preview_image | image_url: width: 293 }} 293w,{%- endif -%}
+                  {%- if media.preview_image.width >= 381 -%}{{ media.preview_image | image_url: width: 381 }} 381w,{%- endif -%}
+                   {{ media.preview_image | image_url: width: media.preview_image.width }} {{ media.preview_image.width }}w"
+          sizes="calc((var(--cp-width-px) / 3) - 30px)"
+          src="{{- media.preview_image | image_url: width: 233 -}}"
+          alt="{{- product.title | escape -}}"
+          loading="lazy"
+          width= "233"
+          height="{{- 233 | divided_by: media.preview_image.aspect_ratio | round -}}"
+          class="object-fit object-fit--absolute"
+        >
+        {% else %}
+          {%- render 'placeholder-svgs', type: 'hero', index: 1, class: 'object-fit object-fit--absolute' -%}
+      {%- endif -%}
+    </a>
+    <div class="{{ section_prefix_class }}_countdown-timer">
+      {%- if block.settings.end_date != blank -%}
+        <div class="countdown-timer-wrap">
+          {%- render 'countdown-timer', end_date: block.settings.end_date, end_type: block.settings.end_type, end_message: block.settings.end_message -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="mega-mpc_description">
+    <div class="mega-mpc_align">
+      {%- if product.title != blank -%}
+        <a class="mty mega-mpc_text mega-mpc_heading text-size--small --fw-normal" href="{{- product.url -}}">
+          {{- product.title -}}
+        </a>
+      {%- endif -%}
+      <div class="mega-mpc_price text-size--large">
+        {%- render 'product-price', product: product, use_variant: true, show_unit_price: true -%}
+      </div>
+    </div>
+  </div>
+</div>

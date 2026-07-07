@@ -1,0 +1,24 @@
+{%- liquid
+  assign price_render_attr = 'data-product-card-render-price'
+  assign discount_render_attr = 'data-product-card-render-discount'
+  assign stock_render_attr = 'data-product-card-render-stock'
+  assign price_edit_render_attr = 'data-render-edit-price'
+   assign price_row_render_attr = 'data-product-row-render-price'
+-%}
+<product-organizer id="product-column">
+  <div {{ price_render_attr }}>
+    {%- render 'product-price', product: product, use_variant: true, show_unit_price: true -%}
+  </div>
+  <div {{ stock_render_attr }}>
+    {%- render 'product-stock-tag', product: product -%}
+  </div>
+  <div {{ discount_render_attr }}>
+    {%- render 'product-discount-tag', product: product -%}
+  </div>
+  <div {{ price_edit_render_attr }}>
+    {%- render 'product-price', product: product, use_variant: true, show_unit_price: true -%}
+  </div>
+  <div {{ price_row_render_attr }}>
+    {%- render 'product-price', product: product, use_variant: true, show_unit_price: true, show_discount: false -%}
+  </div>
+</product-organizer>

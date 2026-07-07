@@ -1,0 +1,64 @@
+{%- comment -%}
+  renders pagination on grid structures
+  usage
+    {%- render 'paginaton', prefix_class: 'section_prefix_class' -%}
+{%- endcomment -%}
+
+{%- if paginate.parts.size > 0 -%}
+  <div class="pagination-wrapper {{ prefix_class }}_pagination-wrapper">
+    <nav class="pagination" role="navigation" aria-label="{{- 'pagination.label' | t -}}">
+      <ul class="pagination_list list-unstyled --justify-center">
+        {%- if paginate.previous -%}
+          <li class="pagination_item">
+            <a
+              href="{{ paginate.previous.url }}{{ anchor }}"
+              class="pagination_link pagination_link--prev"
+              aria-label="{{- 'pagination.previous' | t -}}"
+            >
+              {%- render 'icons-data', width: 10, height: 10, use_icon: true, icon_reference: 'left-pg', section_id: section_id -%}
+              <span class="pagination_back-pg">{{ 'pagination.back' | t }}</span>
+            </a>
+          </li>
+        {%- endif -%}
+        {%- for part in paginate.parts -%}
+          <li class="pagination_item">
+            {%- if part.is_link -%}
+              <a
+                href="{{ part.url }}{{ anchor }}"
+                class="pagination_link"
+                aria-label="{{- 'pagination.page' | t: number: part.title }}"
+              >
+                {{- part.title -}}
+              </a>
+            {%- else -%}
+              {%- if part.title == paginate.current_page -%}
+                <a
+                  aria-disabled="true"
+                  class="pagination_link pagination_link--active"
+                  aria-current="page"
+                  aria-label="{{- 'pagination.page' | t: number: part.title }}"
+                >
+                  {{- part.title -}}
+                </a>
+              {%- else -%}
+                <span class="pagination__item pagination_link">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+        {%- if paginate.next -%}
+          <li class="pagination_item">
+            <a
+              href="{{ paginate.next.url }}{{ anchor }}"
+              class="pagination_link pagination_link--next"
+              aria-label="{{- 'pagination.next' | t -}}"
+            >
+              <span class="pagination_next-pg">{{ 'pagination.next_pg' | t }}</span>
+              {%- render 'icons-data', width: 10, height: 10, use_icon: true, icon_reference: 'right-pg', section_id: section_id -%}
+            </a>
+          </li>
+        {%- endif -%}
+      </ul>
+    </nav>
+  </div>
+{%- endif -%}

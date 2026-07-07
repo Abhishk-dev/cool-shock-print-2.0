@@ -1,0 +1,40 @@
+{%- comment -%}
+  renders simple product with featured image, title and price
+  usage
+    {%- render 'simple-product', product: product, prefix_class: section_prefix_class -%}
+{%- endcomment -%}
+<a class="simple-product mty {{ prefix_class }}_simple-product anim--shine" {% if section.settings.predictive_link != blank %}href="{{- section.settings.predictive_link -}}"{% else %}aria-disabled="false"{% endif %} {% if section.settings.predictive_open_new_window %}target="_blank"{% endif %}>
+  <div class="simple-product_image --media-size-{{ media_size }}" style="--media-ratio: 1;">
+    {%- if section.settings.search_image != blank -%}
+      <img
+        srcset="{%- if section.settings.search_image.width >= 152 -%}{{ section.settings.search_image | image_url: width: 152 }} 152w,{%- endif -%}
+                {%- if section.settings.search_image.width >= 200 -%}{{ section.settings.search_image | image_url: width: 200 }} 200w,{%- endif -%}
+                {%- if section.settings.search_image.width >= 260 -%}{{ section.settings.search_image | image_url: width: 260 }} 260w,{%- endif -%}
+                 {{ section.settings.search_image | image_url: width: section.settings.search_image.width }} {{ section.settings.search_image.width }}w"
+        sizes="calc((var(--cp-width-px) / 5) - 10px)"
+        src="{{- section.settings.search_image | image_url: width: 152 -}}"
+        alt="{{- product.title | escape -}}"
+        loading="lazy"
+        width= "152"
+        height="{{- 152 | divided_by: section.settings.search_image.aspect_ratio | round -}}"
+        class="object-fit object-fit--absolute"
+      >
+      {%- else -%}
+        {%- render 'placeholder-svgs', type: 'product', class: 'object-fit object-fit--absolute', index: 1  -%}
+    {%- endif -%}
+  </div>
+  {%- if section.settings.predictive_caption != blank or section.settings.predictive_heading != blank -%}
+    <div class="{{ prefix_class }}_wrap --align-left">
+      {%- if section.settings.predictive_caption != blank -%}
+        <h4 class="{{ prefix_class }}_subheading h text-size--small mty {{ section.settings.predictive_caption_weight }}">
+          {{- section.settings.predictive_caption -}}
+        </h4>
+      {%- endif -%}
+      {%- if section.settings.predictive_heading != blank -%}
+        <h3 class="{{ prefix_class }}_heading mty h text-size--small {{ section.settings.predictive_heading_weight }}">
+          {{- section.settings.predictive_heading -}}
+        </h3>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</a>

@@ -1,0 +1,55 @@
+/* Custom cascade variant UI — theme dropdown list (not native <select> options) */
+
+.product-custom-cascade-ui {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+}
+
+.product-custom-cascade_field {
+  margin-bottom: 0;
+}
+
+.product-custom-cascade-ui .product-custom-cascade_title {
+  margin-bottom: 0.4rem;
+}
+
+.product-custom-cascade-ui .product-custom-cascade_title .product-common_variant-title {
+  margin: 0;
+  cursor: pointer;
+}
+
+.product-custom-cascade_dd {
+  position: relative;
+  width: 100%;
+}
+
+/* Clicks land on the opener button, not inner nodes (matches theme dropdown behaviour) */
+.product-custom-cascade-ui .dropdown-variant_opener .product-custom-cascade_dd-value,
+.product-custom-cascade-ui .dropdown-variant_opener .dropdown-componenet_icn-caret {
+  pointer-events: none;
+}
+
+.product-custom-cascade_dd-value {
+  flex: 1;
+  text-align: left;
+  word-break: break-word;
+}
+
+.product-custom-cascade_dd-item:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.product-custom-cascade_dd-item:disabled:hover {
+  color: inherit;
+  background-color: transparent;
+}
+
+/* Slightly more breathing room in the variant-style list */
+.product-custom-cascade-ui .dropdown-variant_items .product-custom-cascade_dd-item {
+  min-height: 4.8rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}

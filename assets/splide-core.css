@@ -1,0 +1,122 @@
+.splide__track--draggable{
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.splide__track--fade > .splide__list > .splide__slide,
+.splide__track{
+  z-index: 0;
+}
+
+.splide__list,
+.splide__track--fade > .splide__list > .splide__slide{
+  margin: 0 !important;
+}
+
+.splide__track--fade > .splide__list > .splide__slide{
+  opacity: 0;
+}
+
+.splide__track--fade > .splide__list > .splide__slide.is-active{
+  opacity: 1;
+  z-index: 1;
+}
+
+.splide__track--ttb > .splide__list,
+.splide.is-initialized:not(.is-active) .splide__list,
+.splide__pagination__page::before{
+  display: block;
+}
+
+.splide__pagination__page,
+.splide__track,
+.splide__slide,
+.splide{
+  position: relative;
+}
+
+.splide__pagination__page,
+.splide__pagination,
+.splide__arrows,
+.splide__list{
+  display: flex;
+}
+
+.splide__list,
+.splide__slide{
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.splide__list{
+  height: 100%;
+  padding: 0 !important;
+}
+
+.splide__pagination,
+.splide__slide{
+  margin: 0;
+}
+
+.splide__slide{
+  flex-shrink: 0;
+  list-style-type: none !important;
+  width: 100%;
+}
+
+.splide__toggle.is-active .splide__toggle__pause{
+  display: inline;
+}
+
+.splide__track{
+  overflow: hidden;
+}
+
+.splide__arrows{
+  margin-top: 42px;
+  align-items: center;
+  gap: 10px;
+}
+
+.splide__pagination{
+  padding: 0;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.splide__pagination li{
+  display: inline-block;
+  line-height: 0;
+  list-style-type: none;
+}
+
+.splide__pagination__page{
+  border: 0;
+  border-radius: calc(var(--section-radius) * 100);
+  padding: 9px;
+  background-color: transparent;
+}
+
+.splide__pagination__page::before{
+  content: '';
+  border-radius: inherit;
+  margin: auto;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--section-primary-border-color);
+  transition: background-color 0.3s ease;
+  pointer-events: auto;
+}
+
+.splide__pagination__page.is-active::before,
+.splide__pagination__page:hover::before{
+  background-color: var(--section-primary-border-color);
+}
+
+.container-fluid .splide-controls{
+  padding-left: 15px;
+  padding-right: 15px;
+}

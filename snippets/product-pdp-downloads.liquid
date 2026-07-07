@@ -1,0 +1,118 @@
+{%- comment -%}
+  PDP downloads table from product metafield custom.pdp_files_list (metaobject reference).
+  Metaobject type: pdp_file_upload — list fields: file_name (single line text), file (file).
+{%- endcomment -%}
+{%- liquid
+  assign pdp_mo = product.metafields.custom.pdp_files_list.value
+  assign files_arr = nil
+  assign names_arr = nil
+
+  if pdp_mo != blank
+    if pdp_mo.file != blank and pdp_mo.file.value != blank
+      assign files_arr = pdp_mo.file.value
+    endif
+    if pdp_mo.file_name != blank and pdp_mo.file_name.value != blank
+      assign names_arr = pdp_mo.file_name.value
+    endif
+  endif
+
+  assign pdp_dl_row_count = 0
+  if files_arr != blank
+    for _f in files_arr
+      if _f.url != blank
+        assign pdp_dl_row_count = pdp_dl_row_count | plus: 1
+      endif
+    endfor
+  endif
+-%}
+{%- if pdp_dl_row_count > 0 -%}
+  {{- 'product-pdp-downloads.css' | asset_url | stylesheet_tag -}}
+  <div class="product-pdp-downloads">
+    {%- if block.settings.heading != blank -%}
+      <h2 class="product-pdp-downloads__heading h {{ block.settings.heading_size }} {{ block.settings.heading_weight }}">
+        {{- block.settings.heading | escape -}}
+      </h2>
+    {%- endif -%}
+    <div class="product-pdp-downloads__table-wrap">
+      <table class="product-pdp-downloads__table">
+        <thead>
+          <tr>
+            <th scope="col" class="product-pdp-downloads__th product-pdp-downloads__th--file">
+              {{- 'File' | escape -}}
+            </th>
+            <th scope="col" class="product-pdp-downloads__th product-pdp-downloads__th--size">
+              {{- 'Size' | escape -}}
+            </th>
+            <th scope="col" class="product-pdp-downloads__th product-pdp-downloads__th--dl">
+              {{- 'Download' | escape -}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for file_ref in files_arr -%}
+            {%- liquid
+              assign row_name = blank
+              if names_arr != blank
+                assign row_name = names_arr[forloop.index0]
+              endif
+              if row_name == blank and file_ref.alt != blank
+                assign row_name = file_ref.alt
+              endif
+              if row_name == blank
+                assign row_name = 'Download'
+              endif
+
+              assign dl_url = file_ref.url
+              if dl_url != blank
+                unless dl_url contains 'http'
+                  assign dl_url = 'https:' | append: dl_url
+                endunless
+              endif
+
+              # generic_file has no byte size in Liquid; product-pdp-downloads.js fills via HEAD/Range
+              assign size_label = '—'
+            -%}
+            {%- if dl_url != blank -%}
+              <tr class="product-pdp-downloads__row">
+                <td class="product-pdp-downloads__td product-pdp-downloads__td--file">
+                  {{- row_name | escape -}}
+                </td>
+                <td
+                  class="product-pdp-downloads__td product-pdp-downloads__td--size"
+                  data-pdp-dl-size-url="{{ dl_url | escape }}"
+                >
+                  {{- size_label | escape -}}
+                </td>
+                <td class="product-pdp-downloads__td product-pdp-downloads__td--dl">
+                  <a
+                    href="{{ dl_url }}"
+                    class="button button--secondary product-pdp-downloads__btn"
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {{- block.settings.download_label | default: 'Download' | escape -}}
+                  </a>
+                </td>
+              </tr>
+            {%- endif -%}
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="{{ 'product-pdp-downloads.js' | asset_url }}" defer></script>
+{%- elsif request.design_mode -%}
+  {{- 'product-pdp-downloads.css' | asset_url | stylesheet_tag -}}
+  <div class="product-pdp-downloads">
+    {%- if block.settings.heading != blank -%}
+      <h2 class="product-pdp-downloads__heading h {{ block.settings.heading_size }} {{ block.settings.heading_weight }}">
+        {{- block.settings.heading | escape -}}
+      </h2>
+    {%- endif -%}
+    <p class="product-pdp-downloads__placeholder text-size--small">
+      Assign the product metafield <strong>custom.pdp_files_list</strong> to a <strong>PDP file upload</strong> metaobject with list fields
+      <strong>File name</strong> and <strong>File</strong>.
+    </p>
+  </div>
+{%- endif -%}

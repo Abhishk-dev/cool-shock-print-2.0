@@ -1,0 +1,15 @@
+.product-additional-information {
+  width: 100%;
+}
+
+.product-additional-information__textarea {
+  margin-top: 0.6rem;
+  width: 100%;
+  min-height: 10.8rem;
+  resize: vertical;
+}
+
+.product-additional-information__hint {
+  margin: 0.75rem 0 0;
+  opacity: 0.85;
+}

@@ -1,0 +1,129 @@
+{%- comment -%}
+  renders before/after on section templates
+  usage
+    {%- render 'before-after', height: bf_height, loading_attr: loading_attr -%}
+{%- endcomment -%}
+<div class="bf-outer-wrap">
+  <before-after class="bf-wrapper {{ height }}" style="--after-placement: {{ section.settings.after_position }}%;">
+    {%- if section.blocks.size > 1 -%}
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'before' -%}
+            <div class="bf-wrapper_image bf-wrapper_image--before {{ height }} scheme scheme--{{ block.settings.before_color_scheme }}" {{ block.shopify_attributes }}>
+              <div class="bf-caption_col bf-caption_col--first">
+                {%- if block.settings.heading != blank -%}
+                  <h3 class="mty bf-caption_heading {{ block.settings.heading_size }} {{ block.settings.heading_weight }}">
+                    {{- block.settings.heading -}}
+                  </h3>
+                {%- endif -%}
+                {%- if block.settings.sub_heading != blank -%}
+                  <a class="mty bf-caption_subheading button button--icn"
+                    {% if block.settings.view_more_link != blank -%}href="{{ block.settings.view_more_link }}" {% if block.settings.open_new_window %}target="_blank"{% endif %}{% else %}aria-disabled="true"{% endif %}>
+                    {{- block.settings.sub_heading -}}
+                  </a>
+                {%- endif -%}
+              </div>
+              {%- if block.settings.image != blank -%}
+                {%- liquid
+                  capture image_alt
+                    unless block.settings.image.alt == blank
+                      echo block.settings.image.alt
+                      else
+                        echo 'before_after.image_alt' | t: index: forloop.index
+                    endunless
+                  endcapture
+
+                  assign aspect_ratio = block.settings.image.aspect_ratio | default: 1.5
+                -%}
+                <img
+                  srcset="
+                    {%- if block.settings.image.width >= 152 -%}{{ block.settings.image | image_url: width: 152 }} 152w,{%- endif -%}
+                    {%- if block.settings.image.width >= 316 -%}{{ block.settings.image | image_url: width: 316 }} 316w,{%- endif -%}
+                    {%- if block.settings.image.width >= 464 -%}{{ block.settings.image | image_url: width: 464 }} 464w,{%- endif -%}
+                    {%- if block.settings.image.width >= 640 -%}{{ block.settings.image | image_url: width: 640 }} 640w,{%- endif -%}
+                    {%- if block.settings.image.width >= 789 -%}{{ block.settings.image | image_url: width: 789 }} 789w,{%- endif -%}
+                    {{ block.settings.image | image_url }} {{ block.settings.image.width }}w"
+                  sizes="(max-width: 414px) calc(100vw - 98px),
+                         (max-width: 991px) calc(100vw - 128px),
+                         (max-width: 1259px) calc((100vw * 60 / 100) - 15px),
+                         calc((var(--cp-width-px) * 60 / 100) - 15px)"
+                  src="{{ block.settings.image | image_url: width: 316 }}"
+                  alt="{{ image_alt }}"
+                  loading="lazy"
+                  width="316"
+                  height="{{ 316 | divided_by: aspect_ratio | round }}"
+                  class="object-fit object-fit--absolute {{ bf_height }}"
+                />
+                {%- else -%}
+                  {%- render 'placeholder-svgs', type: 'hero', index: 1, class: 'object-fit object-fit--absolute' -%}
+              {%- endif -%}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+      {%- for block in section.blocks -%}
+        {%- assign image_alt = 'before_after.image_alt' | t: index: forloop.index -%}
+        {%- case block.type -%}
+          {%- when 'after' -%}
+            <div class="bf-wrapper_image bf-wrapper_image--after {{ height }} scheme scheme--{{ block.settings.after_color_scheme }}" {{ block.shopify_attributes }}>
+              <div class="bf-caption_col bf-caption_col--second">
+                {%- if block.settings.heading != blank -%}
+                  <h3 class="mty bf-caption_heading {{ block.settings.heading_size }} {{ block.settings.heading_weight }}">
+                    {{- block.settings.heading -}}
+                  </h3>
+                {%- endif -%}
+                {%- if block.settings.sub_heading != blank -%}
+                  <a class="mty bf-caption_subheading button button--icn"
+                    {% if block.settings.view_more_link != blank -%}href="{{ block.settings.view_more_link }}" {% if block.settings.open_new_window %}target="_blank"{% endif %}{% else %}aria-disabled="true"{% endif %}>
+                    {{- block.settings.sub_heading -}}
+                  </a>
+                {%- endif -%}
+              </div>
+              {%- if block.settings.image != blank -%}
+                {%- liquid
+                  capture image_alt
+                    unless block.settings.image.alt == blank
+                      echo block.settings.image.alt
+                      else
+                        echo 'before_after.image_alt' | t: index: forloop.index
+                    endunless
+                  endcapture
+
+                  assign aspect_ratio = block.settings.image.aspect_ratio | default: 1.5
+                -%}
+                <img
+                  srcset="
+                    {%- if block.settings.image.width >= 152 -%}{{ block.settings.image | image_url: width: 152 }} 152w,{%- endif -%}
+                    {%- if block.settings.image.width >= 316 -%}{{ block.settings.image | image_url: width: 316 }} 316w,{%- endif -%}
+                    {%- if block.settings.image.width >= 464 -%}{{ block.settings.image | image_url: width: 464 }} 464w,{%- endif -%}
+                    {%- if block.settings.image.width >= 640 -%}{{ block.settings.image | image_url: width: 640 }} 640w,{%- endif -%}
+                    {%- if block.settings.image.width >= 789 -%}{{ block.settings.image | image_url: width: 789 }} 789w,{%- endif -%}
+                    {{ block.settings.image | image_url }} {{ block.settings.image.width }}w"
+                  sizes="(max-width: 414px) calc(100vw - 98px),
+                         (max-width: 991px) calc(100vw - 128px),
+                         (max-width: 1259px) calc((100vw * 60 / 100) - 15px),
+                         calc((var(--cp-width-px) * 60 / 100) - 15px)"
+                  src="{{ block.settings.image | image_url: width: 316 }}"
+                  alt="{{ image_alt }}"
+                  loading="lazy"
+                  width="316"
+                  height="{{ 316 | divided_by: aspect_ratio | round }}"
+                  class="object-fit object-fit--absolute {{ bf_height }}"
+                />
+                {%- else -%}
+                  {%- render 'placeholder-svgs', type: 'hero', index: 2, class: 'object-fit object-fit--absolute' -%}
+              {%- endif -%}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+      <div class="bf-wrapper_pointer --v-align-middle --justify-center {{ height }}">
+        <span class="bf-wrapper_point"></span>
+        <label class="text-size--small --fw-medium visually-hidden">{{ 'before_after.label' | t }}</label>
+        <input type="range" title="{{- 'before_after.label' | strip_html | escape -}}" value="{{- section.settings.after_position -}}">
+      </div>
+      {%- else -%}
+        <div class="bf-wrapper_error-text mty text-size--small --align-center">
+          <p>{{- 'before_after.error_text' | t -}}</p>
+        </div>
+    {%- endif -%}
+  </before-after>
+</div>

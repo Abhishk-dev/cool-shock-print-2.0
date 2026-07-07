@@ -1,0 +1,95 @@
+{%- comment -%}
+  renders breadcrumb on page templates
+  usage
+    {%- render 'breadcrumb', border_top: section.settings.show_top_bdr, border_bottom: section.settings.show_bottom_bdr, color_scheme: section.settings.section_color_scheme -%}
+{%- endcomment -%}
+{%- unless template == 'index' -%}
+  {%- assign t = template | split: '.' | first -%}
+  <nav class="breadcrumb-nav global-block scheme--{{ color_scheme }} --justify-center">
+    <ol class="breadcrumb-list h widget--styles --justify-center --v-align-middle list-unstyled --uppercase">
+      <li class="breadcrumb-list_item --v-align-middle">
+        <a class="breadcrumb-list_link --word-break" href="{{- routes.root_url -}}">
+          {{- 'page.home' | t -}}
+        </a>
+      </li>
+      {%- case t -%}
+        {%- when 'page' -%}
+          <li class="breadcrumb-list_item --v-align-middle">
+            <span class="breadcrumb-list_link --word-break" aria-current="{{- 'page.current_label' | t -}}">
+              {{- page.title -}}
+            </span>
+          </li>
+        {%- when 'product' -%}
+          {%- assign product_collections = product.collections -%}
+          {%- if product_collections.size > 0 -%}
+            {%- assign product_collection = product_collections.first -%}
+            <li class="breadcrumb-list_item --v-align-middle">
+              <a class="breadcrumb-list_link --word-break" href="{{- product_collection.url -}}">
+                {{- product_collection.title -}}
+              </a>
+            </li>
+          {%- endif -%}
+          <li class="breadcrumb-list_item --v-align-middle">
+            <span class="breadcrumb-list_link --word-break" aria-current="{{- 'page.current_label' | t -}}">
+              {{- product.title -}}
+            </span>
+          </li>
+        {%- when 'collection' -%}
+          {%- if collection.handle -%}
+            {%- if current_tags -%}
+              <li class="breadcrumb-list_item --v-align-middle">
+                {{- collection.title | link_to: collection.url -}}
+              </li>
+              <li class="breadcrumb-list_item --v-align-middle">
+                <span class="breadcrumb-list_link --word-break" aria-current="{{- 'page.current_label' | t -}}">
+                  <span>
+                    {{- current_tags | join: ' + ' -}}
+                  </span>
+                </span>
+              </li>
+            {%- else -%}
+              <li class="breadcrumb-list_item --v-align-middle">
+                <span class="breadcrumb-list_link --word-break" aria-current="{{- 'page.current_label' | t -}}">
+                  {{- collection.title -}}
+                </span>
+              </li>
+            {%- endif -%}
+          {%- endif -%}
+        {%- when 'blog' -%}
+          {%- if current_tags -%}
+            <li class="breadcrumb-list_item --v-align-middle">
+              {{- blog.title | link_to: blog.url -}}
+            </li>
+            <li class="breadcrumb-list_item --v-align-middle">
+              <span class="breadcrumb-list_link --word-break" aria-current="{{- 'page.current_label' | t -}}">
+                {{- current_tags | join: ' + ' -}}
+              </span>
+            </li>
+          {%- else -%}
+            <li class="breadcrumb-list_item --v-align-middle">
+              <span class="breadcrumb-list_link --word-break" aria-current="{{- 'page.current_label' | t -}}">
+                {{- blog.title -}}
+              </span>
+            </li>
+          {%- endif -%}
+        {%- when 'article' -%}
+          <li class="breadcrumb-list_item --v-align-middle">
+            <a class="breadcrumb-list_link --word-break" href="{{- blog.url -}}">
+              {{- blog.title -}}
+            </a>
+          </li>
+          <li class="breadcrumb-list_item --v-align-middle">
+            <span class="breadcrumb-list_link --word-break" aria-current="{{- 'page.current_label' | t -}}">
+              {{- article.title -}}
+            </span>
+          </li>
+        {%- else -%}
+          <li class="breadcrumb-list_item --v-align-middle">
+            <span class="breadcrumb-list_link --word-break" aria-current="{{- 'page.current_label' | t -}}">
+              {{- page_title -}}
+            </span>
+          </li>
+      {%- endcase -%}
+    </ol>
+  </nav>
+{%- endunless -%}

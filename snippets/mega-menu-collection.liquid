@@ -1,0 +1,89 @@
+{%- comment -%}
+  renders mega menu banner on main navigation dropdown item
+  usage
+    {%- render 'mega-menu-banner', block: block, link: link, link_title: link_title, index: forloop.index, dropdown_link_title: dropdown_link_title, link_handle: link_handle -%}
+{%- endcomment -%}
+<li class="main-navigation_item mega-menu" {{ block.shopify_attributes }}>
+  <strong id="{{- link_handle -}}-{{- index -}}-mega-banner-heading-1st-level-{{ left_search }}" class="visually-hidden">{{- dropdown_link_title -}}</strong>
+  <dropdown-component data-level="1" {% if section.settings.enable_dropdown_hover %}data-on-hover="true"{% endif %}>
+    <button
+      type="button"
+      class="dropdown-component_opener {% if section.settings.enable_dropdown_hover %}--hover-opener{% endif %} main-navigation_link main-navigation_link--opener"
+      aria-expanded="false"
+      aria-controls="{{- link_handle -}}-{{- index -}}-mega-banner-1st-level-{{ left_search }}"
+      aria-describedby="{{- link_handle -}}-{{- index -}}-mega-banner-heading-1st-level-{{ left_search }}"
+    >
+      <span class="dropdown--close dropdown-component_opener-icn dropdown-component_opener--icn-close">
+        {%- render 'icons-data', width: 10, height: 10, use_icon: true, icon_reference: 'chevron-down', section_id: section_id -%}
+      </span>
+      <span class="main-navigation_link-title dropdown-component_opener-icn">{{- link_title -}}</span>
+      <span class="dropdown--open dropdown-component_opener-icn dropdown-component_opener--icn-open">
+        {%- render 'icons-data', width: 10, height: 10, use_icon: true, icon_reference: 'chevron-down', section_id: section_id -%}
+      </span>
+    </button>
+    <div class="dropdown-component_wrapper main-navigation_dropdown-wrapper main-navigation_dropdown-wrapper--level1 main-navigation_dropdown-wrapper--mega-banner main-navigation_dropdown--inner-wrapper {{ color_scheme }}" id="{{- link_handle -}}-{{- index -}}-mega-banner-1st-level-{{ left_search }}">
+      <div class="mega-menu_container">
+        {%- if block.settings.mega_menu_heading != blank -%}
+          <div class="seach-heading --fw-bold h --fw-normal --word-brek mty">
+            {{ block.settings.mega_menu_heading }}
+          </div>
+        {%- else -%}
+          <div class="seach-heading --fw-bold h --fw-normal --word-brek mty">
+            {{ 'menu.explore' | t }}
+          </div>
+        {%- endif -%}
+        <div class="mega-menu_banner-wrapper">
+          <div class="mega-menu_banner-col mega-menu_banner-col--list">
+            <ul class="list-unstyled mega-meu_list">
+              {%- if link.links -%}
+                {%- for childlink in link.links -%}
+                  {%- render 'mega-menu-item', childlink: childlink, index: forloop.index -%}
+                {%- endfor -%}
+              {%- endif -%}
+            </ul>
+          </div>
+        </div>
+        <div class="mega-menu_collection-wrapper">
+          <div class="grid">
+            {%- if block.settings.mega-menu_collection != blank -%}
+              {%- for collection in block.settings.mega-menu_collection -%}
+                {%- liquid
+                  capture image_alt
+                    unless collection.title == blank
+                      echo collection.title
+                      else
+                        echo 'sections.collection.title' | t
+                    endunless
+                  endcapture
+                -%}
+                <a class="grid_col mega-menu_collection-grid anim--shine" href="{{ collection.url }}">
+                  <div class="mega-menu_collection-image --media-size-square" style="--media-ratio: 1;">
+                    {%- if collection.featured_image != blank -%}
+                      {{- collection.featured_image | image_url: width: collection.featured_image.width| image_tag: alt: image_alt, class: 'object-fit object-fit--absolute',  loading: loading_attr, widths: '225, 412, 550', sizes: '(max-width: 767px) 225px, 20vw' -}}
+                      {%- else -%}
+                        {%- render 'placeholder-svgs', type: 'hero', index: 1, class: 'object-fit object-fit--absolute' -%}
+                    {%- endif -%}
+                  </div>
+                  <div class="mega-menu_collection-title h --fw-semi-bold {% if collection.featured_image == blank %}{% endif %}">
+                    {{ collection.title }}
+                  </div>
+                </a>
+              {%- endfor -%}
+            {%- else -%}
+              {%- for placeholder_block in (1..6) -%}
+                <div class="grid_col mega-menu_collection-grid anim--shine">
+                  <div class="mega-menu_collection-image --media-size-square" style="--media-ratio: 1;">
+                    {%- render 'placeholder-svgs', type: 'hero', index: 1, class: 'object-fit object-fit--absolute' -%}
+                  </div>
+                  <div class="mega-menu_collection-title h --fw-semi-bold">
+                    {{ 'sections.collection.title' | t }}
+                  </div>
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </dropdown-component>
+</li>

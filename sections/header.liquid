@@ -1,0 +1,441 @@
+{%- style -%}
+  .aside-desktop-header{
+    display: none;
+  }
+
+  @media(min-width: 1200px){
+    .aside-desktop-header{
+      display: block;
+    }
+
+    .header-top-mobile{
+      display: none;
+    }
+  }
+{%- endstyle -%}
+<svg xmlns="http://www.w3.org/2000/svg" class="hidden">
+  <symbol id="icn-loggedIn-{{ section.id }}">
+    <path d="M190.38 5.76044C198.91 5.04044 207.11 7.53044 213.37 14.9204C215.16 17.0404 215.63 19.7204 213.96 21.9204C211.84 24.7304 209.44 23.0204 207.48 21.3704C191.34 7.83044 175.89 15.3204 160.52 22.9604C157.65 24.3904 154.75 28.3904 151.93 24.4004C149.08 20.3704 152.6 17.2604 155.88 15.1604C166.1 8.63044 177.29 5.33044 190.38 5.76044Z" fill="#3C3C3C"/>
+    <path d="M41.21 0.729772C110.15 0.729772 179.09 0.829772 248.02 0.559772C254.4 0.539772 255.87 1.99977 255.85 8.36977C255.6 87.7798 255.55 167.2 255.9 246.61C255.93 254.21 254.43 256.66 246.73 255.69C240.45 254.9 233.98 255.53 227.6 255.53C231.78 242.32 239.29 230.33 240.68 216.01C241.72 205.24 238.6 203.97 229.67 208.38C213.31 216.46 196.66 224.1 178.91 228.52C156.14 234.2 133.34 240.97 109.57 232.54C86.49 224.36 68.76 210.56 64.84 185.37C62.72 171.74 63.26 157.25 65.31 143.55C67.64 127.99 66.11 113.16 62.13 98.4698C53.41 66.2498 46.46 33.6798 41.21 0.729772ZM190.38 5.75977C177.29 5.33977 166.1 8.63977 155.88 15.1698C152.6 17.2698 149.09 20.3798 151.93 24.4098C154.75 28.3998 157.64 24.3998 160.52 22.9698C175.89 15.3298 191.34 7.83977 207.48 21.3798C209.45 23.0298 211.84 24.7298 213.96 21.9298C215.63 19.7198 215.16 17.0398 213.37 14.9298C207.11 7.51977 198.91 5.03977 190.38 5.75977ZM132.46 141C134.31 140.83 135.72 141.04 136.8 140.54C141.51 138.38 149.68 137.82 147.96 131.02C146.17 123.97 140.56 130.31 136.65 130.83C128.4 131.94 124.23 129.02 126.33 120.3C128.19 112.57 130.76 104.99 132.33 97.2098C132.88 94.4998 131.36 91.1398 127.81 90.6498C126.6 90.4898 124 92.0998 123.98 92.9498C123.7 105.19 115.47 116.09 117.7 128.62C119.16 136.85 125.12 140.3 132.46 141ZM82.09 16.3598C74.93 16.8498 68.9 18.4998 64.95 24.2898C63.73 26.0798 63.48 28.3598 64.96 30.2098C66.61 32.2698 68.84 31.7598 70.63 30.5398C84.18 21.3098 95.22 27.1098 105.89 36.0998C108.05 37.9198 109.77 43.0198 113.76 38.6398C116.72 35.3898 114.64 32.2598 112.26 29.6698C104.01 20.6998 93.16 17.6298 82.09 16.3598ZM154.09 184.19C163.14 184.46 171.62 181.8 180.08 179.09C185.82 177.26 190.86 174.22 195.03 169.81C197.5 167.2 199.69 164.09 196.63 160.98C193.73 158.03 191.13 161.06 189.22 163C185.26 167.03 180.73 169.89 175.34 171.52C166.4 174.22 157.36 176.3 147.98 176.52C145.16 176.59 142.35 177.62 142.24 180.35C142.13 183.19 144.95 184.19 147.72 184.18C149.85 184.18 151.97 184.19 154.09 184.19ZM195.76 70.6598C194.86 67.3898 194.28 63.7598 189.58 64.1498C186.03 64.4398 184.38 66.6398 184.23 70.0398C184.06 73.8098 185.14 76.9198 189.48 77.2598C194.06 77.6098 194.76 73.8998 195.76 70.6598ZM107.42 71.2698C107.19 67.5298 105.86 64.5998 101.78 64.1598C97.48 63.6998 95.6 66.7398 95.3 70.2198C94.99 73.8198 96.91 76.8598 100.85 77.3198C105.1 77.8198 106.53 74.6798 107.42 71.2698Z" fill="#FFDBBB"/>
+    <path d="M130.57 255.53C87.1599 255.53 43.7599 255.53 0.349928 255.53C0.359928 175.27 0.679928 94.9996 -7.15493e-05 14.7396C-0.100072 2.73958 2.37993 -1.86042 14.4099 0.659576C16.4499 1.08958 18.6499 0.719576 20.7799 0.719576C22.3599 22.0896 29.2999 41.6396 40.9599 59.5696C54.7399 91.6196 60.2599 124.84 55.1699 159.55C49.6799 197.05 69.1499 228.88 104.97 240.52C110.58 242.34 116.4 244.11 122.22 244.58C129.78 245.2 131.52 249.06 130.57 255.53Z" fill="#87E64B"/>
+    <path d="M130.57 255.53C131.51 249.06 129.78 245.19 122.23 244.58C116.4 244.11 110.59 242.34 104.98 240.52C69.1603 228.88 49.6903 197.05 55.1803 159.55C60.2603 124.84 54.7403 91.6197 40.9703 59.5697C41.8303 54.4697 41.0903 49.5197 40.1503 44.4697C37.4403 29.9697 33.2303 15.6797 33.5603 0.719727C36.1103 0.719727 38.6703 0.719727 41.2203 0.719727C46.4803 33.6697 53.4203 66.2397 62.1503 98.4697C66.1303 113.16 67.6603 127.99 65.3303 143.55C63.2803 157.25 62.7403 171.74 64.8603 185.37C68.7803 210.56 86.5003 224.36 109.59 232.54C133.35 240.96 156.16 234.2 178.93 228.52C196.68 224.09 213.33 216.45 229.69 208.38C238.61 203.98 241.74 205.24 240.7 216.01C239.31 230.33 231.81 242.32 227.62 255.53C195.25 255.53 162.91 255.53 130.57 255.53Z" fill="#3B3B3B"/>
+    <path d="M33.5503 0.730469C33.2203 15.6905 37.4303 29.9805 40.1403 44.4805C41.0803 49.5305 41.8203 54.4805 40.9603 59.5805C29.3003 41.6405 22.3603 22.1005 20.7803 0.730469C25.0403 0.730469 29.2903 0.730469 33.5503 0.730469Z" fill="#3B3B3B"/>
+    <path d="M132.46 141C125.12 140.3 119.16 136.85 117.7 128.63C115.47 116.1 123.7 105.2 123.98 92.9599C124 92.1099 126.61 90.4899 127.81 90.6599C131.35 91.1399 132.88 94.5099 132.33 97.2199C130.76 105 128.2 112.58 126.33 120.31C124.23 129.03 128.39 131.95 136.65 130.84C140.56 130.32 146.17 123.98 147.96 131.03C149.69 137.83 141.52 138.39 136.8 140.55C135.72 141.03 134.31 140.83 132.46 141Z" fill="#3B3B3B"/>
+    <path d="M82.0899 16.3604C93.1599 17.6304 104.01 20.7004 112.26 29.6604C114.64 32.2504 116.72 35.3904 113.76 38.6304C109.77 43.0104 108.05 37.9104 105.89 36.0904C95.2099 27.1004 84.1799 21.2904 70.6299 30.5304C68.8399 31.7504 66.6099 32.2604 64.9599 30.2004C63.4799 28.3404 63.7299 26.0704 64.9499 24.2804C68.8999 18.4904 74.9299 16.8404 82.0899 16.3604Z" fill="#3B3B3B"/>
+    <path d="M154.09 184.19C151.97 184.19 149.85 184.18 147.73 184.19C144.95 184.2 142.14 183.2 142.25 180.36C142.36 177.62 145.17 176.59 147.99 176.53C157.37 176.31 166.41 174.23 175.35 171.53C180.74 169.9 185.27 167.04 189.23 163.01C191.14 161.07 193.74 158.03 196.64 160.99C199.7 164.11 197.51 167.21 195.04 169.82C190.87 174.22 185.83 177.26 180.09 179.1C171.63 181.79 163.14 184.46 154.09 184.19Z" fill="#3B3B3B"/>
+    <path d="M195.77 70.6596C194.76 73.8996 194.06 77.6096 189.49 77.2596C185.15 76.9196 184.07 73.8196 184.24 70.0396C184.39 66.6396 186.04 64.4396 189.59 64.1496C194.29 63.7696 194.86 67.3896 195.77 70.6596Z" fill="#3B3B3B"/>
+    <path d="M107.42 71.2695C106.52 74.6795 105.1 77.8195 100.85 77.3195C96.91 76.8595 94.99 73.8295 95.3 70.2195C95.6 66.7395 97.48 63.6995 101.78 64.1595C105.87 64.5995 107.19 67.5295 107.42 71.2695Z" fill="#3B3B3B"/>
+  </symbol>
+  <symbol id="icn-barlines-{{ section.id }}">
+    <rect width="29.0588" height="4.15126" rx="1" fill="currentColor"/>
+    <rect y="9.68652" width="24.2157" height="4.15126" rx="1" fill="currentColor"/>
+    <rect y="19.3721" width="15.9132" height="4.15126" rx="1" fill="currentColor"/>
+  </symbol>
+  <symbol id="icn-pin-area-{{ section.id }}">
+    <path fill="none" d="M13 15.1665V19.4998" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path fill="none" d="M6.5 8.6665C6.5 12.2564 9.41015 15.1665 13 15.1665C16.5899 15.1665 19.5 12.2564 19.5 8.6665C19.5 5.07665 16.5899 2.1665 13 2.1665C9.41015 2.1665 6.5 5.07665 6.5 8.6665Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path fill="none" d="M20.2223 16.25C22.4365 17.0437 23.8334 18.1962 23.8334 19.4828C23.8334 21.8856 18.9837 23.8333 13.0001 23.8333C7.01647 23.8333 2.16675 21.8856 2.16675 19.4828C2.16675 18.196 3.56414 17.0442 5.77897 16.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="icn-user-{{ section.id }}">
+    <path d="M8.11911 12.5896C4.67551 10.0142 4.73977 5.38821 7.34968 2.82741C9.89104 0.333727 13.9438 0.403426 16.379 2.96767C18.8492 5.56805 18.8449 10.0219 15.4604 12.587C20.0419 14.5283 22.5164 17.9538 22.7966 22.9937C22.1926 22.9937 21.645 22.9937 21.0624 22.9937C20.9801 20.1016 19.8654 17.6897 17.6428 15.8388C15.858 14.3527 13.7776 13.6686 11.4608 13.7358C6.81587 13.8709 2.57027 17.7456 2.50515 22.9997C1.96878 22.9997 1.43154 22.9997 0.796631 22.9997C1.06311 17.9693 3.53592 14.5429 8.11911 12.5896ZM16.4201 7.37506C16.4269 4.81599 14.3457 2.71813 11.7983 2.71727C9.26726 2.71555 7.18688 4.78673 7.1706 7.32602C7.15346 9.88768 9.22442 11.9941 11.7709 12.0053C14.32 12.0174 16.4132 9.93242 16.4201 7.37506Z" fill="currentColor" stroke="currentColor" stroke-width="0.5"/>
+  </symbol>
+  <symbol id="icn-search-{{ section.id }}">
+    <path d="M18.7042 17.6244C17.5353 16.4365 16.9419 16.0449 15.7709 14.8591C15.678 14.7651 15.5901 14.6675 15.5023 14.5735C18.8229 10.3899 17.2817 5.04336 14.1396 2.68212C10.8037 0.176237 6.23216 0.491216 3.33765 3.48609C0.440966 6.48242 0.217362 11.1388 2.77283 14.4244C5.29926 17.6719 10.3906 18.8495 14.3988 15.5844C14.4605 15.6879 14.6122 15.8334 14.7044 15.9274C15.8711 17.1168 16.463 17.5114 17.637 18.6934C17.9912 19.0503 18.376 19.0943 18.7034 18.8322C19.0955 18.5172 19.102 18.029 18.7042 17.6244ZM9.16659 16.0243C5.48366 15.9964 2.51438 12.9795 2.51511 9.26584C2.51583 5.54483 5.49455 2.53087 9.17313 2.5294C12.8466 2.52793 15.8246 5.52354 15.858 9.25409C15.8914 12.9332 12.8089 16.0522 9.16659 16.0243Z" fill="currentColor" stroke="currentColor" stroke-width="0.2"/>
+  </symbol>
+  <symbol id="icn-cart-{{ section.id }}">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.99752 1C9.32076 1 8.64868 1.11532 8.01886 1.34119C7.38904 1.56706 6.81044 1.90034 6.31834 2.3264C5.82606 2.75263 5.42881 3.26454 5.1553 3.83623C4.88981 4.39118 4.74737 4.98924 4.73904 5.59722C2.33404 6.11864 0.653774 8.45373 1.06491 10.9971L1.7594 15.2934C2.13134 17.5943 4.11777 19.2854 6.44853 19.2854H13.5516C15.8823 19.2854 17.8688 17.5943 18.2407 15.2934L18.9352 10.9971C19.3466 8.45193 17.6637 6.11535 15.256 5.59612C15.2475 4.98852 15.1051 4.39085 14.8397 3.83623C14.5662 3.26454 14.169 2.75263 13.6767 2.3264C13.1846 1.90034 12.606 1.56706 11.9762 1.34119C11.3464 1.11532 10.6743 1 9.99752 1ZM13.7512 5.48915C13.7298 5.1467 13.6413 4.8069 13.4866 4.48358C13.3069 4.10801 13.0399 3.7592 12.6949 3.46041C12.3496 3.16147 11.9341 2.91963 11.4698 2.75314C11.0055 2.58664 10.505 2.5 9.99752 2.5C9.49005 2.5 8.9895 2.58664 8.52523 2.75314C8.06098 2.91963 7.64547 3.16147 7.30019 3.46042C6.9551 3.7592 6.68811 4.10801 6.50843 4.48358C6.35375 4.8069 6.26529 5.1467 6.24381 5.48915H13.7512ZM2.54569 10.7578C2.22624 8.78155 3.75217 6.98915 5.75404 6.98915H14.2461C16.2479 6.98915 17.7739 8.78155 17.4544 10.7578L16.7599 15.0541C16.5054 16.6284 15.1463 17.7854 13.5516 17.7854H6.44853C4.8538 17.7854 3.49466 16.6284 3.24018 15.0541L2.54569 10.7578Z" fill="currentColor"/>
+    <path d="M8.01886 1.34119L8.12014 1.62358L8.01886 1.34119ZM6.31834 2.3264L6.12198 2.0996L6.31834 2.3264ZM5.1553 3.83623L5.42593 3.9657L5.1553 3.83623ZM4.73904 5.59722L4.8026 5.89041L5.03574 5.83986L5.03901 5.60133L4.73904 5.59722ZM1.06491 10.9971L1.36107 10.9493L1.06491 10.9971ZM1.7594 15.2934L2.05556 15.2456L1.7594 15.2934ZM18.2407 15.2934L17.9446 15.2456V15.2456L18.2407 15.2934ZM18.9352 10.9971L19.2314 11.045V11.045L18.9352 10.9971ZM15.256 5.59612L14.956 5.60031L14.9594 5.83904L15.1927 5.88938L15.256 5.59612ZM14.8397 3.83623L14.5691 3.9657L14.8397 3.83623ZM13.6767 2.3264L13.8731 2.0996L13.6767 2.3264ZM11.9762 1.34119L11.8749 1.62358V1.62358L11.9762 1.34119ZM13.7512 5.48915V5.78915H14.0706L14.0506 5.47037L13.7512 5.48915ZM13.4866 4.48358L13.7572 4.35411L13.7572 4.35411L13.4866 4.48358ZM12.6949 3.46041L12.4985 3.68722L12.4985 3.68722L12.6949 3.46041ZM11.4698 2.75314L11.5711 2.47075V2.47075L11.4698 2.75314ZM8.52523 2.75314L8.42396 2.47075L8.52523 2.75314ZM7.30019 3.46042L7.10382 3.23361L7.30019 3.46042ZM6.50843 4.48358L6.2378 4.35411L6.50843 4.48358ZM6.24381 5.48915L5.9444 5.47037L5.92441 5.78915H6.24381V5.48915ZM2.54569 10.7578L2.84185 10.7099L2.54569 10.7578ZM17.4544 10.7578L17.7506 10.8056V10.8056L17.4544 10.7578ZM16.7599 15.0541L16.4638 15.0062V15.0062L16.7599 15.0541ZM3.24018 15.0541L2.94402 15.1019L3.24018 15.0541ZM8.12014 1.62358C8.71685 1.40958 9.35462 1.3 9.99752 1.3V0.7C9.28691 0.7 8.58052 0.821052 7.91759 1.0588L8.12014 1.62358ZM6.51471 2.55321C6.97744 2.15257 7.52342 1.83758 8.12014 1.62358L7.91759 1.0588C7.25466 1.29655 6.64344 1.64811 6.12198 2.0996L6.51471 2.55321ZM5.42593 3.9657C5.68067 3.43323 6.05186 2.95395 6.51471 2.55321L6.12198 2.0996C5.60025 2.55131 5.17695 3.09584 4.88468 3.70676L5.42593 3.9657ZM5.03901 5.60133C5.04673 5.03782 5.17872 4.48244 5.42593 3.9657L4.88468 3.70676C4.60091 4.29992 4.44801 4.94066 4.43906 5.59311L5.03901 5.60133ZM1.36107 10.9493C0.975991 8.56708 2.54969 6.37886 4.8026 5.89041L4.67547 5.30403C2.11838 5.85843 0.331558 8.34038 0.768756 11.045L1.36107 10.9493ZM2.05556 15.2456L1.36107 10.9493L0.768756 11.045L1.46324 15.3413L2.05556 15.2456ZM6.44853 18.9854C4.26497 18.9854 2.404 17.4011 2.05556 15.2456L1.46324 15.3413C1.85867 17.7875 3.97056 19.5854 6.44853 19.5854V18.9854ZM13.5516 18.9854H6.44853V19.5854H13.5516V18.9854ZM17.9446 15.2456C17.5961 17.4011 15.7351 18.9854 13.5516 18.9854V19.5854C16.0296 19.5854 18.1414 17.7875 18.5369 15.3413L17.9446 15.2456ZM18.639 10.9493L17.9446 15.2456L18.5369 15.3413L19.2314 11.045L18.639 10.9493ZM15.1927 5.88938C17.4482 6.37577 19.0244 8.56539 18.639 10.9493L19.2314 11.045C19.6689 8.33848 17.8792 5.85493 15.3192 5.30286L15.1927 5.88938ZM14.5691 3.9657C14.8162 4.48213 14.9481 5.03715 14.956 5.60031L15.556 5.59193C15.5468 4.93989 15.394 4.29956 15.1104 3.70676L14.5691 3.9657ZM13.4803 2.55321C13.9432 2.95395 14.3144 3.43323 14.5691 3.9657L15.1104 3.70676C14.8181 3.09584 14.3948 2.55131 13.8731 2.0996L13.4803 2.55321ZM11.8749 1.62358C12.4716 1.83758 13.0176 2.15257 13.4803 2.55321L13.8731 2.0996C13.3516 1.64811 12.7404 1.29655 12.0774 1.0588L11.8749 1.62358ZM9.99752 1.3C10.6404 1.3 11.2782 1.40958 11.8749 1.62358L12.0774 1.0588C11.4145 0.821052 10.7081 0.7 9.99752 0.7V1.3ZM14.0506 5.47037C14.0267 5.08862 13.9281 4.71132 13.7572 4.35411L13.216 4.61305C13.3545 4.90248 13.4328 5.20477 13.4518 5.50793L14.0506 5.47037ZM13.7572 4.35411C13.5588 3.93932 13.2658 3.55789 12.8912 3.23361L12.4985 3.68722C12.8141 3.9605 13.0551 4.27669 13.216 4.61305L13.7572 4.35411ZM12.8912 3.23361C12.5166 2.90924 12.0685 2.64912 11.5711 2.47075L11.3685 3.03552C11.7997 3.19015 12.1826 3.41369 12.4985 3.68722L12.8912 3.23361ZM11.5711 2.47075C11.0737 2.29237 10.5388 2.2 9.99752 2.2V2.8C10.4711 2.8 10.9374 2.8809 11.3685 3.03552L11.5711 2.47075ZM9.99752 2.2C9.45619 2.2 8.92133 2.29237 8.42396 2.47075L8.62651 3.03552C9.05766 2.8809 9.52391 2.8 9.99752 2.8V2.2ZM8.42396 2.47075C7.92658 2.64912 7.47846 2.90925 7.10382 3.23361L7.49656 3.68722C7.81247 3.41369 8.19537 3.19015 8.62651 3.03552L8.42396 2.47075ZM7.10382 3.23361C6.72928 3.55789 6.43624 3.93932 6.2378 4.35411L6.77905 4.61305C6.93997 4.27669 7.18091 3.9605 7.49656 3.68722L7.10382 3.23361ZM6.2378 4.35411C6.06691 4.71132 5.96834 5.08862 5.9444 5.47037L6.54322 5.50793C6.56223 5.20477 6.64058 4.90248 6.77905 4.61305L6.2378 4.35411ZM6.24381 5.78915H13.7512V5.18915H6.24381V5.78915ZM5.75404 6.68915C3.56738 6.68915 1.90059 8.64701 2.24953 10.8056L2.84185 10.7099C2.55188 8.9161 3.93696 7.28915 5.75404 7.28915V6.68915ZM14.2461 6.68915H5.75404V7.28915H14.2461V6.68915ZM17.7506 10.8056C18.0995 8.647 16.4327 6.68915 14.2461 6.68915V7.28915C16.0632 7.28915 17.4482 8.9161 17.1583 10.7099L17.7506 10.8056ZM17.0561 15.1019L17.7506 10.8056L17.1583 10.7099L16.4638 15.0062L17.0561 15.1019ZM13.5516 18.0854C15.2935 18.0854 16.7781 16.8216 17.0561 15.1019L16.4638 15.0062C16.2328 16.4352 14.9991 17.4854 13.5516 17.4854V18.0854ZM6.44853 18.0854H13.5516V17.4854H6.44853V18.0854ZM2.94402 15.1019C3.222 16.8216 4.70659 18.0854 6.44853 18.0854V17.4854C5.001 17.4854 3.76732 16.4352 3.53633 15.0062L2.94402 15.1019ZM2.24953 10.8056L2.94402 15.1019L3.53633 15.0062L2.84185 10.7099L2.24953 10.8056Z" fill="currentColor"/>
+  </symbol>
+</svg>
+{%- if settings.header_view == 'top_header' -%}
+  {%- render 'top-header' -%}
+{%- endif -%}
+{%- if settings.header_view == 'aside_header' -%}
+  <div class="header-top-mobile">
+    {%- render 'top-header' -%}
+  </div>
+  <div class="aside-desktop-header">
+    {%- render 'aside-header' -%}
+  </div>
+{%- endif -%}
+{% schema %}
+{
+  "name": "t:sections.header.name",
+  "tag": "header",
+  "class": "page-main-header",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "header_view",
+      "label": "t:sections.header.settings.header_view.label",
+      "options": [
+        {
+          "value": "view_1",
+          "label": "t:sections.header.settings.header_view.settings.opt_1"
+        },
+        {
+          "value": "view_2",
+          "label": "t:sections.header.settings.header_view.settings.opt_2"
+        },
+        {
+          "value": "view_3",
+          "label": "t:sections.header.settings.header_view.settings.opt_3"
+        }
+      ],
+      "default": "view_1",
+      "visible_if": "{{ settings.header_view == 'top_header' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "header_overlay",
+      "label": "t:sections.header.settings.header_overlay.label",
+      "info": "t:sections.header.settings.header_overlay.info",
+      "default": false,
+      "visible_if": "{{ settings.header_view == 'top_header' }}"
+    },
+    {
+      "type": "select",
+      "id": "menu_style",
+      "label": "t:sections.header.settings.menu_style.label",
+      "options": [
+        {
+          "value": "drawer",
+          "label": "t:sections.header.settings.menu_style.settings.opt_1"
+        },
+        {
+          "value": "simple",
+          "label": "t:sections.header.settings.menu_style.settings.opt_2"
+        }
+      ],
+      "default": "drawer",
+      "visible_if": "{{ section.settings.header_view == 'view_2' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart",
+      "label": "t:sections.header.settings.show_cart.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_customer",
+      "label": "t:sections.header.settings.show_customer.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.header_menu.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_label",
+      "label": "t:sections.header.settings.show_label.label",
+      "default": true,
+      "visible_if": "{{ section.settings.header_view == 'view_2' }}"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "t:menu.label",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "t:site_logo.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "t:image.label",
+      "info": "t:site_logo.info"
+    },
+    {
+      "type": "range",
+      "id": "logo_desktop_width",
+      "label": "t:image.width.desktop.label",
+      "min": 100,
+      "max": 200,
+      "step": 1,
+      "default": 133,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "logo_mobile_width",
+      "label": "t:image.width.mobile.label",
+      "min": 90,
+      "max": 150,
+      "step": 1,
+      "default": 133,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.settings.search.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_search",
+      "label": "t:sections.header.settings.search.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_opened_search",
+      "label": "t:sections.header.settings.opened_search.label",
+      "default": false,
+      "visible_if": "{{ section.settings.header_view == 'view_3' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_predictive_suggestions",
+      "label": "t:sections.header.settings.search.predictive.label",
+      "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "t:sections.header.settings.search_info.label",
+      "visible_if": "{{ section.settings.header_view == 'view_3' and section.settings.enable_opened_search }}"
+    },
+    {
+      "type": "link_list",
+      "id": "popular_menu",
+      "label": "Popular links",
+      "default": "main-menu"
+    },
+    {
+      "type": "link_list",
+      "id": "quick_menu",
+      "label": "Quick links",
+      "default": "main-menu"
+    },
+    {
+      "type": "image_picker",
+      "id": "search_image", 
+      "label": "t:image.label",
+      "info": "t:sections.header.blocks.featured_banner.settings.image.info"
+    },
+    {
+      "type": "text",
+      "id": "predictive_caption",
+      "label": "t:caption.label",
+      "default": "Featured"
+    },
+    {
+      "type": "select",
+      "id": "predictive_caption_weight",
+      "label": "t:weight.caption.label",
+      "options": [
+        {
+          "value": "--fw-bold",
+          "label": "t:weight.heading.options.opt_1.label"
+        },
+        {
+          "value": "--fw-semi-bold",
+          "label": "t:weight.heading.options.opt_5.label"
+        },
+        {
+          "value": "--fw-medium",
+          "label": "t:weight.heading.options.opt_2.label"
+        },
+        {
+          "value": "--fw-normal",
+          "label": "t:weight.heading.options.opt_3.label"
+        },
+        {
+          "value": "--fw-light",
+          "label": "t:weight.heading.options.opt_4.label"
+        }
+      ],
+      "default": "--fw-bold"
+    },
+    {
+      "type": "text",
+      "id": "predictive_heading",
+      "label": "t:heading.label",
+      "default": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "predictive_heading_weight",
+      "label": "t:weight.heading.label",
+      "options": [
+        {
+          "value": "--fw-bold",
+          "label": "t:weight.heading.options.opt_1.label"
+        },
+        {
+          "value": "--fw-semi-bold",
+          "label": "t:weight.heading.options.opt_5.label"
+        },
+        {
+          "value": "--fw-medium",
+          "label": "t:weight.heading.options.opt_2.label"
+        },
+        {
+          "value": "--fw-normal",
+          "label": "t:weight.heading.options.opt_3.label"
+        },
+        {
+          "value": "--fw-light",
+          "label": "t:weight.heading.options.opt_4.label"
+        }
+      ],
+      "default": "--fw-bold"
+    },
+    {
+      "type": "url",
+      "id": "predictive_link",
+      "label": "t:settings_schema.buttons.settings.button.link.name"
+    },
+    {
+      "type": "checkbox",
+      "id": "predictive_open_new_window",
+      "label": "t:target_blank.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:layout.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_full_width",
+      "label": "t:sections.full_width.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_bdr",
+      "label": "t:sections.header.settings.border.top_header_border.bottom",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_dropdown_hover",
+      "label": "t:sections.header.settings.enable_dropdown_hover.label",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "enable_sticky",
+      "label": "t:sections.header.settings.sticky.label",
+      "info": "t:sections.header.settings.sticky.info",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sticky.options.opt_1.label"
+        },
+        {
+          "value": "on_scroll_up",
+          "label": "t:sticky.options.opt_3.label"
+        },
+        {
+          "value": "on_scroll",
+          "label": "t:sticky.options.opt_4.label"
+        }
+      ],
+      "default": "on_scroll"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "default": "scheme3",
+      "label": "t:sections.header.settings.border.color_schemes.top_header_scheme.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "menu_drawer_color_scheme",
+      "default": "scheme1",
+      "label": "t:sections.header.settings.main_menu.color_scheme.label"
+    },
+		{
+      "type": "select",
+      "id": "links_font_weight",
+      "label": "t:sections.header.settings.main_menu.collapsed.menu_desktop_weight.label",
+      "options": [
+        {
+          "value": "--fw-bold",
+          "label": "t:weight.heading.options.opt_1.label"
+        },
+        {
+          "value": "--fw-semi-bold",
+          "label": "t:weight.heading.options.opt_5.label"
+        },
+        {
+          "value": "--fw-medium",
+          "label": "t:weight.heading.options.opt_2.label"
+        },
+        {
+          "value": "--fw-normal",
+          "label": "t:weight.heading.options.opt_3.label"
+        },
+        {
+          "value": "--fw-light",
+          "label": "t:weight.heading.options.opt_4.label"
+        }
+      ],
+      "default": "--fw-semi-bold"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "t:sections.header.blocks.mega_menu.name",
+      "type": "mega_menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "item_index",
+          "label": "t:sections.header.blocks.mega_menu.settings.item.label",
+          "info": "t:sections.header.blocks.mega_menu.settings.item.info"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "mega_menu_heading",
+          "label": "t:heading.label",
+          "default": "Heading"
+        },
+        {
+          "type": "image_picker",
+          "id": "mage_image_banner_1", 
+          "label": "t:sections.header.blocks.mega_menu.settings.banner_1.label",
+          "info": "t:sections.header.blocks.mega_menu.settings.banner_1.info"
+        },
+        {
+          "type": "image_picker",
+          "id": "mage_image_banner_2", 
+          "label": "t:sections.header.blocks.mega_menu.settings.banner_2.label",
+          "info": "t:sections.header.blocks.mega_menu.settings.banner_2.info"
+        }
+      ]
+    },
+    {
+      "name": "t:sections.header.blocks.mega_menu_collection.name",
+      "type": "mega_menu_2",
+      "settings": [
+        {
+          "type": "text",
+          "id": "item_index",
+          "label": "t:sections.header.blocks.mega_menu.settings.item.label",
+          "info": "t:sections.header.blocks.mega_menu.settings.item.info"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "mega_menu_heading",
+          "label": "t:heading.label",
+          "default": "Heading"
+        },
+        {
+          "type": "collection_list",
+          "limit": 8,
+          "label": "t:sections.header.settings.search.predictive.settings.collection.label",
+          "id": "mega-menu_collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

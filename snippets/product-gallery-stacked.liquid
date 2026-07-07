@@ -1,0 +1,191 @@
+{%- comment -%}
+  renders product gallery full width stacked thumbnails on product templates
+  usage
+    {%- render 'product-gallery-stacked', product: product, variant_media_attr: media_static_attr, tablet_hidden: true, media_size: section.settings.product_media_size, fetchpriority: true -%}
+{%- endcomment -%}
+{%- liquid
+  capture loading_attr
+    unless fetchpriority
+      if section.index > 1
+        echo 'lazy'
+        else
+          echo 'eager'
+      endif
+      else
+        echo 'lazy'
+    endunless
+  endcapture
+
+  assign featured_media = product.selected_or_first_available_variant.featured_media
+-%}
+{%- capture image_sizes -%}
+  (max-width: 991px) calc(100vw - 30px), {{ settings.page_width | divided_by: 1.6 | minus: 30 | round }}px
+{%- endcapture -%}
+<div class="product-common_gallery-stacked {% if tablet_hidden %}--hidden-down-tablet{% endif %}" id="gallery-zoom-in-{{- section.id -}}{{- product.id -}}-stacked" {{ variant_media_attr }}>
+  {%- if featured_media != null -%}
+    {%- liquid
+      capture media_ratio
+        if media_size == 'adapt'
+          echo featured_media.preview_image.aspect_ratio | default: '1'
+          else 
+            echo '1'
+        endif
+      endcapture
+    -%}
+    {%- capture zoom_image_attributes -%}
+      {%- render 'product-zoom-largest-attributes', media: featured_media -%}
+    {%- endcapture -%}
+    <a
+      class="product-common_image product-common_image--stacked --media-zoom-in --media-size-{{ media_size }}"
+      style="--media-ratio: {{ media_ratio }};"
+      data-media-id="{{- featured_media.id -}}"
+      data-gal-item=""
+      {{ zoom_image_attributes }}
+    >
+      <img
+        srcset="{%- if featured_media.preview_image.width >= 382 -%}{{ featured_media.preview_image | image_url: width: 382 }} 382w,{%- endif -%}
+                {%- if featured_media.preview_image.width >= 961 -%}{{ featured_media.preview_image | image_url: width: 961 }} 961w,{%- endif -%}
+                {{ featured_media.preview_image | image_url }} {{ featured_media.preview_image.width }}w"
+        sizes="{{- image_sizes -}}"
+        src="{{- featured_media.preview_image | image_url: width: 961 -}}"
+        alt="{{- product.title | escape -}}"
+        {% unless fetchpriority %}
+          loading="{{- loading_attr -}}"
+          {% else %}
+            fetchpriority="high"
+        {% endunless %}
+        width="961"
+        height="{{- 961 | divided_by: featured_media.preview_image.aspect_ratio | round -}}"
+        class="object-fit object-fit--absolute"
+      >
+    </a>
+  {%- endif -%}
+  {%- for media in product.media -%}
+    {%- if media.id != featured_media.id -%}
+      {%- liquid
+        capture media_ratio
+          if media_size == 'adapt'
+            echo media.preview_image.aspect_ratio | default: '1'
+            else 
+              echo '1'
+          endif
+        endcapture
+      -%}
+      {%- if media.media_type == 'model' -%}
+        <div
+          class="product-common_image product-common_image--stacked product-common_image--model --media-size-{{ media_size }}"
+          style="--media-ratio: {{ media_ratio }};"
+          data-media-id="{{- media.id -}}"
+          data-gal-item=""
+        >
+          <product-model class="deferred-media" data-media-id="{{ media.id }}">
+            <button data-id="Deferred-Poster-Modal-stacked-{{ media.id }}-{{ section.id }}" class="deferred-media__poster" type="button">
+              <img
+                srcset="{%- if media.preview_image.width >= 382 -%}{{ media.preview_image | image_url: width: 382 }} 382w,{%- endif -%}
+                        {%- if media.preview_image.width >= 961 -%}{{ media.preview_image | image_url: width: 961 }} 961w,{%- endif -%}
+                        {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
+                sizes="{{- image_sizes -}}"
+                src="{{- media.preview_image | image_url: width: 961 -}}"
+                alt="{{- product.title | escape -}}"
+                loading="{{- loading_attr -}}"
+                width="961"
+                height="{{- 961 | divided_by: media.preview_image.aspect_ratio | round -}}"
+                class="object-fit object-fit--absolute"
+              >
+              <span class="deferred-media__poster-icn --v-align-middle --justify-center">
+                {%- render 'icons-data', width: 20, height: 20, use_icon: true, icon_reference: '3d' -%}
+              </span>
+              <span class="visually-hidden">
+                {{- 'product.model_toggler_label' | t: product: product.title, index: index -}}
+              </span>
+            </button>
+            <template>
+              {{- media | media_tag: image_size: "2048x", toggleable: true -}}
+            </template>
+          </product-model>
+          <button
+            class="button --v-align-middle --justify-center button--primary product__xr-button"
+            type="button"
+            aria-label="{{- 'product.xr_button_label' | t -}}"
+            data-shopify-xr
+            data-shopify-model3d-id="{{- media.id -}}"
+            data-shopify-title="{{- product.title | escape -}}"
+            data-shopify-xr-hidden
+          >
+            {%- liquid
+              render 'icons-data', width: 16, height: 16, use_icon: true, icon_reference: '3d'
+              echo 'product.xr_button' | t
+            -%}
+          </button>
+        </div>
+        {%- elsif media.media_type == 'external_video' or media.media_type == 'video' -%}
+          <div
+            class="product-common_image product-common_image--stacked product-common_image--video --media-size-{{ media_size }}"
+            style="--media-ratio: {{ media_ratio }};"
+            data-gal-item=""
+            data-media-id="{{- media.id -}}"
+          >
+            <deferred-media class="deferred-media product-common_deferred-media">
+              <button data-id="Deferred-Poster-Modal-stacked-{{ media.id }}-{{ section.id }}" class="deferred-media__poster product-common_poster" type="button">
+                <img
+                  srcset="{%- if media.preview_image.width >= 382 -%}{{ media.preview_image | image_url: width: 382 }} 382w,{%- endif -%}
+                          {%- if media.preview_image.width >= 961 -%}{{ media.preview_image | image_url: width: 961 }} 961w,{%- endif -%}
+                          {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
+                  sizes="{{- image_sizes -}}"
+                  src="{{- media.preview_image | image_url: width: 961 -}}"
+                  alt="{{- product.title | escape -}}"
+                  loading="{{- loading_attr -}}"
+                  width="961"
+                  height="{{- 961 | divided_by: media.preview_image.aspect_ratio | round -}}"
+                  class="object-fit object-fit--absolute"
+                >
+                <span class="deferred-media__poster-icn --v-align-middle --justify-center product-common_poster-icn">
+                  {%- render 'icons-data', width: 20, height: 20, use_icon: true, icon_reference: 'play' -%}
+                </span>
+                <span class="visually-hidden">
+                  {{- 'product.video_toggler_label' | t: product: product.title, index: index -}}
+                </span>
+              </button>
+              <template>
+                {%- case media.media_type -%}
+                  {%- when 'external_video' -%}
+                    {%- assign video_class = 'js-' | append: media.host -%}
+                    {%- if media.host == 'youtube' -%}
+                      {{- media | external_video_url: autoplay: false, loop: false, playlist: media.external_id | external_video_tag: class: video_class, loading: "lazy" -}}
+                    {%- else -%}
+                      {{- media | external_video_url: autoplay: false, loop: false | external_video_tag: class: video_class, loading: "lazy" -}}
+                    {%- endif -%}
+                  {%- when 'video' -%}
+                    {{- media | media_tag: image_size: "2048x", autoplay: true, loop: false, controls: true, preload: "none" -}}
+                {%- endcase -%}
+              </template>
+            </deferred-media>
+          </div>
+        {%- else -%}
+          {%- capture zoom_image_attributes -%}
+            {%- render 'product-zoom-largest-attributes', media: media -%}
+          {%- endcapture -%}
+          <a
+            class="product-common_image product-common_image--stacked --media-zoom-in --media-size-{{ media_size }}"
+            style="--media-ratio: {{ media_ratio }};"
+            data-media-id="{{- media.id -}}"
+            data-gal-item=""
+            {{ zoom_image_attributes }}
+          >
+            <img
+              srcset="{%- if media.preview_image.width >= 382 -%}{{ media.preview_image | image_url: width: 382 }} 382w,{%- endif -%}
+                      {%- if media.preview_image.width >= 961 -%}{{ media.preview_image | image_url: width: 961 }} 961w,{%- endif -%}
+                      {{ media.preview_image | image_url }} {{ media.preview_image.width }}w"
+              sizes="{{- image_sizes -}}"
+              src="{{- media.preview_image | image_url: width: 961 -}}"
+              alt="{{- product.title | escape -}}"
+              loading="{{- loading_attr -}}"
+              width="961"
+              height="{{- 961 | divided_by: media.preview_image.aspect_ratio | round -}}"
+              class="object-fit object-fit--absolute"
+            >
+          </a>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+</div>

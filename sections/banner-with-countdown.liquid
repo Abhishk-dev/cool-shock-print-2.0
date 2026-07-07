@@ -1,0 +1,1238 @@
+{%- liquid
+  assign section_prefix_class = 'banner-countdown'
+  assign section_scheme_class = section.settings.section_color_scheme | prepend: 'scheme scheme--'
+-%}
+{%- style -%}
+  .banner-carousel-card{
+    --q-align-value: var(--mobile-q-align);
+    --q-justify-value: var(--mobile-justify-align);
+    position: relative;
+    z-index: 1;
+    --cp-spacer-left: 62px;
+    --cp-spacer-right: 62px;
+  }
+
+  .banner-countdown{
+    --q-align-value: var(--mobile-q-align);
+  }
+
+  .banner-carousel-card,
+  .banner-carousel-card .container,
+  .carousel-height,
+  .banner-carousel-card .align-holder,
+  .banner-carousel-card_bg-wrapper,
+  .banner-carousel-card_bg-wrapper::before,
+  .banner-countdown_slider,
+  .banner-countdown_slider .splide__track,
+  .banner-countdown_slider .splide__slide{
+    height: 100%;
+  }
+
+  .banner-carousel-card_wrapper{
+    position: relative;
+  }
+
+  .banner-carousel-card_wrapper{
+    margin-top: var(--make-transparent-offset, 0);
+    padding: 45px 30px;
+  }
+
+  .banner-carousel-card--no-box{
+    background-color: transparent;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .banner-carousel-card_description{
+    --mt-top: 15px;
+    color: var(--section-heading-color);
+  }
+
+  .banner-carousel-card_caption{
+    --mt-bottom: 4px;
+  }
+
+  .banner-carousel-card_btn,
+  .banner-carousel-card .align-holder_wrapper,
+  .banner-carousel-card_slide-controls{
+    display: flex;
+  }
+
+  .banner-carousel-card_btn{
+    flex-wrap: wrap;
+    gap: 12px;
+    --mt-top: 38px;
+    --mt-bottom: 16px;
+  }
+
+  .banner-carousel-card_btn .button{
+    --button-font-weight: 700;
+    --button-padding-y: 1.05rem;
+    --button-padding-x: 2.8rem;
+  }
+
+  .banner-carousel-card_bg-wrapper,
+  .banner-carousel-card_bg-wrapper::before{
+    position: absolute;
+  }
+
+  .banner-carousel-card_bg-wrapper,
+  .banner-carousel-card_bg-wrapper::before,
+  .banner-carousel-card_wrapper,
+  .banner-carousel-card .align-holder_wrapper{
+    width: 100%;
+  }
+
+  .banner-carousel-card_bg-wrapper{
+    top: 0;
+    left: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .banner-carousel-card .align-holder_wrapper,
+  .banner-carousel-card_slide-controls{
+    align-items: center;
+  }
+
+  .banner-carousel-card .align-holder_wrapper{
+    max-width: var(--max-content, 100%);
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .banner-carousel-card_logo{
+    margin: 0 auto 22px;
+    max-width: 180px;
+  }
+
+  .--small-mob-image{
+    min-height: 350px;
+  }
+
+  .--medium-mob-image{
+    min-height: 600px;
+  }
+
+  .--vh-mob-image{
+    min-height: calc(100vh - 44px);
+  }
+
+  .banner-carousel-card_bg-wrapper::before{
+    content: "";
+    background: var(--overlay-bg);
+    z-index: 1;
+    top: 0;
+    left: 0;
+  }
+
+  .carousel_wrapper{
+    position: relative;
+  }
+
+  .carousel_wrapper .product-common_price-col{
+    flex-grow: 1;
+    flex-basis: 0;
+  }
+
+  .banner-countdown .splide-controls{
+    position: absolute;
+    bottom: 34px;
+    left: 50%;
+    margin-left: 0;
+    transform: translateX(-50%);
+  }
+
+  .banner-countdown .splide__arrow--next.button,
+  .banner-countdown .splide__arrow--prev.button{
+    --button-padding-y: 0.6rem;
+    --button-padding-x: 0.6rem;
+    --button-corner-radius: 9px;
+  }
+
+  .banner-countdown_wrapper{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .banner-countdown_countdown-col{
+    width: 100%;
+    flex-shrink: 0;
+    border-bottom: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .banner-countdown_banner-col{
+    flex-grow: 1;
+  }
+
+  .banner-countdown_countdown-col .heading-head{
+    padding: 26px 22px;
+    flex-grow: 1;
+    border: 1px solid var(--section-border-color);
+  }
+
+  .banner-countdown_description {
+    margin-top: 8px;
+  }
+
+  .banner-countdown .countdown-timer{
+    display: flex;
+    flex-wrap: wrap;
+    width: auto;
+    margin-right: -1px;
+    color: var(--section-heading-color);
+  }
+
+  .banner-countdown .countdown-timer .block{
+    width: 50%;
+    text-align: center;
+    border: 1px solid var(--section-border-color);
+    margin-top: -1px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .banner-countdown .countdown-timer .block .time{
+    font-size: 1.4rem;
+    line-height: 2rem;
+    display: block;
+    word-wrap: break-word;
+  }
+
+  .banner-countdown .countdown-timer .block .text{
+    font-family: var(--font-headings-family);
+    text-transform: uppercase;
+    font-weight: 700;
+    display: block;
+  }
+
+  .countdown-timer_message{
+    border: 1px solid var(--section-border-color);
+    margin: 0;
+    display: block;
+    margin-top: -1px;
+    padding: 22px 18px;
+    width: 100%;
+  }
+
+  .banner-carousel-card_wrapper.banner-carousel-card--no-box{
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .banner-countdown .countdown-timer .block:nth-child(2),
+  .banner-countdown .countdown-timer .block:nth-child(4){
+    margin-left: -1px;
+  }
+
+  .banner-countdown_countdown-col.--full-width{
+    width: 100%;
+  }
+
+  .banner-countdown_view-2 .banner-countdown_countdown-col{
+    display: none;
+  }
+
+  .banner-countdown_view-2 .banner-carousel_container{
+    padding: 0;
+  }
+
+  .banner-countdown_view-2 .align-holder_wrapper {
+    position: relative;
+    padding: 10px;
+    max-width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+
+  .banner-countdown.banner-countdown_view-2 .countdown-timer{
+    display: flex;
+    gap: 6px;
+    flex-wrap: unset;
+    width: unset;
+    margin-right: 0;
+    color: unset;
+    margin-bottom: 33px;
+  }
+
+  .banner-countdown.banner-countdown_view-2 .countdown-timer .block{
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: unset;
+    text-align: center;
+    border: 0;
+    margin-top: 0;
+  }
+
+  .banner-countdown.banner-countdown_view-2 .countdown-timer .block .text{
+    font-size: 1.2rem;
+  }
+
+  .count_view-2-radius .banner-carousel-card,
+  .count_view-2-radius .splide__slide{
+    border-radius: 10px;
+  }
+
+  .count_view-2-radius .banner-carousel-card{
+    overflow: hidden;
+  }
+
+  .banner-countdown_view-2 .countdown-timer_message{
+    border: 0;
+    height: auto;
+    padding: 0;
+    margin-bottom: 8px;
+  }
+
+  .banner-countdown_view-2 .banner-countdown_wrapper{
+    flex-direction: column;
+  }
+
+  .banner-countdown_view-2 .banner-countdown_slider .splide__slide{
+    height: auto;
+  }  
+
+  @media (min-width: 576px){
+    .--small-mobi-image{
+      min-height: 400px;
+    }
+    
+    .banner-carousel-card_wrapper{
+      padding: 38px 45px;
+    }
+
+    .--medium-mob-image{
+      min-height: 500px;
+    }
+
+    .--vh-mob-image{
+      min-height: calc(100vh - 44px);
+    }
+
+    .banner-countdown_view-2 .align-holder_wrapper {
+      padding: 10px;
+      max-width: 270px;
+    }
+
+    .banner-countdown.banner-countdown_view-2 .splide-controls{
+      right: 0;
+      margin-right: 62px;
+      transform: none;
+    }
+
+    .banner-countdown.banner-countdown_view-2 .countdown-timer .block .text{
+      font-size: 1rem;
+    }
+
+    .banner-countdown_view-2 .align-holder_wrapper:before{
+      background: var(--overlay-bg);
+      content: "";
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      position: absolute;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .banner-countdown_view-2 .banner-carousel-card_bg-wrapper::before{
+      background: unset;
+    }
+
+    .banner-countdown_view-2 .align-holder--mleft .align-holder_wrapper {
+      border-right: 1px solid var(--section-border-color);
+    }
+
+    .banner-countdown_view-2 .align-holder--mright .align-holder_wrapper {
+      border-left: 1px solid var(--section-border-color);
+    }
+
+    .banner-countdown_view-2 .align-holder--mcenter .align-holder_wrapper {
+      border-width: 0 1px 0 1px;
+      border-style: solid;
+      border-color: var(--section-border-color);
+    }
+  }
+
+  @media (min-width: 768px){
+    .banner-carousel-card_slide-controls{
+      right: 30px;
+    }
+
+    .banner-carousel-card{
+      --q-align-value: var(--desktop-q-align);
+      --q-justify-value: var(--desktop-justify-align);
+    }
+
+    .--des-small-image{
+      min-height: 389px;
+    }
+
+    .--medium-image{
+      min-height: 600px;
+    }
+
+    .--vh-image {
+      min-height: calc(100vh - 66px);
+    }
+
+    .banner-carousel-card_logo{
+      max-width: 300px;
+    }
+
+    .banner-carousel-card_wrapper.--width{
+      width: calc(100% - 280px);
+    }
+
+    .banner-countdown{
+      --q-align-value: var(--desktop-q-align);
+    }
+
+    .banner-countdown .splide-controls{
+      left: 0;
+      margin-left: 62px;
+      transform: none;
+    }
+
+    .banner-countdown_view-2 .align-holder_wrapper {
+      padding: 14px;
+      max-width: 320px;
+    }
+
+    .view-2_countdown.desktop-center .countdown-timer {
+      justify-content: center;
+    }
+
+    .view-2_countdown.desktop-flex-end .countdown-timer {
+      justify-content: end;
+    }
+
+    .view-2_countdown.desktop-flex-start .countdown-timer {
+      justify-content: flex-start;
+    }
+
+    .banner-countdown.banner-countdown_view-2 .countdown-timer .block{
+      padding: 6px;
+    }
+
+    .banner-countdown.banner-countdown_view-2 .countdown-timer .block .text{
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (min-width: 992px){
+    .--des-small-image{
+      min-height: 389px;
+    }
+
+    .--medium-image{
+      min-height: 650px;
+    }
+
+    .--vh-image {
+      min-height: calc(100vh - 66px);
+    }
+
+    .banner-countdown .countdown-timer .block .time{
+      font-size: 3rem;
+      line-height: 5.2rem;
+    }
+
+    .banner-countdown_wrapper{
+      flex-direction: row;
+    }
+
+    .banner-countdown_countdown-col{
+      width: 30%;
+    }
+
+    .banner-countdown_banner-col{
+      flex-grow: 1;
+    }
+
+    .countdown-timer_message{
+      height: 203px;
+      overflow-y: auto;
+    }
+
+    .banner-countdown_view-2 .align-holder_wrapper {
+      padding: 20px;
+      max-width: 380px;
+    }
+  }
+
+  @media (min-width:1024px){
+    .banner-countdown_countdown-col{
+      width: 25%;
+    }
+  }
+
+  @media (min-width:1200px){
+    .banner-countdown_countdown-col{
+      width: 28%;
+    }
+
+    .--des-small-image{
+      min-height: 389px;
+    }
+
+    .--medium-image{
+      min-height: 750px;
+    }
+
+    .--vh-image {
+      min-height: calc(100vh - 66px);
+    }
+
+    .banner-carousel-card_wrapper.--width{
+      width: calc(100% - 372px);
+    }
+    
+    .banner-carousel-card_left.button.button--icn,
+    .banner-carousel-card_right.button.button--icn{
+      --button-padding-y: 1.5rem;
+      --button-padding-x: 1.5rem;
+    }
+
+    .banner-countdown_view-2 .align-holder_wrapper {
+      padding: 48px;
+      max-width: 434px;
+    }
+  }
+
+  @media(min-width: 1340px){
+    .banner-countdown_countdown-col{
+      width: 22%;
+    }
+  }
+
+  @media(min-width: 1600px){
+    .banner-countdown_countdown-col{
+      width: 20%;
+    }
+  }
+
+  @media(max-width: 767px){
+    .view-2_countdown.mob-center .countdown-timer {
+      justify-content: center;
+    }
+
+    .view-2_countdown.mob-flex-end .countdown-timer {
+      justify-content: end;
+    }
+
+    .view-2_countdown.mob-flex-start .countdown-timer {
+      justify-content: flex-start;
+    }
+  }
+
+  @media(max-width: 575px){
+    .banner-countdown.banner-countdown_view-2 .splide-controls{
+      left: 0;
+      transform: none;
+      bottom: 10px;
+      width: 100%;
+      padding: 10px;
+      justify-content: space-between;
+    }
+  }
+{%- endstyle -%}
+<div class="global-block {{ section_prefix_class }} {{ section_prefix_class }}-{{ section.id }} {{ section_scheme_class }} {% if section.settings.banner_view == 'view_2' %}{{ section_prefix_class }}_view-2 {% if section.settings.enable_radius %}count_view-2-radius{% endif %}{% endif %}" style="--section-padding-top: {{ section.settings.section_top_padding }}px; --section-padding-bottom: {{ section.settings.section_bottom_padding }}px; --mobile-q-align: {{ section.settings.section_mobile_text_alignment }}; --desktop-q-align: {{ section.settings.section_text_alignment }};">
+  <div class="container">
+    <div class="{{ section_prefix_class }}_wrapper">
+      <div class="{{ section_prefix_class }}_col {{ section_prefix_class }}_countdown-col {% unless section.blocks.size > 0 %}--full-width{% endunless %}">
+        {%- if section.settings.section_heading != blank or section.settings.section_description != blank -%}
+          <header class="heading-head --word-break --q-align">
+            {%- if section.settings.section_heading != blank -%}
+              <h2 class="{{ section_prefix_class }}_heading {{ section.settings.section_heading_weight }} --h-anchor-none {{ section.settings.section_heading_size }} mty">
+                {{- section.settings.section_heading -}}
+              </h2>
+            {%- endif -%}
+            {%- if section.settings.section_description != blank -%}
+              <div class="{{ section_prefix_class }}_description --word-break {{ section.settings.section_description_weight }} {{ section.settings.description_text_size }} mty">
+                <p>{{- section.settings.section_description -}}</p>
+              </div>
+            {%- endif -%}
+          </header>
+        {%- endif -%}
+        <div class="countdown-timer-wrap">
+          {%- render 'countdown-timer', end_date: section.settings.end_date, end_type: section.settings.end_type, end_message: section.settings.end_message, align_center: false -%}
+        </div>
+      </div>
+      {%- if section.blocks.size > 0 -%}
+        <div class="{{ section_prefix_class }}_col {{ section_prefix_class }}_banner-col">
+          <splide-slider
+            data-slider-type="default"
+            {% if request.design_mode %}
+              data-go-to="true"
+            {% endif %}
+          >
+            <div 
+              class="splide {{ section_prefix_class }}_slider"
+              data-splide='{
+                "drag": true,
+                "autoplay": {{- section.settings.auto_play -}},
+                "interval": {{- section.settings.change_slides_every | times: 1000 -}},
+                "rewind": true,
+                "gap": "30px",
+                "perMove": 1,
+                "perPage": 1,
+                {% if section.blocks.size > 1 %}
+                  "arrows": {{ section.settings.show_navigation }},
+                  "pagination": {{ section.settings.show_pagination }},
+                {% else %}
+                  "arrows": false,
+                  "pagination": false,
+                {% endif %}
+                {% if section.settings.type == 'fade' %}
+                  "type": "fade"
+                {% else %}
+                  "type": "slide"
+                {% endif %}
+              }'>
+              <div class="splide__track">
+                <div class="splide__list splide-slider--h-scroll" style="--init-divider: 1; --init-mob-divider: 1;">
+                  {%- for block in section.blocks -%}
+                    <div class="splide__slide {% unless block.settings.enable_container %}scheme scheme--{{ block.settings.block_color_scheme }}{% endunless %}" {{ block.shopify_attributes }}>
+                      {%- render 'banner-carousel-card', card: block, index: forloop.index, height: section_height_class, prefix_class: section_prefix_class, section_mobile_height_class: section_mobile_height_class -%}
+                    </div>
+                  {%- endfor -%}
+                </div>
+              </div>
+              {%- if section.blocks.size > 1 -%}
+                {%- if section.settings.show_navigation or section.settings.show_pagination -%}
+                  <div class="splide-controls splide__arrows --justify-end">
+                    {%- if section.settings.show_navigation -%}
+                      <button class="splide__arrow splide__arrow--prev button button--primary button--icn button--animate">
+                        <span class="visually-hidden">{{- 'accessibility.slider.previous' | t -}}</span>
+                        {%- render 'icons-data', width: 10, height: 10, use_icon: true, icon_reference: 'left-arrow' -%}
+                      </button>
+                    {%- endif -%}
+                    <ul
+                      class="splide__pagination {% if section.settings.show_navigation %}--padding{% endif %}"
+                      role="tablist"
+                      aria-label="{{- 'accessibility.slider.pagination_label' | t -}}"
+                    ></ul>
+                    {%- if section.settings.show_navigation -%}
+                      <button class="splide__arrow splide__arrow--next button button--primary button--icn button--animate">
+                        <span class="visually-hidden">{{- 'accessibility.slider.next' | t -}}</span>
+                        {%- render 'icons-data', width: 10, height: 10, use_icon: true, icon_reference: 'right-arrow' -%}
+                      </button>
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+          </splide-slider>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "t:sections.banner-with-countdown.name",
+    "tag": "section",
+    "disabled_on": {
+      "groups": [
+        "header",
+        "footer",
+        "custom.overlay"
+    ]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "id": "banner_view",
+      "label": "t:sections.banner-with-countdown.settings.banner_view.label",
+      "options": [
+        {
+          "value": "view_1",
+          "label": "t:sections.banner-with-countdown.settings.banner_view.settings.opt_1"
+        },
+        {
+          "value": "view_2",
+          "label": "t:sections.banner-with-countdown.settings.banner_view.settings.opt_2"
+        }
+      ],
+      "default": "view_1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.head.content",
+      "visible_if": "{{ section.settings.banner_view == 'view_1' }}"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_heading",
+      "label": "t:heading.label",
+      "default": "Talk about your brand",
+      "visible_if": "{{ section.settings.banner_view == 'view_1' }}"
+    },
+    {
+      "type": "select",
+      "id": "section_heading_size",
+      "label": "t:sizes.heading.label",
+      "options": [
+        {
+          "value": "h3",
+          "label": "t:sizes.heading.options.opt_3.label"
+        },
+        {
+          "value": "h4",
+          "label": "t:sizes.heading.options.opt_4.label"
+        },
+        {
+          "value": "h5",
+          "label": "t:sizes.heading.options.opt_5.label"
+        },
+        {
+          "value": "h6",
+          "label": "t:sizes.heading.options.opt_6.label"
+        }
+      ],
+      "default": "h6",
+      "visible_if": "{{ section.settings.banner_view == 'view_1' }}"
+    },
+    {
+      "type": "select",
+      "id": "section_heading_weight",
+      "label": "t:weight.heading.label",
+      "options": [
+        {
+          "value": "--fw-bold",
+          "label": "t:weight.heading.options.opt_1.label"
+        },
+        {
+          "value": "--fw-semi-bold",
+          "label": "t:weight.heading.options.opt_5.label"
+        },
+        {
+          "value": "--fw-medium",
+          "label": "t:weight.heading.options.opt_2.label"
+        },
+        {
+          "value": "--fw-normal",
+          "label": "t:weight.heading.options.opt_3.label"
+        }
+      ],
+      "default": "--fw-bold",
+      "visible_if": "{{ section.settings.banner_view == 'view_1' }}"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "section_description",
+      "label": "t:description_text.label",
+      "default": "Share information about your brand and products with your customers.",
+      "visible_if": "{{ section.settings.banner_view == 'view_1' }}"
+    },
+    {
+      "type": "select",
+      "id": "description_text_size",
+      "label": "t:sizes.description_text.label",
+      "options": [
+        {
+          "value": "text-size--small",
+          "label": "t:sizes.text.options.opt_1.label"
+        },
+        {
+          "value": "text-size--medium",
+          "label": "t:sizes.text.options.opt_2.label"
+        },
+        {
+          "value": "text-size--large",
+          "label": "t:sizes.text.options.opt_3.label"
+        },
+        {
+          "value": "text-size--xlarge",
+          "label": "t:sizes.text.options.opt_4.label"
+        }
+      ],
+      "default": "text-size--medium",
+      "visible_if": "{{ section.settings.banner_view == 'view_1' }}"
+    },
+    {
+      "type": "select",
+      "id": "section_description_weight",
+      "label": "t:weight.description_text.label",
+      "options": [
+        {
+          "value": "--fw-bold",
+          "label": "t:weight.heading.options.opt_1.label"
+        },
+        {
+          "value": "--fw-semi-bold",
+          "label": "t:weight.heading.options.opt_5.label"
+        },
+        {
+          "value": "--fw-medium",
+          "label": "t:weight.heading.options.opt_2.label"
+        },
+        {
+          "value": "--fw-normal",
+          "label": "t:weight.heading.options.opt_3.label"
+        },
+        {
+          "value": "--fw-light",
+          "label": "t:weight.heading.options.opt_4.label"
+        }
+      ],
+      "default": "--fw-light",
+      "visible_if": "{{ section.settings.banner_view == 'view_1' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.countdown_timer.content"
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": "t:countdown_timer.end_date.label",
+      "info": "t:countdown_timer.end_date.info",
+      "default": "2026/05/06"
+    },
+    {
+      "type": "select",
+      "id": "end_type",
+      "label": "t:countdown_timer.on_end.label",
+      "options": [
+        {
+          "value": "hide",
+          "label": "t:countdown_timer.on_end.options.opt_1.label"
+        },
+        {
+          "value": "show_message",
+          "label": "t:countdown_timer.on_end.options.opt_2.label"
+        }
+      ],
+      "default": "hide"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "end_message",
+      "label": "t:countdown_timer.message.label",
+      "info": "t:countdown_timer.message.info"
+    },
+    {
+      "type": "header",
+      "content": "t:layout.content"
+    },
+    {
+      "type": "text_alignment",
+      "id": "section_text_alignment",
+      "label": "t:alignments.text.desktop.label",
+      "default": "left",
+      "visible_if": "{{ section.settings.banner_view == 'view_1' }}"
+    },
+    {
+      "type": "text_alignment",
+      "id": "section_mobile_text_alignment",
+      "label": "t:alignments.text.mobile.label",
+      "default": "left",
+      "visible_if": "{{ section.settings.banner_view == 'view_1' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_radius",
+      "label": "t:sections.banner-with-countdown.settings.enable_radius.label",
+      "default": false,
+      "visible_if": "{{ section.settings.banner_view == 'view_2' }}"
+    },
+    {
+      "type": "color_scheme",
+      "id": "section_color_scheme",
+      "default": "scheme1",
+      "label": "t:color_scheme.label"
+    },
+    {
+      "type": "header",
+      "content": "t:slideshow.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_play",
+      "label": "t:slideshow.auto_play.label",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "type",
+      "label": "t:sections.banner-with-countdown.settings.slide_type.name",
+      "options": [
+        {
+          "value": "fade",
+          "label": "t:sections.banner-with-countdown.settings.slide_type.opt_1.label"
+        },
+        {
+          "value": "slide",
+          "label": "t:sections.banner-with-countdown.settings.slide_type.opt_2.label"
+        }
+      ],
+      "default": "fade"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "t:slideshow.show_arrows.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "t:slideshow.show_nav.label",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "change_slides_every",
+      "label": "t:slideshow.interval.label",
+      "min": 2,
+      "max": 9,
+      "step": 1,
+      "default": 5,
+      "unit": "s",
+      "info": "t:slideshow.interval.info"
+    },
+    {
+      "type": "header",
+      "content": "t:spacing.content"
+    },
+    {
+      "type": "range",
+      "id": "section_top_padding",
+      "label": "t:spacing.settings.top.label",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_bottom_padding",
+      "label": "t:spacing.settings.bottom.label",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "t:sections.banner-with-countdown.blocks.slide.name",
+      "type": "slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:sections.banner-with-countdown.blocks.slide.settings.image.label",
+          "info": "t:sections.banner-with-countdown.blocks.slide.settings.image.info"
+        },
+        {
+          "type": "color_background",
+          "id": "background",
+          "label": "t:sections.banner-with-countdown.blocks.slide.settings.image.bg_overlay.label",
+          "default": "linear-gradient(to bottom, rgba(121,121,121,0.1) 0%,rgba(19,19,19,0.5) 100%)"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "t:caption.label"
+        },
+        {
+          "type": "select",
+          "id": "caption_size",
+          "label": "t:sizes.caption.label",
+          "options": [
+            {
+              "value": "text-size--small",
+              "label": "t:sizes.text.options.opt_1.label"
+            },
+            {
+              "value": "text-size--medium",
+              "label": "t:sizes.text.options.opt_2.label"
+            },
+            {
+              "value": "text-size--large",
+              "label": "t:sizes.text.options.opt_3.label"
+            }
+          ],
+          "default": "text-size--medium"
+        },
+        {
+          "type": "select",
+          "id": "caption_weight",
+          "label": "t:weight.caption.label",
+          "options": [
+            {
+              "value": "--fw-bold",
+              "label": "t:weight.heading.options.opt_1.label"
+            },
+            {
+              "value": "--fw-semi-bold",
+              "label": "t:weight.heading.options.opt_5.label"
+            },
+            {
+              "value": "--fw-medium",
+              "label": "t:weight.heading.options.opt_2.label"
+            },
+            {
+              "value": "--fw-normal",
+              "label": "t:weight.heading.options.opt_3.label"
+            }
+          ],
+          "default": "--fw-bold"
+        },     
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "t:heading.label",
+          "default": "Talk about your brand"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "label": "t:sizes.heading.label",
+          "options": [
+            {
+              "value": "h1",
+              "label": "t:sizes.heading.options.opt_1.label"
+            },
+            {
+              "value": "h2",
+              "label": "t:sizes.heading.options.opt_2.label"
+            },
+            {
+              "value": "h3",
+              "label": "t:sizes.heading.options.opt_3.label"
+            },
+            {
+              "value": "h4",
+              "label": "t:sizes.heading.options.opt_4.label"
+            }
+          ],
+          "default": "h4"
+        },
+        {
+          "type": "select",
+          "id": "heading_weight",
+          "label": "t:weight.heading.label",
+          "options": [
+            {
+              "value": "--fw-bold",
+              "label": "t:weight.heading.options.opt_1.label"
+            },
+            {
+              "value": "--fw-semi-bold",
+              "label": "t:weight.heading.options.opt_5.label"
+            },
+            {
+              "value": "--fw-medium",
+              "label": "t:weight.heading.options.opt_2.label"
+            },
+            {
+              "value": "--fw-normal",
+              "label": "t:weight.heading.options.opt_3.label"
+            }
+          ],
+          "default": "--fw-bold"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "description",
+          "label": "t:description_text.label",
+          "default": "Share information about your brand with your customers."
+        },
+        {
+          "type": "select",
+          "id": "text_size",
+          "label": "t:sizes.description_text.label",
+          "options": [
+            {
+              "value": "text-size--small",
+              "label": "t:sizes.text.options.opt_1.label"
+            },
+            {
+              "value": "text-size--medium",
+              "label": "t:sizes.text.options.opt_2.label"
+            },
+            {
+              "value": "text-size--large",
+              "label": "t:sizes.text.options.opt_3.label"
+            },
+            {
+              "value": "text-size--xlarge",
+              "label": "t:sizes.text.options.opt_4.label"
+            }
+          ],
+          "default": "text-size--small"
+        },
+        {
+          "type": "select",
+          "id": "description_weight",
+          "label": "t:weight.description_text.label",
+          "options": [
+            {
+              "value": "--fw-bold",
+              "label": "t:weight.heading.options.opt_1.label"
+            },
+            {
+              "value": "--fw-semi-bold",
+              "label": "t:weight.heading.options.opt_5.label"
+            },
+            {
+              "value": "--fw-medium",
+              "label": "t:weight.heading.options.opt_2.label"
+            },
+            {
+              "value": "--fw-normal",
+              "label": "t:weight.heading.options.opt_3.label"
+            },
+            {
+              "value": "--fw-light",
+              "label": "t:weight.heading.options.opt_4.label"
+            }
+          ],
+          "default": "--fw-light"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.banner-with-countdown.blocks.slide.settings.container.content"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_container",
+          "label": "t:sections.banner-with-countdown.blocks.slide.settings.enable_container.label",
+          "default": false,
+          "visible_if": "{{ section.settings.banner_view == 'view_1' }}"
+        },
+        {
+          "type": "range",
+          "id": "max_content_size",
+          "label": "t:sections.head.size.label",
+          "min": 15,
+          "max": 100,
+          "step": 5,
+          "default": 15,
+          "unit": "%",
+          "visible_if": "{{ section.settings.banner_view == 'view_1' }}"
+        },
+        {
+          "type": "select",
+          "id": "block_content_position",
+          "label": "t:positions.label",
+          "options": [
+            {
+              "value": "center_left",
+              "label": "t:positions.options.left"
+            },
+            {
+              "value": "centered",
+              "label": "t:positions.options.center"
+            },
+            {
+              "value": "center_right",
+              "label": "t:positions.options.right"
+            }
+          ],
+          "default": "center_left"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.banner-with-countdown.blocks.slide.settings.first_button.content"
+        },
+        {
+          "type": "text",
+          "id": "first_button_heading",
+          "label": "t:settings_schema.buttons.settings.button.label",
+          "default": "BUTTON LABEL"
+        },
+        {
+          "type": "url",
+          "id": "first_url",
+          "label": "t:settings_schema.buttons.settings.button.link.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "first_open_new_window",
+          "label": "t:target_blank.label",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "t:sections.banner-with-countdown.blocks.slide.settings.second_button.content"
+        },
+        {
+          "type": "text",
+          "id": "second_button_heading",
+          "label": "t:settings_schema.buttons.settings.button.label"
+        },
+        {
+          "type": "url",
+          "id": "second_url",
+          "label": "t:settings_schema.buttons.settings.button.link.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "second_open_new_window",
+          "label": "t:target_blank.label",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "t:layout.content"
+        },
+        {
+          "type": "text_alignment",
+          "id": "block_text_alignment",
+          "label": "t:alignments.content.desktop.label",
+          "default": "left"
+        },
+        {
+          "type": "text_alignment",
+          "id": "block_mobile_text_alignment",
+          "label": "t:alignments.text.mobile.label",
+          "default": "center"
+        },
+        {
+          "type": "color_scheme",
+          "id": "block_color_scheme",
+          "default": "scheme4",
+          "label": "t:color_scheme.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.banner-with-countdown.name",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

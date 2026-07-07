@@ -1,0 +1,12 @@
+{%- comment -%}
+  renders shopify enabled payment gateway icons
+  usage
+     {%- render 'payment-icons' | prefix_class: section_prefix_class | social_extra_class: only_socials -%}
+{%- endcomment -%}
+<ul class="{{ prefix_class }}_payments-list payments-list list-unstyled {{ social_extra_class }}">
+  {%- for type in shop.enabled_payment_types -%}
+    <li>
+      {{ type | payment_type_svg_tag }}
+    </li>
+  {%- endfor -%}
+</ul>

@@ -1,0 +1,234 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main_page": {
+      "type": "main-page",
+      "settings": {
+        "section_color_scheme": "scheme4"
+      }
+    },
+    "collapsible_media": {
+      "type": "collapsible-with-media",
+      "settings": {
+        "section_heading": "General Information",
+        "section_heading_size": "h6",
+        "section_caption": "",
+        "section_description": "",
+        "section_text_alignment": "left",
+        "section_top_padding": 25,
+        "section_bottom_padding": 13
+      },
+      "blocks": {
+        "collapse_row_1": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "Where is your company based?",
+            "description": "We are proudly based in United States, where all our products are designed and carefully curated.",
+            "open_by_default": true
+          }
+        },
+        "collapse_row_2": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "Do you have any physical stores?",
+            "description": "Currently, we operate exclusively online, allowing us to deliver quality shoes directly to your doorstep.",
+            "open_by_default": true
+          }
+        },
+        "collapse_row_3": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "Are your shoes ethically made?",
+            "description": "Yes, we work closely with manufacturers who share our commitment to ethical labor practices and sustainable production.",
+            "open_by_default": true
+          }
+        },
+        "collapse_row_4": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "Do you offer gift cards?",
+            "description": "Yes! Digital gift cards are available in multiple denominations and make the perfect present for any shoe lover.",
+            "open_by_default": true
+          }
+        }
+      },
+      "block_order": [
+        "collapse_row_1",
+        "collapse_row_2",
+        "collapse_row_3",
+        "collapse_row_4"
+      ]
+    },
+    "collapsible_media_2": {
+      "type": "collapsible-with-media",
+      "settings": {
+        "section_heading": "Products",
+        "section_heading_size": "h6",
+        "section_caption": "",
+        "section_description": "",
+        "section_text_alignment": "left",
+        "section_top_padding": 15,
+        "section_bottom_padding": 13
+      },
+      "blocks": {
+        "collapse_row_1": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "What materials are used in your shoes?",
+            "description": "We use premium materials such as genuine leather, high-grade synthetics, and eco-friendly fabrics, depending on the style.",
+            "open_by_default": true
+          }
+        },
+        "collapse_row_2": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "Are your shoes true to size?",
+            "description": "Most of our shoes fit true to size. We recommend checking our detailed size guide on each product page for the best fit.",
+            "open_by_default": true
+          }
+        },
+        "collapse_row_3": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "Do you restock sold-out styles?",
+            "description": "Some styles may be restocked. Sign up for restock notifications on the product page to be the first to know.",
+            "open_by_default": true
+          }
+        },
+        "collapse_row_4": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "Do you offer wide or narrow sizes?",
+            "description": "While most of our shoes come in standard widths, select styles are available in wide/narrow options. Filter by size for availability.",
+            "open_by_default": true
+          }
+        }
+      },
+      "block_order": [
+        "collapse_row_1",
+        "collapse_row_2",
+        "collapse_row_3",
+        "collapse_row_4"
+      ]
+    },
+    "collapsible_media_3": {
+      "type": "collapsible-with-media",
+      "settings": {
+        "section_heading": "Order & Shipping",
+        "section_heading_size": "h6",
+        "section_caption": "",
+        "section_description": "",
+        "section_text_alignment": "left",
+        "section_top_padding": 15,
+        "section_bottom_padding": 13
+      },
+      "blocks": {
+        "collapse_row_1": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "How can I track my order?",
+            "description": "Once your order ships, you'll receive an email with a tracking link to follow its journey.",
+            "open_by_default": true
+          }
+        },
+        "collapse_row_2": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "How long does shipping take?",
+            "description": "Standard shipping typically takes 3–7 business days, while express options are also available at checkout.",
+            "open_by_default": true
+          }
+        },
+        "collapse_row_3": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "Do you offer international shipping?",
+            "description": "Yes, we ship globally! Shipping times and rates vary depending on your location.",
+            "open_by_default": true
+          }
+        },
+        "collapse_row_4": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "Can I change or cancel my order after placing it?",
+            "description": "We process orders quickly, but if you contact us within 1 hour of placing your order, we’ll do our best to assist.",
+            "open_by_default": true
+          }
+        }
+      },
+      "block_order": [
+        "collapse_row_1",
+        "collapse_row_2",
+        "collapse_row_3",
+        "collapse_row_4"
+      ]
+    },
+    "collapsible_media_4": {
+      "type": "collapsible-with-media",
+      "settings": {
+        "section_heading": "Return & Exchange",
+        "section_heading_size": "h6",
+        "section_caption": "",
+        "section_description": "",
+        "section_text_alignment": "left",
+        "section_top_padding": 15,
+        "section_bottom_padding": 90
+      },
+      "blocks": {
+        "collapse_row_1": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "What is your return policy?",
+            "description": "We accept returns within 30 days of delivery, provided the shoes are unworn and in original packaging.",
+            "open_by_default": true
+          }
+        },
+        "collapse_row_2": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "How do I start a return or exchange?",
+            "description": "Simply visit our Returns Portal [link] and follow the step-by-step instructions to process your request.",
+            "open_by_default": true
+          }
+        },
+        "collapse_row_3": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "Is there a return shipping fee?",
+            "description": "Return shipping is free for exchanges and store credit. A small fee may apply for refunds, depending on your location.",
+            "open_by_default": true
+          }
+        },
+        "collapse_row_4": {
+          "type": "collapse_row",
+          "settings": {
+            "heading": "Can I return shoes purchased on sale?",
+            "description": "Sale items are eligible for exchange or store credit only, unless marked final sale.",
+            "open_by_default": true
+          }
+        }
+      },
+      "block_order": [
+        "collapse_row_1",
+        "collapse_row_2",
+        "collapse_row_3",
+        "collapse_row_4"
+      ]
+    }
+  },
+  "order": [
+    "main_page",
+    "collapsible_media",
+    "collapsible_media_2",
+    "collapsible_media_3",
+    "collapsible_media_4"
+  ]
+}

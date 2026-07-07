@@ -1,0 +1,159 @@
+{%- comment -%}
+  renders video card
+  usage
+    {%- render 'video-card', card: card, prefix_class: section_prefix_class, index: forloop.index -%}
+{%- endcomment -%}
+{%- liquid
+  assign block_scheme_class = card.settings.block_color_scheme | prepend: 'scheme scheme--'
+
+  capture video_id
+    echo card.settings.upload_video.id | default: card.settings.video_url.id
+  endcapture
+
+  capture video_alt
+    echo card.settings.default_text | default: card.settings.upload_video.alt
+  endcapture
+
+  assign poster = card.settings.cover_image | default: card.settings.upload_video.preview_image
+
+  capture enable_loop_attr
+    if card.settings.enable_video_looping
+      echo '&loop=1&playlist=' | append: video_id
+    endif
+  endcapture
+
+  capture title_alt
+    if card.settings.alt_text != blank
+      echo card.settings.alt_text
+      else
+        echo card.settings.default_text | default: card.settings.upload_video.alt
+    endif
+  endcapture
+
+  capture button_text
+    if card.settings.alt_text != blank
+      echo card.settings.alt_text
+      else
+        if video_alt != blank
+          echo video_alt
+          else
+            echo 'sections.video.video_alt_html' | t: caption: index
+        endif 
+    endif
+  endcapture
+
+  capture card_media_size
+    if card_media_option == 'adapt'
+      echo poster.aspect_ratio | default: '1'
+      else
+        echo '1'
+    endif
+  endcapture
+
+  capture content_position
+    case card.settings.content_position
+      when 'top_left'
+        echo '--tleft'
+      when 'top_right'
+        echo '--tright'
+      when 'middle'
+        echo '--middle-center'
+      when 'bottom_left'
+        echo '--bleft'
+      when 'bottom_right'
+        echo '--bright'
+    endcase
+  endcapture
+
+  capture q_justify_text
+    case card.settings.block_text_alignment
+      when 'left'
+        echo 'content-start'
+      when 'center'
+        echo 'content-center'
+      when 'right'
+        echo 'content-end'
+    endcase
+  endcapture
+-%}
+<article class="video-card --align-center {{ block_scheme_class }} {% if poster == blank %}--media-size--blank --media-size-{{ card_media_option }} {% else %}--media-size-{{ card_media_option }}{% endif %}" style="--media-ratio: {{ card_media_size }};">
+  <deferred-media class="deferred-media video-card_media" style="--media-ratio: {{ card_media_size }};" data-media-id="{{ section.id }}-{{ index }}-{{ video_id }}" data-parent="[data-deffered-parent='{{ section.id }}-{{ card.id }}']">
+    <button data-id="Deferred-Poster-Modal-{{ section.id }}-{{ index }}-{{ video_id }}" class="deferred-media__poster" type="button">
+      <span class="deferred-media__poster-icn --v-align-middle --justify-center">
+        {%- render 'icons-data', width: 25, height: 27, use_icon: true, icon_reference: 'play', section_id: section_id -%}
+      </span>
+      <strong class="video-card_heading visually-hidden">
+        {{- button_text -}}
+      </strong>
+      {%- if poster != blank -%}
+        {%- liquid
+          capture image_alt
+            if poster.alt != blank
+              echo poster.alt
+              else
+                echo button_text | escape
+            endif
+          endcapture
+
+          assign image_height = 286 | divided_by: poster.aspect_ratio | round
+        -%}
+        {{- poster | image_url: width: width_attr | image_tag:
+          width: 286,
+          height: image_height,
+          class: 'object-fit object-fit--absolute',
+          loading: loading_attr,
+          widths: widths_attr,
+          sizes: sizes_attr,
+          alt: image_alt
+        -}}
+        {%- else -%}
+          {%- render 'placeholder-svgs', type: 'hero', index: index, class: 'object-fit object-fit--absolute' -%}
+      {%- endif -%}
+    </button>
+    <template>
+      {%- if card.settings.upload_video != blank -%}
+        {{- card.settings.upload_video | video_tag: image_size: width_attr, autoplay: true, loop: card.settings.enable_video_looping, controls: true, muted: false, class: 'object-fit object-fit--absolute' -}}
+        {%- else -%}
+          {%- if card.settings.video_url.type == 'youtube' -%}
+            <iframe
+              src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1&autoplay=1{{ enable_loop_attr }}"
+              class="js-youtube object-fit object-fit--absolute"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              title="{{- title_alt -}}"
+              width="{{- width_attr -}}"
+            ></iframe>
+          {%- else -%}
+            <iframe
+              src="https://player.vimeo.com/video/{{ video_id }}?autoplay=1{{ enable_loop_attr }}"
+              class="js-vimeo object-fit object-fit--absolute"
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              title="{{- title_alt -}}"
+              width="{{- width_attr -}}"
+            ></iframe>
+          {%- endif -%}
+      {%- endif -%}
+    </template>
+  </deferred-media>
+  {%- if card.settings.content_position == 'top_left' or card.settings.content_position == 'top_right' -%}
+    {%- if card.settings.block_heading != blank or card.settings.section_description != blank -%}
+      <span class="video-card_header {{ q_justify_text }} {{ content_position }}" data-deffered-parent="{{ section.id }}-{{ card.id }}">
+        <span class="video-card_bg">
+          <span class="video-card_height container">
+            {%- if card.settings.block_heading != blank-%}
+              <span class="video-card_heading h3 --fw-bold --h-anchor-none --word-break mty">
+                {{- card.settings.block_heading -}}
+              </span>
+            {%- endif -%}
+            {%- if card.settings.block_description != blank -%}
+              <span class="video-card_description --word-break --fw-normal text-size--small mty">
+                {{- card.settings.block_description -}}
+              </span>
+            {%- endif -%}
+          </span>
+        </span>
+      </span>
+    {%- endif -%}
+  {%- endif -%}
+</article>

@@ -1,0 +1,28 @@
+{%- comment -%}
+  renders mega menu banner image
+  usage
+    {%- render 'mega-menu-banner', image: block.settings.banner_i, url: block.settings.banner_link_i, open_new_window: block.settings.open_new_window_i, index: 1 -%}
+{%- endcomment -%}
+{%- liquid
+  assign image_alt = 'menu.banner_image' | t: index: index
+
+  capture index_class
+    case index
+      when 1
+        echo 'first'
+      when 2
+        echo 'second'
+      when 3
+        echo 'third'
+    endcase
+  endcapture
+-%}
+{%- if url != blank -%}
+  <a class="mega-menu_banner mega-menu_banner--{{ index_class }}" href="{{- url -}}" {% if open_new_window %}target="_blank"{% endif %}>
+    {{- image | image_url: width: 530 | image_tag: class: 'object-fit object-fit--absolute', loading: 'lazy', alt: image_alt, widths: '265, 530, 1060', sizes: '(max-width: 767px) 265px, 1060px' -}}
+  </a>
+  {%- else -%}
+    <div class="mega-menu_banner mega-menu_banner--{{ index_class }}">
+      {{- image | image_url: width: 530 | image_tag: class: 'object-fit object-fit--absolute', loading: 'lazy', alt: image_alt, widths: '265, 530, 1060', sizes: '(max-width: 767px) 265px, 1060px' -}}
+    </div>
+{%- endif -%}

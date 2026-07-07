@@ -1,0 +1,35 @@
+{%- comment -%}
+  renders mega-menu-item on section templates
+  usage
+    {%- render 'mega-menu-item', childlink: childlink, index: forloop.index -%}
+{%- endcomment -%}
+<li class="mega-menu_dropdown-item">
+  {%- if childlink.links == blank -%}
+    <a class="mega-menu_item-link mega-menu_link--level1 {% if link.current %}main-navigation_link--active{% endif %}" href="{{- childlink.url -}}" {% if link.current %}aria-current="{{- 'navigation.current_page_label' | t -}}"{% endif %}>
+      {{- childlink.title | escape -}}
+    </a>
+    {%- else -%}
+      {%- liquid
+        assign link_title = childlink.title | escape
+        assign link_handle = childlink.title | handle
+      -%}
+      <div class="mega-menu_items-list">
+        <div
+          class="h --fw-normal mega-menu_heading mty predictive-collection-header-flex ">
+          <div class="circle"></div>
+          {{- link_title -}}
+        </div>
+        <div class="">
+          <ul class="list-unstyled mega-menu_grandchild">
+            {%- for grandchildlink in childlink.links -%}
+              <li class="">
+                <a class="mega-menu_link--level2 mega-menu_item-link {% if link.current %}main-navigation_link--active{% endif %}" href="{{- grandchildlink.url -}}" {% if link.current %}aria-current="{{- 'navigation.current_page_label' | t -}}"{% endif %}>
+                  {{- grandchildlink.title | escape -}}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      </div>
+  {%- endif -%}
+</li>

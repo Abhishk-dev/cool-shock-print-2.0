@@ -1,0 +1,8 @@
+{%- comment -%}
+  renders cart icon bubble counter
+  usage
+    {%- render 'cart-bubble', prefix_class: 'section_prefix_class' -%}
+{%- endcomment -%}
+<span class="cart-bubble {% unless cart != empty %}hidden{% endunless %}" aria-hidden="true" data-render-cart-bubble="">
+  {{- cart.item_count -}}
+</span>

@@ -1,0 +1,172 @@
+{%- comment -%}
+  renders carousel card on section templates
+  usage
+    {%- render 'banner-carousel-card', card: block, index: forloop.index, height: section_height_class, prefix_class -%}
+{%- endcomment -%}
+{% liquid
+  assign block_scheme_class = card.settings.block_color_scheme | prepend: 'scheme scheme--'
+
+  capture content_alignment
+    case card.settings.block_content_position
+      when 'center_left'
+        echo 'mleft'
+      when 'center_right'
+        echo 'mright'
+      when 'centered'
+        echo 'mcenter'
+    endcase
+  endcapture
+
+  capture q_justify_mobile
+    case card.settings.block_mobile_text_alignment
+      when 'left'
+        echo 'flex-start'
+      when 'center'
+        echo 'center'
+      when 'right'
+        echo 'flex-end'
+    endcase
+  endcapture
+
+  capture q_justify_desktop
+    case card.settings.block_text_alignment
+      when 'left'
+        echo 'flex-start'
+      when 'center'
+        echo 'center'
+      when 'right'
+        echo 'flex-end'
+    endcase
+  endcapture
+
+  capture q_counter_justify_mobile
+    case card.settings.block_mobile_text_alignment
+      when 'left'
+        echo 'mob-flex-start'
+      when 'center'
+        echo 'mob-center'
+      when 'right'
+        echo 'mob-flex-end'
+    endcase
+  endcapture
+
+  capture q_counter_justify_desktop
+    case card.settings.block_text_alignment
+      when 'left'
+        echo 'desktop-flex-start'
+      when 'center'
+        echo 'desktop-center'
+      when 'right'
+        echo 'desktop-flex-end'
+    endcase
+  endcapture
+
+  capture max_content_size
+    echo settings.page_width | times: card.settings.max_content_size | divided_by: 100
+  endcapture
+
+  capture enable_container
+    unless card.settings.enable_container
+      echo 'banner-carousel-card--no-box'
+    endunless
+  endcapture
+%}
+<article class="banner-carousel-card {{ prefix_class }}-{{ card.id }}-{{section.id}} --q-align" style="--mobile-q-align: {{ card.settings.block_mobile_text_alignment }}; --mobile-justify-align: {{ q_justify_mobile }}; --desktop-q-align: {{ card.settings.block_text_alignment }}; --desktop-justify-align: {{ q_justify_desktop }};">
+  <div class="container banner-carousel_container">
+    <div class="carousel-height">
+      <div class="align-holder align-holder--{{ content_alignment }}">
+        <div class="align-holder_wrapper {% if section.settings.show_navigation %}align-holder_wrapper--no-padding{% endif %} {% if section.settings.banner_view == 'view_2' %}{{ block_scheme_class }}{% endif %}" {% if section.settings.banner_view == 'view_1' %}style="--max-content: {{ max_content_size }}px;"{% endif %}
+        {% if section.settings.banner_view == 'view_2' %}style="--overlay-bg: {{ card.settings.background }}"{% endif %}>
+          <div class="banner-carousel-card_wrapper {% if section.settings.banner_view == 'view_1' %}{% if card.settings.enable_container %}{{ block_scheme_class }}{% endif %}{% endif %} {{ enable_container }}">
+            {%- if card.settings.heading != blank or card.settings.description != blank or card.settings.caption != blank -%}
+              <header class="heading-head">
+                {%- if section.settings.banner_view == 'view_2' -%}
+                  <div class="view-2_countdown {{ q_counter_justify_desktop }} {{ q_counter_justify_mobile }}">
+                    {%- render 'countdown-timer', end_date: section.settings.end_date, end_type: section.settings.end_type, end_message: section.settings.end_message, align_center: false -%}
+                  </div>
+                {%- endif -%}
+                {%- if card.settings.caption != blank -%}
+                  <div class="banner-carousel-card_caption h --word-break {{ card.settings.caption_size }} {{ card.settings.caption_weight }} mty">
+                    {{- card.settings.caption -}} 
+                  </div>
+                {%- endif -%}
+                {%- if card.settings.heading != blank -%}
+                  <h2 class="banner-carousel-card_heading {{ card.settings.heading_size }} {{ card.settings.heading_weight }} --h-anchor-none mty">
+                    {{- card.settings.heading -}}
+                  </h2>
+                {%- endif -%}
+                {%- if card.settings.description != blank -%}
+                  <div class="banner-carousel-card_description {{ card.settings.text_size }} {{ card.settings.description_weight }} --word-break mty">
+                    <p>{{- card.settings.description -}}</p>
+                  </div>
+                {%- endif -%}
+              </header>
+            {%- endif -%}
+            {%- if card.settings.first_button_heading != blank or card.settings.second_button_heading != blank -%}
+              <div class="banner-carousel-card_btn mty --q-align-justify">
+                {%- if card.settings.first_button_heading != blank -%}
+                  <a
+                    {% if card.settings.first_url != blank %}href="{{ card.settings.first_url -}}" {% if card.settings.first_open_new_window %}target="_blank"{% endif %} {% else %} aria-disabled="true" {% endif %}
+                    class="button button--primary button--animate"
+                  >
+                    {{- card.settings.first_button_heading -}}
+                  </a>
+                {%- endif -%}
+                {%- if card.settings.second_button_heading != blank -%}
+                  <a
+                    {% if card.settings.second_url != blank %}href="{{ card.settings.second_url -}}" {% if card.settings.second_open_new_window %}target="_blank"{% endif %} {% else %} aria-disabled="true" {% endif %}
+                    class="button button--secondary button--animate"
+                  >
+                    {{- card.settings.second_button_heading -}}
+                  </a>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="banner-carousel-card_bg-wrapper" style="--overlay-bg: {{ card.settings.background }}">
+    {%- if card.settings.image -%}
+      <div class="banner-carousel-card_image">
+        {%- liquid
+          capture image_alt
+            if card.settings.image.alt != blank
+              echo card.settings.image.alt
+              else
+                echo card.settings.heading | escape
+            endif
+          endcapture
+
+          assign image_height = 320 | divided_by: card.settings.image.aspect_ratio | round
+        -%}
+        {%- unless index != 1 -%}
+          {{- card.settings.image | image_url: width: 1920 | image_tag:
+            class: 'object-fit object-fit--absolute',
+            fetchpriority: 'high',
+            width: 320,
+            height: image_height,
+            widths: '320, 412, 768, 992, 1260, 1350, 1440, 1640, 1920',
+            sizes: '100vw',
+            alt: image_alt
+          -}}
+          {%- else -%}
+            {{- card.settings.image | image_url: width: 1920 | image_tag:
+              class: 'object-fit object-fit--absolute',
+              loading: 'lazy',
+              width: 320,
+              height: image_height,
+              widths: '320, 412, 768, 992, 1260, 1350, 1440, 1640, 1920',
+              sizes: '100vw',
+              alt: image_alt
+            -}}
+        {%- endunless -%}
+      </div>
+      {% else %}
+        <div class="banner-carousel-card_image">
+          {%- render 'placeholder-svgs', type: 'hero', index: index, class: 'object-fit object-fit--absolute' -%}
+        </div>
+    {%- endif -%}
+  </div>
+</article>

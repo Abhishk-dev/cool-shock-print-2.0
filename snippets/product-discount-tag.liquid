@@ -1,0 +1,30 @@
+{%- comment -%}
+  renders product discount sale tag
+  usage
+    {%- render 'product-discount-tag', product: product -%}
+{%- endcomment -%}
+{%- if product.title == blank -%}
+  <span class="product-tag --v-align-middle --word-break" style="--bg-clr: var(--section-success-color);">
+    <span class="product-tag_dot"></span>
+    {{ 'product.sale' | t }}
+  </span>
+  {%- else -%}
+    {%- liquid
+      assign target = product.selected_or_first_available_variant
+      assign compare_at_price = target.compare_at_price
+      assign price = target.price | default: 1999
+    
+      assign onsale = false
+      if compare_at_price > price
+        assign onsale = true
+      endif
+    -%}
+    {%- if onsale -%}
+      <span class="product-tag --v-align-middle --word-break" style="--bg-clr: var(--section-success-color);">
+        <span class="product-tag_dot"></span>
+        {{- 'product.sale' | t -}}
+      </span>
+      {%- else -%}
+        <span class="hidden"></span>
+    {%- endif -%}
+{%- endif -%}
