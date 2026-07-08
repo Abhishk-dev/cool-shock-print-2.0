@@ -16,7 +16,7 @@
   };
 
   var validationMsg = 'Please enter width, height, and measurement units.';
-  var validationRangeMsg = 'Width and height must be whole numbers between 100 and 999999999.';
+  var validationRangeMsg = 'Width and height must be whole numbers between 1 and 999999999.';
 
   function convertToMeters(value, unit) {
     var factor = UNIT_TO_METERS[unit];
@@ -53,7 +53,7 @@
     }
     var wn = parseInt(w, 10);
     var hn = parseInt(h, 10);
-    if (wn < 100 || hn < 100 || wn > 999999999 || hn > 999999999) {
+    if (wn < 1 || hn < 1 || wn > 999999999 || hn > 999999999) {
       return { valid: false, message: validationRangeMsg };
     }
     return { valid: true, message: '' };
