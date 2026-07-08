@@ -25,7 +25,6 @@
         type="text"
         id="dimension-width-{{ section.id }}"
         class="form-control product-dimension-fields_input"
-        name="properties[Width]"
         form="{{ form_id }}"
         inputmode="numeric"
         pattern="[0-9]*"
@@ -43,7 +42,6 @@
         type="text"
         id="dimension-height-{{ section.id }}"
         class="form-control product-dimension-fields_input"
-        name="properties[Height]"
         form="{{ form_id }}"
         inputmode="numeric"
         pattern="[0-9]*"
@@ -60,7 +58,6 @@
       <select
         id="dimension-units-{{ section.id }}"
         class="form-control product-dimension-fields_input"
-        name="properties[Measurement units]"
         form="{{ form_id }}"
         data-dimension-units
         required
@@ -73,10 +70,6 @@
       </select>
     </div>
   </div>
-
-  <input type="hidden" name="properties[Square meters]" form="{{ form_id }}" data-dimension-sqm-hidden value="">
-  <input type="hidden" name="properties[Calculated price]" form="{{ form_id }}" data-dimension-price-hidden value="">
-  <input type="hidden" name="properties[_price_cents]" form="{{ form_id }}" data-dimension-price-cents-hidden value="">
 
   <div class="product-dimension-fields_summary">
     <div class="product-dimension-fields_summary-item">

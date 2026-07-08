@@ -11,19 +11,27 @@
   assign dimension_calculated_price = blank
   assign dimension_price_cents = 0
   assign dimension_sqm = blank
+  assign has_cpc_pricing = false
   for property in item.properties
     if property.first == 'Calculated price'
       assign dimension_calculated_price = property.last
+    elsif property.first == 'Total Square Meters'
+      assign dimension_sqm = property.last
     elsif property.first == 'Square meters'
       assign dimension_sqm = property.last
     elsif property.first == '_price_cents'
       assign dimension_price_cents = property.last | plus: 0
+    elsif property.first == '_cpc_custom_cart_item' and property.last != blank and property.last != 'none'
+      assign has_cpc_pricing = true
     endif
   endfor
   assign has_dimension_pricing = false
   if dimension_price_cents > 0
     assign has_dimension_pricing = true
     assign dimension_line_total = dimension_price_cents | times: item.quantity
+  elsif has_cpc_pricing
+    assign has_dimension_pricing = true
+    assign dimension_line_total = item.final_line_price
   endif
 -%}
 <div class="line-item {% if settings.cart_related_collection != null %}line-item_bdr-bottom{% endif %}" {{ parent_attr }} data-init-qty="{{- item.quantity -}}">
@@ -78,7 +86,11 @@
             <div class="line-item_price-individual line-item_variant-value">
               {%- if has_dimension_pricing -%}
                 <strong class="line-item_final-price --word-break">
-                  {{- dimension_calculated_price -}}
+                  {%- if dimension_calculated_price != blank -%}
+                    {{- dimension_calculated_price -}}
+                  {%- else -%}
+                    {{- item.final_price | money -}}
+                  {%- endif -%}
                 </strong>
                 {%- if dimension_sqm != blank -%}
                   <span class="line-item_unit-price text-size--small">

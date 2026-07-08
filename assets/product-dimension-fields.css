@@ -70,3 +70,20 @@
   opacity: 0.55;
   font-weight: var(--fw-normal, 400);
 }
+
+/* Custom Price Calculator app — hidden, used only for cart pricing */
+#calculator.rounded-edges,
+#calculator.cpc-calculator-form,
+form .cpc-calculator-form#calculator {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
