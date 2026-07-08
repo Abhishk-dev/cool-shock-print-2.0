@@ -606,6 +606,12 @@ class AtcSubmit extends HTMLElement {
     config.headers['X-Requested-With'] = 'XMLHttpRequest';
     delete config.headers['Content-Type'];
     const formData = new FormData(this.form);
+    // Quantity often sits outside the form via form="…"; ensure cart/add gets the visible value.
+    const qtyField = this.form.elements && this.form.elements.namedItem('quantity');
+    const qtyEl = qtyField && qtyField.tagName ? qtyField : (qtyField && qtyField[0]);
+    if (qtyEl && qtyEl.value != null && qtyEl.value !== '') {
+      formData.set('quantity', qtyEl.value);
+    }
     formData.append('sections', secArr.map(section => section.id));
     formData.append('sections_url', window.location.pathname);
     config.body = formData;

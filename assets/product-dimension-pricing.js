@@ -253,11 +253,40 @@
       return Array.prototype.slice.call(wrappers);
     }
 
+    function getQuantityInput() {
+      if (!form) return null;
+      // Theme quantity often lives outside <form> and is linked via form="…".
+      // form.querySelector() won't find those; form.elements / [form=…] will.
+      var named = form.elements && form.elements.namedItem('quantity');
+      if (named) {
+        if (typeof RadioNodeList !== 'undefined' && named instanceof RadioNodeList) {
+          return named[0] || null;
+        }
+        if (named.tagName) return named;
+      }
+      if (form.id) {
+        var linked = document.querySelector(
+          'input[name="quantity"][form="' + form.id + '"]'
+        );
+        if (linked) return linked;
+      }
+      return form.querySelector('input[name="quantity"]');
+    }
+
     function getQuantity() {
-      if (!form) return 1;
-      var qtyInput = form.querySelector('input[name="quantity"]');
+      var qtyInput = getQuantityInput();
       var qty = parseInt(qtyInput && qtyInput.value ? qtyInput.value : '1', 10);
       return isNaN(qty) || qty < 1 ? 1 : qty;
+    }
+
+    function syncThemeQuantityToCpc() {
+      if (!cpcCalc) return;
+      var qtyEl = cpcField(cpcCalc, 'Quantity');
+      if (!qtyEl) return;
+      var qty = getQuantity();
+      if (String(qtyEl.value) === String(qty)) return;
+      qtyEl.value = String(qty);
+      triggerCpcChange(qtyEl);
     }
 
     function showError(message) {
@@ -494,16 +523,24 @@
               variant: state.variant
             });
           }
+
+          // Ensure Shopify cart/add receives the visible qty (not CPC's stale default of 1).
+          var qtyInput = getQuantityInput();
+          var qty = getQuantity();
+          if (qtyInput) qtyInput.value = String(qty);
+          syncThemeQuantityToCpc();
         },
         true
       );
 
-      var qtyInput = form.querySelector('input[name="quantity"]');
+      var qtyInput = getQuantityInput();
       if (qtyInput) {
         qtyInput.addEventListener('change', function () {
+          syncThemeQuantityToCpc();
           recalculate();
         });
         qtyInput.addEventListener('input', function () {
+          syncThemeQuantityToCpc();
           recalculate();
         });
       }
