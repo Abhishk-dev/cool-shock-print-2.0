@@ -1,10 +1,9 @@
 {%- comment -%}
-  Theme dimension UI. Pricing is handled by Custom Price Calculator app (#calculator).
-  product-cpc-bridge.js syncs these fields to the hidden app calculator.
+  Dimension fields for area-based pricing. Required before add to cart.
+  Variant price is treated as price per square meter.
 {%- endcomment -%}
 {{- 'product-dimension-fields.css' | asset_url | stylesheet_tag -}}
-{{- 'product-cpc-bridge.css' | asset_url | stylesheet_tag -}}
-<script src="{{ 'product-cpc-bridge.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'product-dimension-pricing.js' | asset_url }}" defer="defer"></script>
 
 <div
   class="product-dimension-fields"
@@ -12,6 +11,7 @@
   data-form-id="{{ form_id }}"
   data-main-parent="#{{ section.id }}-description"
   data-price-render="[{{ price_render_attr }}]"
+  data-qty-render="[{{ qty_render_attr }}]"
 >
   <p class="product-common_variant-title text-size--small --fw-bold product-dimension-fields_heading">
     Enter your dimensions
@@ -22,15 +22,16 @@
         Width<span class="product-dimension-fields_required" aria-hidden="true">*</span>
       </label>
       <input
-        type="number"
+        type="text"
         id="dimension-width-{{ section.id }}"
         class="form-control product-dimension-fields_input"
+        name="properties[Width]"
+        form="{{ form_id }}"
         inputmode="numeric"
-        min="0"
-        step="1"
+        pattern="[0-9]*"
         autocomplete="off"
         data-dimension-width
-        placeholder="e.g. 100"
+        placeholder="100"
         required
       >
     </div>
@@ -39,15 +40,16 @@
         Height<span class="product-dimension-fields_required" aria-hidden="true">*</span>
       </label>
       <input
-        type="number"
+        type="text"
         id="dimension-height-{{ section.id }}"
         class="form-control product-dimension-fields_input"
+        name="properties[Height]"
+        form="{{ form_id }}"
         inputmode="numeric"
-        min="0"
-        step="1"
+        pattern="[0-9]*"
         autocomplete="off"
         data-dimension-height
-        placeholder="e.g. 100"
+        placeholder="100"
         required
       >
     </div>
@@ -58,6 +60,8 @@
       <select
         id="dimension-units-{{ section.id }}"
         class="form-control product-dimension-fields_input"
+        name="properties[Measurement units]"
+        form="{{ form_id }}"
         data-dimension-units
         required
       >
@@ -69,6 +73,10 @@
       </select>
     </div>
   </div>
+
+  <input type="hidden" name="properties[Square meters]" form="{{ form_id }}" data-dimension-sqm-hidden value="">
+  <input type="hidden" name="properties[Calculated price]" form="{{ form_id }}" data-dimension-price-hidden value="">
+  <input type="hidden" name="properties[_price_cents]" form="{{ form_id }}" data-dimension-price-cents-hidden value="">
 
   <div class="product-dimension-fields_summary">
     <div class="product-dimension-fields_summary-item">
@@ -100,7 +108,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    if (typeof window.initProductCpcBridge !== 'function') return;
-    window.initProductCpcBridge({ sectionId: {{ section.id | json }} });
+    if (typeof window.initProductDimensionPricing !== 'function') return;
+    window.initProductDimensionPricing({ sectionId: {{ section.id | json }} });
   });
 </script>
